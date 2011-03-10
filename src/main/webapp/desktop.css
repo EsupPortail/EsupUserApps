@@ -1,0 +1,88 @@
+.bandeau_ENT_portalLogo {
+ height: 66px;
+}
+
+#bandeau_ENT_portalPageBarToggleMenu {
+    height: 71px;
+    background: #ccc;
+    border-left: 1px solid #a8a8a8;
+}
+#bandeau_ENT_portalPageBarToggleMenu:hover {
+    background: #dddddd;
+}
+
+.menuClosed #bandeau_ENT_portalPageBarToggleMenu {
+    height: 66px;
+    background: transparent;
+    border-left: 0;
+}
+
+#bandeau_ENT_portalPageBarToggleMenu > span {
+    border-left: 0;
+}
+
+.bandeau_ENT_Menu {
+   height: 28px;
+}
+
+.toggleMenuSpacer {
+    float: right;
+    height: 23px;
+    padding: 5px 0px;
+    width: 24px;
+}
+
+.bandeau_ENT_Menu, .bandeau_ENT_Menu > li {
+   background: url(https://esup.univ-paris1.fr/media/skins/universality/uportal3/images/background_menu-h.png) repeat-x scroll right top; 
+   border-bottom: 1px solid #FFFFFF;
+}
+
+.bandeau_ENT_Menu > li.activeTab,
+.bandeau_ENT_Menu > li:hover {
+   margin-top: -10px;
+   padding: 5px 10px;
+   border-left: 1px solid #999999;
+   border-right: 1px solid #999999;
+   border-top: 1px solid #999999;
+   border-bottom: 0px solid transparent!important;
+   height: 28px;
+   -moz-border-radius : 5px 5px 0 0;
+   border-radius : 5px 5px 0 0;
+   -webkit-border-bottom-left-radius : 0;
+   -webkit-border-bottom-right-radius : 0;
+   -webkit-border-top-left-radius: 5px;
+   -webkit-border-top-right-radius : 5px;
+}
+
+.bandeau_ENT_Menu li ul {
+  border-top: 1px dotted #999999; 
+  -moz-border-radius : 0 5px 5px 5px;
+  border-radius : 0 5px 5px 5px;
+  -webkit-border-bottom-left-radius : 5px;
+  -webkit-border-bottom-right-radius : 5px;
+  -webkit-border-top-left-radius: 0;
+  -webkit-border-top-right-radius : 5px;
+}
+.bandeau_ENT_Menu li ul li {
+  border-top: 1px dotted #999999 !important;
+}
+
+.bandeau_ENT_Menu li ul {
+   width:200px; position:absolute; z-index:100004; display:none;
+   background-color:#f1f1f1;
+   top: 20px\9; /* for IE8 */
+   top: 37px; 
+   left: -1px;
+}
+
+.bandeau_ENT_Menu > li {
+  height: 23px;
+}
+
+#bandeau_ENT_Inner .bandeau_ENT_Menu li ul li a {
+ background-position:5px 3px;
+ background-repeat:no-repeat;
+ background-image:url(https://esup.univ-paris1.fr/ResourceServingWebapp/rs/famfamfam/silk/1.3/application.png);
+ padding:4px 4px 4px 25px; 
+ background-color:#f1f1f1;
+}

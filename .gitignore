@@ -1,0 +1,9 @@
+logs
+packages
+Portail/apache-maven-2.2.1
+Portail/maven-repo
+Portail/uPortal_rel-3.2.4/uportal-ear/target
+Portail/uPortal_rel-3.2.4/uportal-impl/target
+Portail/uPortal_rel-3.2.4/uportal-war/target
+Portail/webapps
+custom

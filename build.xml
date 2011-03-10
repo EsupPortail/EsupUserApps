@@ -1,0 +1,129 @@
+<project name="esup-3.2" default="usage" xmlns:artifact="urn:maven-artifact-ant">
+	<property environment="env"/>
+	<pathconvert property="basedir.conv" dirsep="/">
+		<path location="${basedir}" />
+	</pathconvert>
+	
+	<property name="custom.config.default" value="${basedir.conv}/custom.properties" />			
+	<property name="custom.config" value="${custom.config.default}" />
+			
+	<property file="${basedir.conv}/resources/version.properties"/>
+	
+	
+	<!-- replace space end lin in all properties files -->
+	<replaceregexp byline="true" match="\s*$" replace="">
+		<fileset dir="${basedir.conv}">
+			<include name="*.properties"/>
+		</fileset>
+	</replaceregexp>
+
+	<property file="${custom.config}"/>
+	<property file="${basedir.conv}/build.properties"/>
+	<fail message="build.properties n'existe pas , merci de recopyer le build.sample.properties.">
+        <condition>
+            <not>
+                <available file="${basedir.conv}/build.properties" />
+            </not>
+        </condition>
+    </fail>
+	
+	<property file="${config.file}"/>
+	<fail message="${config.file} n'existe pas">
+        <condition>
+            <not>
+                <available file="${config.file}" />
+            </not>
+        </condition>
+    </fail>	
+	
+	<import file="${esup.resources}/ant-files/components.xml"/>
+	<import file="${esup.resources}/ant-files/uportal-init.xml"/>
+	<import file="${esup.resources}/ant-files/uportal-cmd.xml"/>
+	<import file="${esup.resources}/ant-files/script.xml"/>
+	<import file="${esup.resources}/ant-files/package.xml"/>
+	<import file="${esup.resources}/ant-files/deprecated.xml"/>
+		
+	<presetdef name="java">
+    	<java>
+			<sysproperty key="file.encoding" value="UTF-8" />
+		</java>
+	</presetdef>
+	<presetdef name="javac">
+    	<javac>
+			<sysproperty key="file.encoding" value="UTF-8" />
+		</javac>
+	</presetdef>	
+	
+	<!-- use ant contrib -->
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+        <classpath>
+            <pathelement location="${esup.resources}/ant-contrib-1.0b3.jar" />
+        </classpath>
+    </taskdef>
+	
+	<filter filtersfile="${basedir.conv}/build.properties"/>
+	<filter filtersfile="${config.file}"/>
+	<if>
+		<available file="${custom.config}" />
+		<then>
+			<filter filtersfile="${custom.config}"/>
+		</then>
+	</if>	
+	
+	<if>
+		<not>
+			<equals arg1="${custom.config.default}" arg2="${custom.config}" />
+		</not>
+		<then>
+			<echo> ** Use custom properties file ${custom.config}</echo>
+			<if>
+				<not>
+					<available file="${custom.config}" />
+				</not>
+				<then>
+					<echo> ** File custom : custom.config} doesn't exist</echo>
+				</then>
+			</if>
+		</then>
+	</if>
+	
+	<path id="compile.classpath">
+		<fileset dir="${esup.sources}/lib/compile">
+   			<include name="**/*.jar"/>
+ 		</fileset>
+		<fileset dir="${esup.sources}/lib/provided">
+  			<include name="**/*.jar"/>
+		</fileset>
+		<fileset dir="${esup.sources}/lib/container-common">
+  			<include name="**/*.jar"/>
+		</fileset>
+		<fileset dir="${esup.sources}/lib/container-shared">
+  			<include name="**/*.jar"/>
+		</fileset>
+		<fileset dir="${esup.sources}/lib/container-common-endorsed">
+  			<include name="**/*.jar"/>
+		</fileset>
+	</path>			
+	
+	<property name="compile.debug"       value="true"/>
+	<property name="compile.deprecation" value="false"/>
+	<property name="compile.optimize"    value="true"/>   						
+	 
+	<target name="usage" description="How to se this package" depends="_version.display">
+		<echo>*** How to use this package by step ***</echo>
+		<echo>*** 1) Rename build.sample.properties to build.properties</echo>
+		<echo>*** 2) adapt build.properties (java_home, etc...)</echo>		
+		<echo>*** 3) Rename config.sample.properties to config.properties</echo>
+		<echo>*** 4) Adapt config.properties</echo>
+		<echo>*** 5) Adapt ant.[cmd|sh] (JAVA_HOME)</echo>
+		<echo>*** 6) ant getcomponents : get remote components like uPortal sources</echo>
+		<echo>*** 7) ant unzip : unzip remote components</echo>
+		<echo>*** 8) ant init : init the package installation</echo>
+		<echo>*** 9) ant db.test : test the database connection (becareful if you use production packageupdate your server.xml in tomcat before)</echo>
+		<echo>*** 10) ant db.init : init the database (erase all data) </echo>
+		<echo>*** 11) ant deploy : deploy portal in tomcat</echo>	
+		<echo>*** 12) start-esup.[cmd|sh] : start embedded tomcat server</echo>
+		<echo>*** </echo>
+		<echo>*** look in logs folder (portal.log)</echo>		
+	</target>
+</project>

@@ -1,0 +1,29 @@
+// NB: not pure json, comments are allowed :)
+{
+    "admins": ["prigaux"],
+
+    "cas_base_url": "https://cas-test.univ-paris1.fr/cas",
+    "ent_base_url": "https://uportal3-test.univ-paris1.fr",
+    "ent_base_url_guest": "https://ent.univ-paris1.fr",
+    "_currentIdpId": "urn:mace:cru.fr:federation:univ-paris1.fr",
+
+    "url_bandeau_compatible": [
+	"caccueil-pers", "caccueil-etu", "caccueil-guest",
+	"journal-lemonde", "Compilatio", "CFilex", "moodle-cours" ],
+
+    "url_bandeau_direct": [
+	"Assistance_DSI", "intranet", "nuxeo",
+	"aleph", "domino", "domino-presse",
+	"grouper", "dsidoc", "pad", "HyperPlanning-ens", "esup-smsu-api-admin",
+	"sorbonnaute-management",
+	"se-apogee", "eee", "eee-ens", "sifac",
+	"horde5-imp", "horde5-kronolith",
+	"CReservaLang","CReservaLang-etu","CReservaLang-ens","reservasport-gest","reservasport-ens","reservasport-etu",
+    ],
+
+    "wanted_user_attributes": [ "supannAliasLogin", "displayName", "mail" ],
+    "time_before_checking_browser_cache_is_up_to_date": 60,
+
+    "disableLocalStorage": true
+
+}
