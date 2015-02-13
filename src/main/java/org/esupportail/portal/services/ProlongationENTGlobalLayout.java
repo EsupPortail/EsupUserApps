@@ -33,19 +33,29 @@ class ProlongationENTGlobalLayout {
     
     public ProlongationENTGlobalLayout() {
 	this.layout = getWantedLayout();
-	this.allChannels = keepOnlyUsedChannels(getAllChannels(), layout);
+	this.allChannels = keepOnlyUsedChannelsAndAddTab(getAllChannels(), layout);
     }
 	
     
-    Map<Integer,Map<String,String>> keepOnlyUsedChannels(Map<Integer,Map<String,String>> channels, Map<String, List<String>> layout) {
-	Set<String> usedChannels = new HashSet<String>();
-	for (List<String> fnames : layout.values()) 
-	    usedChannels.addAll(fnames);
+    Map<Integer,Map<String,String>> keepOnlyUsedChannelsAndAddTab(Map<Integer,HashMap<String,String>> channels, Map<String, List<String>> layout) {
+	Map<String, Integer> fname2tab = new HashMap<String,Integer>();
+	int i = 1;
+	for (List<String> fnames : layout.values()) {
+	    for (String fname : fnames) {
+		fname2tab.put(fname, i);
+	    }
+	    i++;
+	}
 
 	Map<Integer,Map<String,String>> rslt = new HashMap<Integer,Map<String,String>>();
-	for (Map.Entry<Integer, Map<String,String>> e : channels.entrySet())
-	    if (usedChannels.contains(e.getValue().get("fname")))
-		rslt.put(e.getKey(), e.getValue());
+	for (Map.Entry<Integer, HashMap<String,String>> e : channels.entrySet()) {
+	    HashMap<String,String> channel = e.getValue();
+	    Integer tab = fname2tab.get(channel.get("fname"));
+	    if (tab != null) {
+		channel.put("uportalActiveTab", ""+tab);
+		rslt.put(e.getKey(), channel);
+	    }
+	}
 	return rslt;
     }
 
@@ -72,15 +82,15 @@ class ProlongationENTGlobalLayout {
 	return layout;
     }
 
-    Map<Integer,Map<String,String>> getAllChannels() {
+    Map<Integer,HashMap<String,String>> getAllChannels() {
 
 	//List<IPortletDefinition> allPortlets = portletDefinitionRegistry.getAllPortletDefinitions();
 	List<IChannelDefinition> allPortlets = ChannelRegistryStoreFactory.getChannelRegistryStoreImpl().getChannelDefinitions();
 
-	Map<Integer,Map<String,String>> rslt = new HashMap<Integer,Map<String,String>>();
+	Map<Integer,HashMap<String,String>> rslt = new HashMap<Integer,HashMap<String,String>>();
 	//for (IPortletDefinition pdef : allPortlets) {
 	for (IChannelDefinition pdef : allPortlets) {
-	    Map<String,String> channel = 
+	    HashMap<String,String> channel = 
 		arrayS("fname", pdef.getFName(),
 		       "text", pdef.getName(),
 		       "title", pdef.getTitle(),
@@ -131,23 +141,23 @@ class ProlongationENTGlobalLayout {
 	}
     }
 
-    static Map<String, String> arrayS(String key1, String val1) {
-	Map<String, String> r = new HashMap<String, String>();
+    static HashMap<String, String> arrayS(String key1, String val1) {
+	HashMap<String, String> r = new HashMap<String, String>();
 	r.put(key1, val1);
 	return r;
     }
-    static Map<String, String> arrayS(String key1, String val1, String key2, String val2) {
-	Map<String, String> r = arrayS(key1, val1);
+    static HashMap<String, String> arrayS(String key1, String val1, String key2, String val2) {
+	HashMap<String, String> r = arrayS(key1, val1);
 	r.put(key2, val2);
 	return r;
     }
-    static Map<String, String> arrayS(String key1, String val1, String key2, String val2, String key3, String val3) {
-	Map<String, String> r = arrayS(key1, val1, key2, val2);
+    static HashMap<String, String> arrayS(String key1, String val1, String key2, String val2, String key3, String val3) {
+	HashMap<String, String> r = arrayS(key1, val1, key2, val2);
 	r.put(key3, val3);
 	return r;
     }
-    static Map<String, String> arrayS(String key1, String val1, String key2, String val2, String key3, String val3, String key4, String val4) {
-	Map<String, String> r = arrayS(key1, val1, key2, val2, key3, val3);
+    static HashMap<String, String> arrayS(String key1, String val1, String key2, String val2, String key3, String val3, String key4, String val4) {
+	HashMap<String, String> r = arrayS(key1, val1, key2, val2, key3, val3);
 	r.put(key4, val4);
 	return r;
     }        
