@@ -53,6 +53,8 @@ public class ProlongationENT extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	if (request.getServletPath().endsWith("detectReload")) {
 	    detectReload(request, response);
+	} else if (request.getServletPath().endsWith("logout")) {
+	    logout(request, response);
 	} else if (request.getServletPath().endsWith("purgeCache")) {
 	    log.warn("purging cache");
 	    initConf(request);
@@ -143,7 +145,15 @@ public class ProlongationENT extends HttpServlet {
 	response.setContentType("application/javascript; charset=utf8");
 	response.getWriter().println("window.bandeau_ENT_detectReload(" + now() + ");");
     }
+    
+    void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	session_invalidate(request);
 
+	String callback = request.getParameter("callback");
+	response.setContentType("application/javascript; charset=utf8");
+	response.getWriter().println(callback + "();");
+    }
+    
     static long time_before_forcing_CAS_authentication_again(boolean different_referrer) {
   	return different_referrer ? 10 : 120; // seconds
     }
@@ -418,6 +428,18 @@ public class ProlongationENT extends HttpServlet {
 	} catch (java.net.MalformedURLException e) {
 	    log.error(e, e);
 	    return null;
+	}
+    }
+
+    void session_invalidate(HttpServletRequest request) {
+	HttpSession session = request.getSession(false);
+	if (session == null) return;
+	try {
+	    session.invalidate();
+	} catch (IllegalStateException ise) {
+	    // IllegalStateException indicates session was already invalidated.
+	    // This is fine.  LogoutServlet is looking to guarantee the logged out session is invalid;
+	    // it need not insist that it be the one to perform the invalidating.
 	}
     }
 

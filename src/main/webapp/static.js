@@ -203,7 +203,7 @@ function via_CAS(url) {
 
 function computeHeader() {
     var app_logout_url = CONF.ent_logout_url;
-    var logout_url = CONF.bandeau_ENT_url + '/logout?service=' + encodeURIComponent(app_logout_url);
+    var logout_url = app_logout_url; //CONF.bandeau_ENT_url + '/logout?service=' + encodeURIComponent(app_logout_url);
     return replaceAll(DATA.bandeauHeader, "<%logout_url%>", logout_url);
 }
 

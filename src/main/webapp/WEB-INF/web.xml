@@ -458,6 +458,11 @@
 	    <url-pattern>/ProlongationENT/purgeCache</url-pattern> 
 	</servlet-mapping>
 
+	<servlet-mapping>
+	    <servlet-name>ProlongationENT</servlet-name> 
+	    <url-pattern>/ProlongationENT/logout</url-pattern> 
+	</servlet-mapping>
+
 	
 	<servlet-mapping>
 	   <servlet-name>EsupMonitor</servlet-name>
