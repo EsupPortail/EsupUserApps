@@ -176,6 +176,8 @@ function bandeau_ENT_Account_toggleOpen() {
 }
 
 function bandeau_ENT_Menu_toggle() {
+    if (b_E.quirks && simpleContains(b_E.quirks, 'global-menuClosed-class'))
+	toggleClass(document.body, 'bandeau_ENT_menuClosed');
     return toggleClass(document.getElementById('bandeau_ENT_Inner'), 'menuClosed');
 }
 
