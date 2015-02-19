@@ -66,7 +66,7 @@ class ProlongationENTGlobalLayout {
 	    for (String fragmentName : documents.keySet()) {
 		if (!fragmentName.equals(wanted_fragment_user)) continue;
 
-		String expression = "//folder[@type='regular' and @hidden='false' and @name !='Column']";
+		String expression = "//folder[@type='regular' and @hidden='false' and not(starts-with(@name,'Column'))]";
 		for (Element folder : listElement((NodeList) XPathFactory.newInstance().newXPath().evaluate(expression, documents.get(fragmentName), XPathConstants.NODESET))) {
 			
 		    List<String> channels = new ArrayList<String>();
