@@ -306,7 +306,7 @@ public class ProlongationENT extends HttpServlet {
  	return rslt;  
     }
     
-    Map<String,Map<String,String>> userChannels(Map<Integer,Map<String,String>> channels, final String userId) {
+    Map<String,Map<String,String>> userChannels(Map<Long,Map<String,String>> channels, final String userId) {
 	String idpAuthnRequest_url = null;
 	
         Map<String,Map<String,String>> rslt = new HashMap<String,Map<String,String>>();
@@ -320,8 +320,8 @@ public class ProlongationENT extends HttpServlet {
 	IAuthorizationPrincipal ap = AuthorizationService.instance().newPrincipal(user);
 
 	int i = 0;
-	for (Map.Entry<Integer, Map<String,String>> e : channels.entrySet()) {
-	    if (ap.canRender(e.getKey())) {
+	for (Map.Entry<Long, Map<String,String>> e : channels.entrySet()) {
+	    if (ap.canRender(e.getKey().intValue())) {
 		// clone
 		Map<String,String> def = new HashMap<String,String>(e.getValue());
 		String fname = def.get("fname");

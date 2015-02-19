@@ -28,7 +28,7 @@ class ProlongationENTGlobalLayout {
     String wanted_fragment_user = "all-lo";
 	
     Map<String, List<String>> layout;
-    Map<Integer,Map<String,String>> allChannels;
+    Map<Long,Map<String,String>> allChannels;
     org.apache.commons.logging.Log log = LogFactory.getLog(ProlongationENTGlobalLayout.class);
     
     public ProlongationENTGlobalLayout() {
@@ -37,9 +37,9 @@ class ProlongationENTGlobalLayout {
     }
 	
     
-    Map<Integer,Map<String,String>> keepOnlyUsedChannelsAndAddTab(Map<Integer,HashMap<String,String>> channels, Map<String, List<String>> layout) {
-	Map<String, Integer> fname2tab = new HashMap<String,Integer>();
-	int i = 1;
+    Map<Long,Map<String,String>> keepOnlyUsedChannelsAndAddTab(Map<Long,HashMap<String,String>> channels, Map<String, List<String>> layout) {
+	Map<String, Long> fname2tab = new HashMap<String,Long>();
+	long i = 1;
 	for (List<String> fnames : layout.values()) {
 	    for (String fname : fnames) {
 		fname2tab.put(fname, i);
@@ -47,10 +47,10 @@ class ProlongationENTGlobalLayout {
 	    i++;
 	}
 
-	Map<Integer,Map<String,String>> rslt = new HashMap<Integer,Map<String,String>>();
-	for (Map.Entry<Integer, HashMap<String,String>> e : channels.entrySet()) {
+	Map<Long,Map<String,String>> rslt = new HashMap<Long,Map<String,String>>();
+	for (Map.Entry<Long, HashMap<String,String>> e : channels.entrySet()) {
 	    HashMap<String,String> channel = e.getValue();
-	    Integer tab = fname2tab.get(channel.get("fname"));
+	    Long tab = fname2tab.get(channel.get("fname"));
 	    if (tab != null) {
 		channel.put("uportalActiveTab", ""+tab);
 		rslt.put(e.getKey(), channel);
@@ -82,13 +82,12 @@ class ProlongationENTGlobalLayout {
 	return layout;
     }
 
-    Map<Integer,HashMap<String,String>> getAllChannels() {
+    Map<Long,HashMap<String,String>> getAllChannels() {
 
 	//List<IPortletDefinition> allPortlets = portletDefinitionRegistry.getAllPortletDefinitions();
 	List<IChannelDefinition> allPortlets = ChannelRegistryStoreFactory.getChannelRegistryStoreImpl().getChannelDefinitions();
 
-	Map<Integer,HashMap<String,String>> rslt = new HashMap<Integer,HashMap<String,String>>();
-	//for (IPortletDefinition pdef : allPortlets) {
+	Map<Long,HashMap<String,String>> rslt = new HashMap<Long,HashMap<String,String>>();
 	for (IChannelDefinition pdef : allPortlets) {
 	    HashMap<String,String> channel = 
 		arrayS("fname", pdef.getFName(),
@@ -107,8 +106,7 @@ class ProlongationENTGlobalLayout {
 		    channel.put("url", url);
 		}
 	    }
-	    //pdef.getPortletDefinitionId().getStringId()
-	    rslt.put(pdef.getId(), channel);
+	    rslt.put(new Long(pdef.getId()), channel);
 	}
 	return rslt;
     }
