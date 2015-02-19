@@ -30,7 +30,7 @@ import org.jasig.portal.security.IAuthorizationPrincipal;
 import org.jasig.portal.security.IPerson;
 import org.jasig.portal.services.AuthorizationService;
 import org.jasig.portal.services.GroupService;
-import org.jasig.portal.services.PersonDirectory;
+import org.jasig.portal.spring.locator.PersonAttributeDaoLocator;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -281,7 +281,7 @@ public class ProlongationENT extends HttpServlet {
     /* compute user's layout & channels using uportal API */
     /* ******************************************************************************** */   
     Map<String,String> getUser(String userId) {
-	Map<String,Object> attrs = PersonDirectory.getPersonAttributeDao().getUserAttributes(userId);
+	Map<String,Object> attrs = PersonAttributeDaoLocator.getPersonAttributeDao().getUserAttributes(userId);
 
 	Map<String,String> user = new HashMap<String,String>();
 	for (String attr: wanted_user_attributes) {
