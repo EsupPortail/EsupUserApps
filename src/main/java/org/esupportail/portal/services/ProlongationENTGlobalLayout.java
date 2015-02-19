@@ -77,14 +77,13 @@ class ProlongationENTGlobalLayout {
 		}
 	    }
 	} catch (Exception e) {
-	    log.error(e);
+	    log.error(e, e);
 	}
 	return layout;
     }
 
     Map<Long,HashMap<String,String>> getAllChannels() {
 
-	//List<IPortletDefinition> allPortlets = portletDefinitionRegistry.getAllPortletDefinitions();
 	List<IChannelDefinition> allPortlets = ChannelRegistryStoreFactory.getChannelRegistryStoreImpl().getChannelDefinitions();
 
 	Map<Long,HashMap<String,String>> rslt = new HashMap<Long,HashMap<String,String>>();
