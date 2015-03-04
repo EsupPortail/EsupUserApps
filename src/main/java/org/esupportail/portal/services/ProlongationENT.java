@@ -95,7 +95,7 @@ public class ProlongationENT extends HttpServlet {
 	Map<String,Map<String,String>> userChannels = userChannels(globalLayout.allChannels, userId);
 	List<Map<String, Object>> userLayout = userLayout(globalLayout.layout, userChannels.keySet());
 
-	boolean is_old = is_old(request);
+	boolean is_old = is_old(request) && request.getParameter("auth_checked") == null; // checking auth_checked should not be necessary since having "auth_checked" implies having gone through cleanupSession & CAS and so prev_time should not be set. But it seems firefox can bypass the initial redirect and go straight to CAS without us having cleaned the session... and then a dead-loop always asking for not-old version
 	String bandeauHeader = computeBandeauHeader(request, user, userChannels);
 	String static_js = file_get_contents(request, "static.js");
 
