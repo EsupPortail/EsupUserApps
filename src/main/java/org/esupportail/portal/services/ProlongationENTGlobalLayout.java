@@ -110,19 +110,12 @@ class ProlongationENTGlobalLayout {
 	return rslt;
     }
 
-    static List<Element> listElement(final NodeList list) {
-	return new AbstractList<Element>() {
-	    public int size() {
-		return list.getLength();
-	    }
-
-	    public Element get(int index) {
-		Element item = (Element) list.item(index);
-		if (item == null)
-		    throw new IndexOutOfBoundsException();
-		return item;
-	    }
-	};
+    static List<Element> listElement(NodeList list) {
+	List<Element> r = new ArrayList<Element>();
+	for (int i = 0; i < list.getLength(); i++) {
+	    r.add((Element) list.item(i));
+	}
+	return r;
     }
 
     static String removePrefixOrNull(String s, String prefix) {
