@@ -6,7 +6,6 @@ if (!window.bandeau_ENT_maybe_loaded)
     //else { mylog = function(s) { alert(s); }; }
 
     if (parent == window) load_bandeau_ENT();
-    //if (parent == window) loadScript("https://bandeau-ent.univ-paris1.fr/piwik-affiliation.php");
 
     function loadScript(url) {
 	var script = document.createElement("script");
