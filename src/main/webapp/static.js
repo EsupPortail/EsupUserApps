@@ -478,6 +478,8 @@ function installBandeau() {
 	}
 	if (b_E.quirks && simpleContains(b_E.quirks, 'window-resize'))
 	     setTimeout(triggerWindowResize, 0);
+
+	if (b_E.onload) b_E.onload(DATA, PARAMS, CONF);
     });
 
 }
