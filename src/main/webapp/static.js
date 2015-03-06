@@ -579,15 +579,6 @@ if (currentAppId === "HyperPlanning-ens") {
 	DATA.apps[currentAppId].title = "Mon emploi du temps";
 }
 
-if (!b_E.localStorage_prefix)
-    b_E.localStorage_prefix = 'bandeau_ENT_';
-// for old loader.js which did not set localStorage_js_text_field:
-if (!b_E.localStorage_js_text_field)
-    b_E.localStorage_js_text_field = 'js_text';
-// for old loader.js which did not set b_E.url:
-if (!b_E.url)
-    b_E.url = CONF.bandeau_ENT_url;
-
 if (!notFromLocalStorage && b_E.url !== localStorageGet('url')) {
     mylog("not using bandeau from localStorage which was computed for " + localStorageGet('url') + " whereas " + b_E.url + " is wanted");
     return "invalid";
