@@ -89,7 +89,7 @@ public class ProlongationENT extends HttpServlet {
 
     void js(HttpServletRequest request, HttpServletResponse response, String userId) throws ServletException, IOException {
 	//prev = 0;	
-	Map<String,String> user = getUser(userId);
+	Map<String,List<String>> user = getUser(userId);
 
 	ProlongationENTGlobalLayout globalLayout = this.globalLayout;
 	Map<String,Map<String,String>> userChannels = userChannels(globalLayout.allChannels, userId);
@@ -195,19 +195,19 @@ public class ProlongationENT extends HttpServlet {
 	return String.format(template, activation_url);
     }
 
-    String computeBandeauHeaderLinks(HttpServletRequest request, Map<String,String> user, Map<String,Map<String,String>> validApps) {
+    String computeBandeauHeaderLinks(HttpServletRequest request, Map<String,List<String>> user, Map<String,Map<String,String>> validApps) {
 	String template = file_get_contents(request, "templates/headerLinks.html");
 
 	String myAccount = computeBandeauHeaderLinkMyAccount(request, validApps);
 
-	String login = user.containsKey("supannAliasLogin") ? user.get("supannAliasLogin") : user.get("id");
+	String login = user.containsKey("supannAliasLogin") ? user.get("supannAliasLogin").get(0) : user.get("id").get(0);
 	return String.format(template,
 			     user.containsKey("displayName") ? user.get("displayName") : user.get("mail"), 
 			     user.containsKey("displayName") ? user.get("mail") + " (" + login + ")" : login, 
 			     myAccount);
     }
 
-    String computeBandeauHeader(HttpServletRequest request, Map<String,String> user, Map<String,Map<String,String>> validApps) {
+    String computeBandeauHeader(HttpServletRequest request, Map<String,List<String>> user, Map<String,Map<String,String>> validApps) {
 	String template = file_get_contents(request, "templates/header.html");
 
 	String portalPageBarLinks = user != null ? computeBandeauHeaderLinks(request, user, validApps) : "";
@@ -280,16 +280,16 @@ public class ProlongationENT extends HttpServlet {
     /* ******************************************************************************** */
     /* compute user's layout & channels using uportal API */
     /* ******************************************************************************** */   
-    Map<String,String> getUser(String userId) {
-	Map<String,Object> attrs = PersonAttributeDaoLocator.getPersonAttributeDao().getUserAttributes(userId);
+    Map<String,List<String>> getUser(String userId) {
+	Map<String,List<Object>> attrs = PersonAttributeDaoLocator.getPersonAttributeDao().getPerson(userId).getAttributes();
 
-	Map<String,String> user = new HashMap<String,String>();
+	Map<String,List<String>> user = new HashMap<String,List<String>>();
 	for (String attr: wanted_user_attributes) {
-	    Object val = attrs.get(attr);
+	    List<Object> val = attrs.get(attr);
 	    if (val != null)
-		user.put(attr, (String) val);
+		user.put(attr, (List) val);
 	}
-	user.put("id", userId);
+	user.put("id", java.util.Collections.singletonList(userId));
 	return user;
     }
     

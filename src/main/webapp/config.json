@@ -21,7 +21,7 @@
 	"CReservaLang","CReservaLang-etu","CReservaLang-ens","reservasport-gest","reservasport-ens","reservasport-etu",
     ],
 
-    "wanted_user_attributes": [ "supannAliasLogin", "displayName", "mail" ],
+    "wanted_user_attributes": [ "supannAliasLogin", "displayName", "mail", "eduPersonAffiliation" ],
     "time_before_checking_browser_cache_is_up_to_date": 60,
 
     "disableLocalStorage": true
