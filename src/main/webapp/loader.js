@@ -17,7 +17,7 @@ if (!window.bandeau_ENT_maybe_loaded)
       
     function load_bandeau_ENT() {
 	var b_E = window.bandeau_ENT;
-	if (!b_E.url) b_E.url = "https://uportal3-test.univ-paris1.fr/ProlongationENT";
+	b_E.url = "https://uportal3-test.univ-paris1.fr/ProlongationENT";
 	if (!b_E.localStorage_prefix) b_E.localStorage_prefix = "bandeau_ENT:";
 	if (!b_E.localStorage_js_text_field) b_E.localStorage_js_text_field = "v5:js_text";
 	var url = b_E.url + "/js";
