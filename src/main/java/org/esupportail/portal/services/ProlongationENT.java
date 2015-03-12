@@ -202,8 +202,8 @@ public class ProlongationENT extends HttpServlet {
 
 	String login = user.containsKey("supannAliasLogin") ? user.get("supannAliasLogin").get(0) : user.get("id").get(0);
 	return String.format(template,
-			     user.containsKey("displayName") ? user.get("displayName") : user.get("mail"), 
-			     user.containsKey("displayName") ? user.get("mail") + " (" + login + ")" : login, 
+			     user.containsKey("displayName") ? user.get("displayName").get(0) : user.get("mail").get(0), 
+			     user.containsKey("displayName") ? user.get("mail").get(0) + " (" + login + ")" : login, 
 			     myAccount);
     }
 
