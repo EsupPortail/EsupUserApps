@@ -69,21 +69,21 @@ public class ProlongationENT extends HttpServlet {
     void js(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	boolean noCache = request.getParameter("noCache") != null;
 	String userId = noCache ? null : get_CAS_userId(request);
+	String forcedId = request.getParameter("uid");
 
 	if (noCache || userId == null) {
 	    if (request.getParameter("auth_checked") == null) {
 		cleanupSession(request);
-		response.sendRedirect(via_CAS(cas_login_url, bandeau_ENT_url + "/js?auth_checked=true") + "&gateway=true");
+		String final_url = bandeau_ENT_url + "/js?auth_checked=true" + (forcedId != null ? "&uid=" + urlencode(forcedId) : "");
+		response.sendRedirect(via_CAS(cas_login_url, final_url) + "&gateway=true");
 	    } else {
 		// user is not authenticated. Empty response
 	    }
 	    return;
 	}
 
-	{
-	    String forcedId = request.getParameter("uid");
-	    if (forcedId != null && getConfList("admins").contains(userId)) userId = forcedId;
-	}
+	if (forcedId != null && getConfList("admins").contains(userId)) userId = forcedId;
+
 	js(request, response, userId);
     }
 
