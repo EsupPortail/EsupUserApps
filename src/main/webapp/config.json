@@ -12,7 +12,8 @@
 	"journal-lemonde", "Compilatio", "CFilex", "moodle-cours" ],
 
     "url_bandeau_direct": [
-	"Assistance_DSI", "intranet", "nuxeo",
+	"Assistance_DSI", "intranet", 
+        "nuxeo", "memoire-etu", "memoire-ens", "memoire-gest",
 	"aleph", "domino", "domino-presse",
 	"grouper", "dsidoc", "pad", "HyperPlanning-ens", "esup-smsu-api-admin",
 	"sorbonnaute-management",
