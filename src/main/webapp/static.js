@@ -522,16 +522,16 @@ function removeLocalStorageCache() {
 }
 
 function loadBandeauJs(params) {
-    if (PARAMS.PHPSESSID && params == '')
-	params = "PHPSESSID=" + PARAMS.PHPSESSID;
-    loadScript(b_E.url + "/js" + (params ? "?" + params : ''));
+    if (b_E.uid)
+	params.push = "uid=" + encodeURIComponent(b_E.uid);
+    loadScript(b_E.url + "/js" + (params.length ? "?" + params.join('&') : ''));
 }
 
 function detectReload($time) {
     var $prev = localStorageGet('detectReload');
     if ($prev && $prev != $time) {
 	mylog("reload detected, updating bandeau softly");
-	loadBandeauJs('');
+	loadBandeauJs([]);
     }
     localStorageSet('detectReload', $time);
 }
@@ -544,13 +544,13 @@ function mayUpdate() {
 	}
 	if (PARAMS.is_old) {
 	    mylog("server said bandeau is old, forcing full bandeau update");
-	    loadBandeauJs('noCache=1');
+	    loadBandeauJs(['noCache=1']);
 	}
     } else {
 	var age = now() - localStorageGet("time");
 	if (age > CONF.time_before_checking_browser_cache_is_up_to_date) {
 	    mylog("cached bandeau is old (" + age + "s), updating it softly");
-	    loadBandeauJs('');
+	    loadBandeauJs([]);
 	} else {
 	    // if user used "reload", the cached version of detectReload will change
 	    window.bandeau_ENT_detectReload = detectReload;
@@ -597,7 +597,7 @@ if (!notFromLocalStorage && b_E.url !== localStorageGet('url')) {
 	removeLocalStorageCache();
     } else {
 	// checking wether we are logged in now
-	loadBandeauJs('');
+	loadBandeauJs([]);
     }
 } else if ((b_E.is_logged || b_E.login) && !isLogged()) {
     onReady(function () {
