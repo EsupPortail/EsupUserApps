@@ -1,0 +1,23 @@
+<script type="text/javascript"> 
+ window.bandeau_ENT = { current: "caccueil-etu" }
+ if (document.location.hash) {
+    window.bandeau_ENT.uid = document.location.hash.replace(/^#/, '')
+ }
+</script>
+<script src="/ProlongationENT/loader.js" type="text/javascript"></script>
+
+<script src="//wsgroups.univ-paris1.fr/web-widget/autocompleteUser-resources.html.js"></script>
+
+<input id="person" name="person" placeholder="Nom et/ou prenom" />
+
+<script>
+   var select = function (event, ui) {
+     document.location.hash = "#" + ui.item.value;
+     document.location.reload();
+     return false;
+   };
+   
+   $( "#person" ).autocompleteUser(
+      'https://wsgroups.univ-paris1.fr/searchUser', { select: select }
+   );
+</script>
