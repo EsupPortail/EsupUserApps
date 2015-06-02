@@ -446,7 +446,6 @@ function installBandeau() {
 	    loadCSS(CONF.bandeau_ENT_url + "/desktop.css", condition);
     }
 
-    if (!b_E.showSearch) addCSS('#portalPageBarSearch { display: none; }');
     var header = computeHeader();
     var menu = computeMenu(currentAppId);
     var help = computeHelp(currentAppId);
@@ -456,6 +455,11 @@ function installBandeau() {
     var bandeau_html = "\n\n<div id='bandeau_ENT_Inner' class='menuOpen'>" + header + menu_ + titlebar + help + "</div>" + "\n\n";
     onIdOrBody(bandeau_div_id(), function () { 
 	set_div_innerHTML(bandeau_div_id(), bandeau_html);
+
+	if (!b_E.showSearch) {
+	    var searchElt = document.getElementById("portalPageBarSearch");
+	    if (searchElt) searchElt.innerHTML = '';
+        }
 
 	var barAccount = document.getElementById('portalPageBarAccount');
 	if (barAccount) barAccount.onclick = bandeau_ENT_Account_toggleOpen;
