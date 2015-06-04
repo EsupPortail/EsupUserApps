@@ -3,7 +3,7 @@
     "admins": ["prigaux"],
 
     "cas_base_url": "https://cas-test.univ-paris1.fr/cas",
-    "ent_base_url": "https://uportal3-test.univ-paris1.fr",
+    "ent_base_url": "https://esup-test.univ-paris1.fr",
     "ent_base_url_guest": "https://ent.univ-paris1.fr",
     "_currentIdpId": "urn:mace:cru.fr:federation:univ-paris1.fr",
 

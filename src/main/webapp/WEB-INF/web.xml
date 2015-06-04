@@ -119,11 +119,11 @@
         </init-param>
         <init-param>
           <param-name>serverName</param-name>
-          <param-value>uportal3-test.univ-paris1.fr</param-value>
+          <param-value>esup-test.univ-paris1.fr</param-value>
         </init-param>
         <init-param>
             <param-name>proxyCallbackUrl</param-name>
-            <param-value>https://uportal3-test.univ-paris1.fr/CasProxyServlet</param-value>
+            <param-value>https://esup-test.univ-paris1.fr/CasProxyServlet</param-value>
         </init-param>
         <init-param>
             <param-name>proxyReceptorUrl</param-name>
@@ -328,11 +328,11 @@
 	    </init-param>
 	    <init-param>
 		<param-name>org.esupportail.portal.security.HTTPSGatewayServlet.virtualUrl</param-name>
-		<param-value>https://uportal3-test.univ-paris1.fr</param-value>
+		<param-value>https://esup-test.univ-paris1.fr</param-value>
 	    </init-param>
 	    <init-param>
 		<param-name>org.esupportail.portal.security.HTTPSGatewayServlet.realUrl</param-name>
-		<param-value>https://uportal3-test.univ-paris1.fr</param-value>
+		<param-value>https://esup-test.univ-paris1.fr</param-value>
 	    </init-param>
 	    <load-on-startup>4</load-on-startup>
 	</servlet> 
@@ -423,7 +423,7 @@
         </init-param>
         <init-param>
           <param-name>serverName</param-name>
-          <param-value>uportal3-test.univ-paris1.fr</param-value>
+          <param-value>esup-test.univ-paris1.fr</param-value>
         </init-param>
         <init-param>
           <param-name>redirectAfterValidation</param-name>
