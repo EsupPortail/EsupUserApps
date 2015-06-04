@@ -55,6 +55,10 @@ public class ProlongationENT extends HttpServlet {
 	    detectReload(request, response);
 	} else if (request.getServletPath().endsWith("logout")) {
 	    logout(request, response);
+	} else if (request.getServletPath().endsWith("redirect")) {
+	    if (conf == null) initConf(request);
+	    if (globalLayout == null) computeGlobalLayout();
+	    redirect(request, response);
 	} else if (request.getServletPath().endsWith("purgeCache")) {
 	    log.warn("purging cache");
 	    initConf(request);
@@ -152,6 +156,31 @@ public class ProlongationENT extends HttpServlet {
 	String callback = request.getParameter("callback");
 	response.setContentType("application/javascript; charset=utf8");
 	response.getWriter().println(callback + "();");
+    }
+    
+    void redirect(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	String activeTab = request.getParameter("uportalActiveTab");
+	String appId = null;
+	String location = null;
+	if (activeTab != null) {
+	    if (!tab_has_non_https_url(activeTab, hasParameter(request, "guest"))) {
+		// ok: let uportal display all channels
+		location = ent_tab_url(activeTab);
+	    } else {
+		// gasp, there is a http:// iframe, display only one channel (nb: if the first channel is http-only, it will be displayed outside of uportal)
+		appId = request.getParameter("firstId");
+	    }
+	} else {
+	    appId = request.getParameter("id");
+	    if (appId == null) throw new RuntimeException("missing 'id=xxx' parameter");
+	}
+	if (appId != null) { 
+	    Map<String,String> app = get_app(appId);
+	    if (app == null) throw new RuntimeException("invalid appId " + appId);
+	    location = get_url(app, appId, hasParameter(request, "guest"), !hasParameter(request, "login"), null);
+	}
+	response.sendRedirect(location);
     }
     
     static long time_before_forcing_CAS_authentication_again(boolean different_referrer) {
@@ -396,6 +425,34 @@ public class ProlongationENT extends HttpServlet {
 	return get_url(app, appId, false, false, idpAuthnRequest_url);
     }
 
+    
+    Map<String,String> get_app(String appId) {
+	for (Map<String,String> app : globalLayout.allChannels.values()) {
+	    if (appId.equals(app.get("fname"))) {
+		return app;
+	    }
+	}
+	return null;
+    }
+
+    boolean tab_has_non_https_url(String uportalActiveTab, boolean isGuest) {
+	String key = isGuest ? "uportalActiveTabGuest" : "uportalActiveTab";
+	for (Map<String,String> app : globalLayout.allChannels.values()) {
+	    if (uportalActiveTab.equals(app.get(key))) {
+		String url = app.get("url");
+		if (url != null && urldecode(url).contains("http://")) {
+		    return true;
+		}
+	    }
+	}
+	return false;
+    }
+
+    String ent_tab_url(String uportalActiveTab) {
+	String url = ent_base_url + "/render.userLayoutRootNode.uP";
+	String params = "?uP_root=root" + "&uP_sparam=activeTab&activeTab=" + uportalActiveTab;
+	return url + params;
+    }
 
     /* ******************************************************************************** */
     /* simple helper functions */
@@ -471,6 +528,14 @@ public class ProlongationENT extends HttpServlet {
 	}
     }
 
+    static String urldecode(String s) {
+	return ProlongationENTGlobalLayout.urldecode(s);
+    }
+
+    static private boolean hasParameter(HttpServletRequest request, String attrName) {
+	return request.getParameter(attrName) != null;
+    }
+    
     static private String removePrefixOrNull(String s, String prefix) {
 	return ProlongationENTGlobalLayout.removePrefixOrNull(s, prefix);
     }

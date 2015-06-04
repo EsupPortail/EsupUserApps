@@ -457,6 +457,11 @@
 
 	<servlet-mapping>
 	    <servlet-name>ProlongationENT</servlet-name> 
+	    <url-pattern>/ProlongationENT/redirect</url-pattern> 
+	</servlet-mapping>
+
+	<servlet-mapping>
+	    <servlet-name>ProlongationENT</servlet-name> 
 	    <url-pattern>/ProlongationENT/purgeCache</url-pattern> 
 	</servlet-mapping>
 
