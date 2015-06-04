@@ -61,6 +61,11 @@ public class ProlongationENT extends HttpServlet {
 	    redirect(request, response);
 	} else if (request.getServletPath().endsWith("purgeCache")) {
 	    log.warn("purging cache");
+
+	    org.jasig.portal.utils.cache.CacheManagementHelper helper = new org.jasig.portal.utils.cache.CacheManagementHelper();
+	    helper.setCacheManager((net.sf.ehcache.CacheManager) org.jasig.portal.spring.PortalApplicationContextLocator.getApplicationContext().getBean("cacheManager"));
+	    helper.clearAllCaches();
+
 	    initConf(request);
 	    computeGlobalLayout();
 	} else {
