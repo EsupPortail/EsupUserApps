@@ -1,6 +1,8 @@
 // NB: not pure json, comments are allowed :)
 {
-    "admins": ["prigaux"],
+    "admins": ["prigaux",
+	       "cn=applications.userinfo.l1-users,ou=groups,dc=univ-paris1,dc=fr",
+	       "cn=applications.userinfo.l2-users,ou=groups,dc=univ-paris1,dc=fr"],
 
     "cas_base_url": "https://cas-test.univ-paris1.fr/cas",
     "ent_base_url": "https://esup-test.univ-paris1.fr",
