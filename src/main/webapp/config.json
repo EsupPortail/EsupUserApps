@@ -23,7 +23,7 @@
         "userinfo",
     ],
 
-    "wanted_user_attributes": [ "supannAliasLogin", "displayName", "mail", "eduPersonAffiliation" ],
+    "wanted_user_attributes": [ "supannAliasLogin", "displayName", "mail", "eduPersonAffiliation", "memberOf" ],
     "time_before_checking_browser_cache_is_up_to_date": 60,
 
     "disableLocalStorage": true

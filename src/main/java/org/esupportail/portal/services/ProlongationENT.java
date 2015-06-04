@@ -86,8 +86,13 @@ public class ProlongationENT extends HttpServlet {
 	    return;
 	}
 
-	if (forcedId != null && getConfList("admins").contains(userId)) userId = forcedId;
-
+	if (forcedId != null) {
+	    List<String> memberOf = getUser(userId).get("memberOf");
+	    if (getConfList("admins").contains(userId) ||
+		memberOf != null && !org.apache.commons.collections.CollectionUtils.intersection(memberOf, getConfList("admins")).isEmpty()) {
+		userId = forcedId;
+	    }
+	}
 	js(request, response, userId);
     }
 
