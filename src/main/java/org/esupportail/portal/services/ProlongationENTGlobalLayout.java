@@ -54,6 +54,12 @@ class ProlongationENTGlobalLayout {
 	    if (tab != null) {
 		channel.put("uportalActiveTab", ""+tab);
 		rslt.put(e.getKey(), channel);
+	    } else if (channel.get("fname").equals("caccueil-guest")) {
+		// hack needed for redirect?id=caccueil-guest
+		// get rid of the hack when we get rid of guest ENT or when we get rid of uportal bandeau
+		rslt.put(e.getKey(), channel);
+	    } else {
+                //log.warn("skipping unused channel " + channel.get("fname"));
 	    }
 	}
 	return rslt;
