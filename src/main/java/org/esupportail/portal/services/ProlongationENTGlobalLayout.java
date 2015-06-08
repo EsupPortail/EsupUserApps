@@ -47,6 +47,8 @@ class ProlongationENTGlobalLayout {
 	    i++;
 	}
 
+	List<String> guestChannels = java.util.Arrays.asList(new String[] { "CMentions", "CContacts", "caccueil-guest", "CActivation" });
+	
 	Map<Long,Map<String,String>> rslt = new HashMap<Long,Map<String,String>>();
 	for (Map.Entry<Long, HashMap<String,String>> e : channels.entrySet()) {
 	    HashMap<String,String> channel = e.getValue();
@@ -54,7 +56,7 @@ class ProlongationENTGlobalLayout {
 	    if (tab != null) {
 		channel.put("uportalActiveTab", ""+tab);
 		rslt.put(e.getKey(), channel);
-	    } else if (channel.get("fname").equals("caccueil-guest")) {
+	    } else if (guestChannels.contains(channel.get("fname"))) {
 		// hack needed for redirect?id=caccueil-guest
 		// get rid of the hack when we get rid of guest ENT or when we get rid of uportal bandeau
 		rslt.put(e.getKey(), channel);
