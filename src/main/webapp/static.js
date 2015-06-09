@@ -527,7 +527,7 @@ function removeLocalStorageCache() {
 
 function loadBandeauJs(params) {
     if (b_E.uid)
-	params.push = "uid=" + encodeURIComponent(b_E.uid);
+	params.push("uid=" + encodeURIComponent(b_E.uid));
     loadScript(b_E.url + "/js" + (params.length ? "?" + params.join('&') : ''));
 }
 
