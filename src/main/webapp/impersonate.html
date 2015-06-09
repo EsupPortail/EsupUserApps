@@ -1,13 +1,23 @@
 <!doctype html>
 <html>
+  <head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+  </head>
+<body>
+
 <script type="text/javascript"> 
  function setHash(uid) {
     document.location.hash = "#" + uid;
     document.location.reload();
  }
  function setCasCookie(uid) {
-    document.cookie = "CAS_IMPERSONATE=" + uid + ";domain=.univ-paris1.fr;path=/";
+   document.cookie = "CAS_IMPERSONATE=" + uid + ";domain=.univ-paris1.fr;path=/" + (uid ? '' : ";expires=Thu, 01 Jan 1970 00:00:01 GMT;");
  }
+ function restoreRealUser() {
+   setHash('');
+   setCasCookie('');
+ };
+
  window.bandeau_ENT = { current: "bandeau-ent-assistance" };
  var m;
  if (document.location.hash) {
@@ -34,7 +44,12 @@ Pour voir les onglets d'un autre utilisateur :
    
    $( "#person" ).autocompleteUser(
       'https://wsgroups.univ-paris1.fr/searchUser', { select: select }
-   );
+ );
+
 </script>
 
+<p>
+  <button onclick="restoreRealUser()">Revenir à votre utilisateur</button>
+
+</body>
 </html>
