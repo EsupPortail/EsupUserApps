@@ -17,7 +17,7 @@
 	"Assistance_DSI", "intranet", 
         "nuxeo", "memoire-etu", "memoire-ens", "memoire-gest",
 	"aleph", "domino", "domino-presse",
-	"grouper", "dsidoc", "pad", "HyperPlanning-ens", "esup-smsu-api-admin",
+	"grouper", "dsidoc", "pad", "hyperplanning-ens", "hyperplanning-gest", "esup-smsu-api-admin",
 	"sorbonnaute-management",
 	"se-apogee", "eee", "eee-ens", "sifac",
 	"horde5-imp", "horde5-kronolith",
