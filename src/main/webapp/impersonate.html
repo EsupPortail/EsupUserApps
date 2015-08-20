@@ -6,12 +6,13 @@
 <body>
 
 <script type="text/javascript"> 
+ var IMPERSONATE_COOKIE = 'CAS_IMPERSONATE';
  function setHash(uid) {
     document.location.hash = "#" + uid;
     document.location.reload();
  }
  function setCasCookie(uid) {
-   document.cookie = "CAS_IMPERSONATE=" + uid + ";domain=.univ-paris1.fr;path=/" + (uid ? '' : ";expires=Thu, 01 Jan 1970 00:00:01 GMT;");
+   document.cookie = IMPERSONATE_COOKIE + "=" + uid + ";domain=.univ-paris1.fr;path=/" + (uid ? '' : ";expires=Thu, 01 Jan 1970 00:00:01 GMT;");
  }
  function restoreRealUser() {
    setHash('');
@@ -23,7 +24,7 @@
  if (document.location.hash) {
     window.bandeau_ENT.uid = document.location.hash.replace(/^#/, '')
     setCasCookie(window.bandeau_ENT.uid);
- } else if (m = document.cookie.match(/CAS_IMPERSONATE=(\w+)/)) {
+ } else if (m = document.cookie.match(new RegExp(IMPERSONATE_COOKIE + "=(\\w+)"))) { //xx
     setHash(m[1]);
  }
 </script>
