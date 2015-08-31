@@ -86,3 +86,11 @@
  padding:4px 4px 4px 25px; 
  background-color:#f1f1f1;
 }
+
+/* when impersonated */
+#bandeau_ENT_Inner .bandeau_ENT_Menu li ul li.bandeau_ENT_Menu_Entry__Forbidden a,
+#bandeau_ENT_Inner .bandeau_ENT_Menu li ul li.bandeau_ENT_Menu_Entry__Forbidden a:hover {
+    color: #aaa !important;
+    pointer-events: none;
+    cursor: default;
+}

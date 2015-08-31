@@ -75,6 +75,11 @@ function simpleQuerySelector(selector) {
 	return simpleQuerySelectorAll(selector)[0];
 }
 
+function getCookie(name) {
+    var m = document.cookie.match(new RegExp(name + '=([^;]+)'));
+    return m && m[1];
+}
+
 function simpleContains(a, val) {
     var len = a.length;
     for(var i = 0; i < len; i++) {
@@ -112,6 +117,12 @@ function simpleMap(a, fn) {
 	r.push(fn(a[i]));
     }
     return r;
+}
+
+function intersect(a1, a2) {
+    return simpleFilter(a1, function (e1) {
+	return simpleContains(a2, e1);
+    });
 }
 
 function escapeQuotes(s) {
@@ -209,15 +220,15 @@ function computeHeader() {
     return replaceAll(DATA.bandeauHeader, "<%logout_url%>", logout_url);
 }
 
-function computeLink(app) {
+function computeLink(appId, app) {
     var a = "<a title='" + escapeQuotes(app.description) + "' href='" + app.url + "'>" + escapeQuotes(app.text) + "</a>";
-    return "<li>" + a + "</li>";
+    return "<li class='bandeau_ENT_Menu_Entry_" + appId + "'>" + a + "</li>";
 }
 
 function computeMenu(currentAppId) {
     var li_list = simpleMap(DATA.layout, function (tab) {
 	var sub_li_list = simpleMap(tab.apps, function(appId) {
-	    return computeLink(DATA.apps[appId]);
+	    return computeLink(appId, DATA.apps[appId]);
 	});
     
 	var className = simpleContains(tab.apps, currentAppId) ? "activeTab" : "inactiveTab";
@@ -229,6 +240,14 @@ function computeMenu(currentAppId) {
     return "<ul class='bandeau_ENT_Menu'>\n" + toggleMenuSpacer + li_list.join("\n") + "\n</ul>";
 }
 
+function getValidAppIds() {
+    var l = [];
+    simpleEach(DATA.layout, function (tab) {
+	l.push.apply(l, tab.apps);
+    });
+    return l;
+}
+
 function computeBestCurrentAppId() {
     if (b_E.current) {
 	// easy case
@@ -236,13 +255,8 @@ function computeBestCurrentAppId() {
     } else if (b_E.currentAppIds) {
 	// multi ids for this app, hopefully only one id is allowed for this user...
 	// this is useful for apps appearing with different titles based on user affiliation
-	var validApps = [];
-	simpleEach(DATA.layout, function (tab) {
-	    validApps.push.apply(validApps, tab.apps);
-	});
-	var currentAppIds = simpleFilter(b_E.currentAppIds, function (appId) {
-	    return simpleContains(validApps, appId);
-	});
+	var validApps = getValidAppIds();
+	var currentAppIds = intersect(b_E.currentAppIds, validApps);
 	if (currentAppIds.length > 1) {
 	    mylog("multiple appIds (" + currentAppIds + ") for this user, choosing first");
 	}
@@ -468,6 +482,7 @@ function installBandeau() {
 	var barAccount = document.getElementById('portalPageBarAccount');
 	if (barAccount) barAccount.onclick = bandeau_ENT_Account_toggleOpen;
 
+	if (DATA.realUserId || b_E.uid && getImpersonateCookie()) getCanImpersonate();
 
 	onReady(function () {
 	    if (b_E.account_links) installAccountLinks(currentAppId);
@@ -496,6 +511,58 @@ function triggerWindowResize() {
     var evt = document.createEvent('UIEvents');
     evt.initUIEvent('resize', true, false,window,0);
     window.dispatchEvent(evt);
+}
+
+var CAN_IMPERSONATE_URL = "https://bandeau-ent.univ-paris1.fr/canImpersonate.php?test";
+var IMPERSONATE_COOKIE = 'CAS_TEST_IMPERSONATE';
+function getCanImpersonate() {
+    var uid = DATA.realUserId || DATA.person.id;
+    loadScript(CAN_IMPERSONATE_URL + "&callback=window.bandeau_ENT_onCanImpersonate&uid=" + uid);
+}
+window.bandeau_ENT_onCanImpersonate = function(canImpersonate) {
+    if (DATA.realUserId) {	
+	disableMenuItemsUserCannotImpersonate(canImpersonate);
+    }
+    if (b_E.uid) {
+	detectImpersonationPbs(canImpersonate);
+    }
+};
+
+function disableMenuItemsUserCannotImpersonate(canImpersonate) {
+    simpleEach(getValidAppIds(), function (id) {
+	if (!simpleContains(canImpersonate, id)) {
+	    var elt = simpleQuerySelector(".bandeau_ENT_Menu_Entry_" + id);
+	    if (elt) toggleClass(elt, "bandeau_ENT_Menu_Entry__Forbidden");
+	}
+    });
+}
+
+function detectImpersonationPbs(canImpersonate) {
+    // application tells us what uid is logged, yeepee
+    if (DATA.realUserId) {
+	// app is impersonated
+	if (!getImpersonateCookie()) 
+	    impersonationPb("you are still impersonated");
+	else if (getImpersonateCookie() !== b_E.uid)
+	    impersonationPb("you are still impersonated as " + b_E.uid);
+    } else {
+	// app is not impersonated
+	if (getImpersonateCookie() && currentAppShouldBeImpersonated(canImpersonate))
+	    impersonationPb("you are not impersonated");
+    }
+}
+function impersonationPb(err) {
+    alert(err + ", please logout and log again.");
+    //var barAccount = document.getElementById('portalPageBarAccount');
+    //barAccount.innerHTML = 'warning: ' + err;
+}
+function currentAppShouldBeImpersonated(canImpersonate) {
+    var appIds = b_E.current ? [b_E.current] : b_E.currentAppIds;
+    return intersect(appIds, canImpersonate).length > 0;
+}
+
+function getImpersonateCookie() {
+    return getCookie(IMPERSONATE_COOKIE);
 }
 
 function mayInstallBandeau() {
