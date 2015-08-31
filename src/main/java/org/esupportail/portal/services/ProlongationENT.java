@@ -309,7 +309,6 @@ public class ProlongationENT extends HttpServlet {
 	if (session.getAttribute(prev_time_attr) != null) {
 	    long age = now - (Long) session.getAttribute(prev_time_attr);
 	    is_old = age > max_age;
-	    log.warn("XXX " + age + " > " + max_age);
 	    if (is_old) debug_msg("response is potentially old: age is " + age + " (more than " + max_age + ")");
 	} else {
 	    session.setAttribute(prev_time_attr, now);
