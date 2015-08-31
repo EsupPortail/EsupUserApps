@@ -360,10 +360,12 @@ function isLogged() {
 }
 
 function simulateClickElt(elt) {
-    if (elt.href)
+    if (elt.href && elt.getAttribute('href') !== '#')  // for JSF (esup-annuaire2)
 	document.location = elt.href;
     else if (elt.tagName === "FORM")
 	elt.submit();
+    else
+	elt.click();
 }
 
 function asyncLogout() {
