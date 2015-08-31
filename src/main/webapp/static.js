@@ -336,6 +336,8 @@ function unloadSpecificCss() {
 function find_DOM_elt(elt_spec) {
     if (typeof elt_spec === "string") {
 	return simpleQuerySelector(elt_spec);
+    } else if (typeof elt_spec === "boolean") {
+	return elt_spec;
     } else if (elt_spec.selector) {
 	return simpleQuerySelector(elt_spec.selector);
     } else if (elt_spec.fn) {
