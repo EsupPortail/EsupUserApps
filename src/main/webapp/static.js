@@ -532,6 +532,7 @@ function removeLocalStorageCache() {
 function loadBandeauJs(params) {
     if (b_E.uid)
 	params.push("uid=" + encodeURIComponent(b_E.uid));
+    params.push("app=" + (b_E.currentAppIds ? b_E.currentAppIds : [b_E.current]).join(","));
     loadScript(b_E.url + "/js" + (params.length ? "?" + params.join('&') : ''));
 }
 

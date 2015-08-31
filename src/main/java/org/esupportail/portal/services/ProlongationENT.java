@@ -78,12 +78,15 @@ public class ProlongationENT extends HttpServlet {
     void js(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	boolean noCache = request.getParameter("noCache") != null;
 	String userId = noCache ? null : get_CAS_userId(request);
+	String app = request.getParameter("app");
 	String forcedId = request.getParameter("uid");
 
 	if (noCache || userId == null) {
 	    if (request.getParameter("auth_checked") == null) {
 		cleanupSession(request);
-		String final_url = bandeau_ENT_url + "/js?auth_checked=true" + (forcedId != null ? "&uid=" + urlencode(forcedId) : "");
+		String final_url = bandeau_ENT_url + "/js?auth_checked=true"
+		    + (app != null ? "&app=" + urlencode(app) : "")
+		    + (forcedId != null ? "&uid=" + urlencode(forcedId) : "");
 		response.sendRedirect(via_CAS(cas_login_url, final_url) + "&gateway=true");
 	    } else {
 		// user is not authenticated. Empty response
@@ -109,6 +112,8 @@ public class ProlongationENT extends HttpServlet {
 	Map<String,Map<String,String>> userChannels = userChannels(globalLayout.allChannels, userId);
 	List<Map<String, Object>> userLayout = userLayout(globalLayout.layout, userChannels.keySet());
 
+	stats(request, realUserId, userChannels.keySet());
+	
 	boolean is_old = is_old(request) && request.getParameter("auth_checked") == null; // checking auth_checked should not be necessary since having "auth_checked" implies having gone through cleanupSession & CAS and so prev_time should not be set. But it seems firefox can bypass the initial redirect and go straight to CAS without us having cleaned the session... and then a dead-loop always asking for not-old version
 	String bandeauHeader = computeBandeauHeader(request, user, userChannels);
 	String static_js = file_get_contents(request, "static.js");
@@ -313,6 +318,29 @@ public class ProlongationENT extends HttpServlet {
 	if (session != null) {
 	    session.removeAttribute(prev_time_attr);
 	    session.removeAttribute(prev_host_attr);
+	}
+    }
+
+    List<String> intersect(String[] l1, Set<String> l2) {
+	List<String> r = new ArrayList<String>();
+	for (String e : l1)
+	    if (l2.contains(e))
+		r.add(e);
+	return r;	    
+    }
+    
+    void stats(HttpServletRequest request, String userId, Set<String> userChannels) {
+	String app = request.getParameter("app");
+	if (app == null) return;
+	List<String> apps = intersect(app.split(","), userChannels);
+	if (!apps.isEmpty()) {
+	    log.info(
+		"[" + new java.util.Date() + "] " +
+		"[IP:" + request.getRemoteAddr() + "] " +
+		"[ID:" + userId + "] " +
+		"[APP:" + apps.get(0) + "] " +
+		"[URL:" + request.getHeader("Referer") + "] " +
+		"[USER-AGENT:" + request.getHeader("User-Agent") +"]");
 	}
     }
     

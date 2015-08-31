@@ -23,7 +23,10 @@ if (!window.bandeau_ENT_maybe_loaded)
 	
 	if (!b_E.localStorage_prefix) b_E.localStorage_prefix = "bandeau_ENT:" + (b_E.uid ? b_E.uid + ":" : '');
 	if (!b_E.localStorage_js_text_field) b_E.localStorage_js_text_field = "v5:js_text";
-	var url = b_E.url + "/js" + (b_E.uid ? "?uid=" + b_E.uid : '');
+	var url = b_E.url + "/js?app=" +
+	    (b_E.currentAppIds ? b_E.currentAppIds : [b_E.current]).join(",") +
+	    (b_E.uid ? "&uid=" + b_E.uid : '');
+	
 	var localStorageName = b_E.localStorage_prefix + b_E.localStorage_js_text_field;
 	try {
 	    if (window.localStorage && localStorage.getItem(localStorageName)) {
