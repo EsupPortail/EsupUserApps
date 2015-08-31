@@ -17,6 +17,7 @@ if (!window.bandeau_ENT_maybe_loaded)
       
     function load_bandeau_ENT() {
 	var b_E = window.bandeau_ENT;
+	if (!b_E) return;
 	b_E.url = "https://esup-test.univ-paris1.fr/ProlongationENT";
 
 	
