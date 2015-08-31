@@ -19,10 +19,15 @@
    setCasCookie('');
  };
 
+ function onBandeauLoad(DATA, PARAMS, CONF) {
+    if (!DATA.realUserId) return alert("impersonate not allowed");
+ }
+
  window.bandeau_ENT = { current: "bandeau-ent-assistance" };
  var m;
  if (document.location.hash) {
     window.bandeau_ENT.uid = document.location.hash.replace(/^#/, '')
+    window.bandeau_ENT.onload = onBandeauLoad;
     setCasCookie(window.bandeau_ENT.uid);
  } else if (m = document.cookie.match(new RegExp(IMPERSONATE_COOKIE + "=(\\w+)"))) { //xx
     setHash(m[1]);

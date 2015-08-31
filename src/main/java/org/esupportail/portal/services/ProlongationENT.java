@@ -98,13 +98,16 @@ public class ProlongationENT extends HttpServlet {
 	    List<String> memberOf = getUser(userId).get("memberOf");
 	    if (getConfList("admins").contains(userId) ||
 		memberOf != null && !org.apache.commons.collections.CollectionUtils.intersection(memberOf, getConfList("admins")).isEmpty()) {
-		userId = forcedId;
+		// ok
+	    } else {
+		forcedId = null;
 	    }
 	}
-	js(request, response, userId);
+	if (forcedId == null) forcedId = userId;
+	js(request, response, forcedId, userId);
     }
 
-    void js(HttpServletRequest request, HttpServletResponse response, String userId) throws ServletException, IOException {
+    void js(HttpServletRequest request, HttpServletResponse response, String userId, String realUserId) throws ServletException, IOException {
 	//prev = 0;	
 	Map<String,List<String>> user = getUser(userId);
 
@@ -130,6 +133,7 @@ public class ProlongationENT extends HttpServlet {
 		  "bandeauHeader", bandeauHeader,
 		  "apps", userChannels,
 		  "layout", userLayout);
+	if (!realUserId.equals(userId)) js_data.put("realUserId", realUserId);
 
 	Map<String, Object> js_css =
 	    array("base",    get_css_with_absolute_url(request, "main.css"),
