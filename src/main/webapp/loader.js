@@ -27,21 +27,35 @@ if (!window.bandeau_ENT_maybe_loaded)
 	    (b_E.currentAppIds ? b_E.currentAppIds : [b_E.current]).join(",") +
 	    (b_E.uid ? "&uid=" + b_E.uid : '');
 	
-	var localStorageName = b_E.localStorage_prefix + b_E.localStorage_js_text_field;
+	var storageName = b_E.localStorage_prefix + b_E.localStorage_js_text_field;
 	try {
-	    if (window.localStorage && localStorage.getItem(localStorageName)) {
-		mylog("loading bandeau from localStorage (" + localStorageName + ")");
-		var val = eval(localStorage.getItem(localStorageName));
+	    if (window.sessionStorage && sessionStorage.getItem(storageName)) {
+		mylog("loading bandeau from sessionStorage (" + storageName + ")");
+		var val = eval(sessionStorage.getItem(storageName));
 		if (val === "OK") return;
 		else throw (new Error("invalid return value '" + val + "'"));
 	    }
 	} catch (err) {
 	    mylog("load_bandeau_ENT: " + err.message);
 	    try {
-		localStorage.setItem(localStorageName, '');
+		sessionStorage.setItem(storageName, '');
 	    } catch (err) { }
 	}
 
+	try {
+	    if (window.localStorage && localStorage.getItem(storageName)) {
+		mylog("loading bandeau from localStorage (" + storageName + ")");
+		var val = eval(localStorage.getItem(storageName));
+		if (val === "OK") return;
+		else throw (new Error("invalid return value '" + val + "'"));
+	    }
+	} catch (err) {
+	    mylog("load_bandeau_ENT: " + err.message);
+	    try {
+		localStorage.setItem(storageName, '');
+	    } catch (err) { }
+	}
+	
 	loadScript(url);
     }
 

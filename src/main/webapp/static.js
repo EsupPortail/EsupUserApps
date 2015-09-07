@@ -383,7 +383,7 @@ function simulateClickElt(elt) {
 }
 
 function asyncLogout() {
-    removeLocalStorageCache();
+    removeSessionStorageCache();
     loadScript(CONF.bandeau_ENT_url + '/logout?callback=window.bandeau_ENT_onAsyncLogout');
     return false;
 }
@@ -584,15 +584,34 @@ function localStorageSet(field, value) {
 	localStorage.setItem(b_E.localStorage_prefix + field, value);
     } catch (err) {}
 }
-function setLocalStorageCache() {
-    localStorageSet(b_E.localStorage_js_text_field, b_E.js_text);
-    localStorageSet("url", b_E.url);
-    localStorageSet("time", now());
+function sessionStorageGet(field) {
+    try {
+	return sessionStorage.getItem(b_E.localStorage_prefix + field);
+    } catch (err) {
+	return null;
+    }
 }
-function removeLocalStorageCache() {
+function sessionStorageSet(field, value) {
+    try {
+	sessionStorage.setItem(b_E.localStorage_prefix + field, value);
+    } catch (err) {}
+}
+function setSessionStorageCache() {
+    sessionStorageSet(b_E.localStorage_js_text_field, b_E.js_text);
+    sessionStorageSet("url", b_E.url);
+    sessionStorageSet("time", now());
+
+    // for old Prolongation, cleanup our mess
     if (window.localStorage) {
-	mylog("removing cached bandeau from localStorage");
-	localStorageSet(b_E.localStorage_js_text_field, '');
+	simpleEachObject(localStorage, function (field) {
+	    if (field.match(b_E.localStorage_prefix)) localStorage.removeItem(field);
+	});
+    }
+}
+function removeSessionStorageCache() {
+    if (window.sessionStorage) {
+	mylog("removing cached bandeau from sessionStorage");
+	sessionStorageSet(b_E.localStorage_js_text_field, '');
     }
 }
 
@@ -604,26 +623,26 @@ function loadBandeauJs(params) {
 }
 
 function detectReload($time) {
-    var $prev = localStorageGet('detectReload');
+    var $prev = sessionStorageGet('detectReload');
     if ($prev && $prev != $time) {
 	mylog("reload detected, updating bandeau softly");
 	loadBandeauJs([]);
     }
-    localStorageSet('detectReload', $time);
+    sessionStorageSet('detectReload', $time);
 }
 
 function mayUpdate() {
     if (notFromLocalStorage) {
-	if (window.localStorage) {
-	    mylog("caching bandeau in localStorage (" + b_E.localStorage_prefix + " " + b_E.localStorage_js_text_field + ")");
-	    setLocalStorageCache();
+	if (window.sessionStorage) {
+	    mylog("caching bandeau in sessionStorage (" + b_E.localStorage_prefix + " " + b_E.localStorage_js_text_field + ")");
+	    setSessionStorageCache();
 	}
 	if (PARAMS.is_old) {
 	    mylog("server said bandeau is old, forcing full bandeau update");
 	    loadBandeauJs(['noCache=1']);
 	}
     } else {
-	var age = now() - localStorageGet("time");
+	var age = now() - sessionStorageGet("time");
 	if (age > CONF.time_before_checking_browser_cache_is_up_to_date) {
 	    mylog("cached bandeau is old (" + age + "s), updating it softly");
 	    loadBandeauJs([]);
@@ -657,8 +676,8 @@ if (currentAppId === "HyperPlanning-ens") {
 	DATA.apps[currentAppId].title = "Mon emploi du temps";
 }
 
-if (!notFromLocalStorage && b_E.url !== localStorageGet('url')) {
-    mylog("not using bandeau from localStorage which was computed for " + localStorageGet('url') + " whereas " + b_E.url + " is wanted");
+if (!notFromLocalStorage && b_E.url !== sessionStorageGet('url')) {
+    mylog("not using bandeau from sessionStorage which was computed for " + sessionStorageGet('url') + " whereas " + b_E.url + " is wanted");
     return "invalid";
 } else if (currentAppId == "redirect-first" && DATA.layout && DATA.layout[0]) {
     document.location.href = DATA.apps[DATA.layout[0].apps[0]].url;
@@ -670,7 +689,7 @@ if (!notFromLocalStorage && b_E.url !== localStorageGet('url')) {
 	onIdOrBody(bandeau_div_id(), function () { 
 	    set_div_innerHTML(bandeau_div_id(), '');
 	});
-	removeLocalStorageCache();
+	removeSessionStorageCache();
     } else {
 	// checking wether we are logged in now
 	loadBandeauJs([]);
