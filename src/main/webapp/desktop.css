@@ -4,21 +4,11 @@
 
 #bandeau_ENT_portalPageBarToggleMenu {
     height: 71px;
-    background: #ccc;
     border-left: 1px solid #a8a8a8;
-}
-#bandeau_ENT_portalPageBarToggleMenu:hover {
-    background: #dddddd;
 }
 
 .menuClosed #bandeau_ENT_portalPageBarToggleMenu {
     height: 66px;
-    background: transparent;
-    border-left: 0;
-}
-
-#bandeau_ENT_portalPageBarToggleMenu > span {
-    border-left: 0;
 }
 
 .bandeau_ENT_Menu {

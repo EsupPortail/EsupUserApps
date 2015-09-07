@@ -43,7 +43,7 @@
 #portalPageBarAccount {
     display: block;
     float: left;
-    height: 56px;
+    height: 30px;
 }
 
 #portalPageBarSearch span,
@@ -117,7 +117,7 @@
     position: absolute;
     background-color: #10427e;
     z-index: 100006;
-    top: 56px;
+    top: 30px;
     right: 75px;
     border: 1px solid #20528e;
     -moz-border-radius : 5px 0 5px 5px;
@@ -170,7 +170,7 @@ li.portalPageBarAccountSeparator {
 .portalPageBarLogout {
     display: block;
     float: right;
-    height: 56px;
+    height: 30px;
     width: 33px;
 }
 
@@ -195,6 +195,7 @@ li.portalPageBarAccountSeparator {
 #bandeau_ENT_portalPageBarToggleMenu {
     height: 66px;
     width: 41px;
+    background: #ccc;
     display: block;
     float: right;
     position: relative;
@@ -202,17 +203,19 @@ li.portalPageBarAccountSeparator {
 #bandeau_ENT_portalPageBarToggleMenu > span {
   display: block; font-size: 16px !important; color: #263F82; padding: 5px;
   background: #cccccc;
-  border-left: 1px solid #a8a8a8;
   height: 46px;
   /*text-shadow: 0 0 1px;*/
+}
+.menuClosed #bandeau_ENT_portalPageBarToggleMenu {
+    background: transparent;
+    border-left: 0;
 }
 .menuClosed #bandeau_ENT_portalPageBarToggleMenu > span {
   border-left: 1px solid #c7bdb0;
 }
+#bandeau_ENT_portalPageBarToggleMenu:hover,
 #bandeau_ENT_portalPageBarToggleMenu:hover > span {
     background: #dddddd;
-}
-#bandeau_ENT_portalPageBarToggleMenu:hover {
     cursor: pointer;
 }
 
@@ -480,9 +483,6 @@ body {
 	height: 28px;
     }
 
-    #portalPageBarAccountInner {
-	top: 30px;
-    }
 }
 
 @media screen and (max-height: 700px) and (-webkit-max-device-pixel-ratio: 1.99),
