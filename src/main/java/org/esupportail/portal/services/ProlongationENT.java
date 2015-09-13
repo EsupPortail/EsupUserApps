@@ -335,16 +335,15 @@ public class ProlongationENT extends HttpServlet {
     void stats(HttpServletRequest request, String userId, Set<String> userChannels) {
 	String app = request.getParameter("app");
 	if (app == null) return;
-	List<String> apps = intersect(app.split(","), userChannels);
-	if (!apps.isEmpty()) {
-	    log.info(
+	String[] app_ = app.split(",");
+	List<String> apps = intersect(app_, userChannels);
+	log.info(
 		"[" + new java.util.Date() + "] " +
 		"[IP:" + request.getRemoteAddr() + "] " +
 		"[ID:" + userId + "] " +
-		"[APP:" + apps.get(0) + "] " +
+		"[APP:" + (apps.isEmpty() ? app_[0] : apps.get(0)) + "] " +
 		"[URL:" + request.getHeader("Referer") + "] " +
 		"[USER-AGENT:" + request.getHeader("User-Agent") +"]");
-	}
     }
     
     /* ******************************************************************************** */
