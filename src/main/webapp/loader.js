@@ -41,20 +41,6 @@ if (!window.bandeau_ENT_maybe_loaded)
 		sessionStorage.setItem(storageName, '');
 	    } catch (err) { }
 	}
-
-	try {
-	    if (window.localStorage && localStorage.getItem(storageName)) {
-		mylog("loading bandeau from localStorage (" + storageName + ")");
-		var val = eval(localStorage.getItem(storageName));
-		if (val === "OK") return;
-		else throw (new Error("invalid return value '" + val + "'"));
-	    }
-	} catch (err) {
-	    mylog("load_bandeau_ENT: " + err.message);
-	    try {
-		localStorage.setItem(storageName, '');
-	    } catch (err) { }
-	}
 	
 	loadScript(url);
     }
