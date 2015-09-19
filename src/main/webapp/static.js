@@ -210,10 +210,6 @@ function installToggleMenu(hide) {
     }
 }
 
-function via_CAS(url) {
-  return CONF.cas_login_url + "?service=" + encodeURIComponent(url);
-}
-
 function computeHeader() {
     var app_logout_url = CONF.ent_logout_url;
     var logout_url = app_logout_url; //CONF.bandeau_ENT_url + '/logout?service=' + encodeURIComponent(app_logout_url);
@@ -679,8 +675,6 @@ if (currentAppId === "HyperPlanning-ens") {
 if (!notFromLocalStorage && b_E.url !== sessionStorageGet('url')) {
     mylog("not using bandeau from sessionStorage which was computed for " + sessionStorageGet('url') + " whereas " + b_E.url + " is wanted");
     return "invalid";
-} else if (currentAppId == "redirect-first" && DATA.layout && DATA.layout[0]) {
-    document.location.href = DATA.apps[DATA.layout[0].apps[0]].url;
 } else if (!DATA.person.id) {
     // disabled for now
 
