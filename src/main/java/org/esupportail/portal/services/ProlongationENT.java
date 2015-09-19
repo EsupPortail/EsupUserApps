@@ -84,7 +84,7 @@ public class ProlongationENT extends HttpServlet {
 	if (noCache || userId == null) {
 	    if (request.getParameter("auth_checked") == null) {
 		cleanupSession(request);
-		String final_url = bandeau_ENT_url + "/js?auth_checked=true"
+		String final_url = bandeau_ENT_url + "/js?auth_checked"
 		    + (app != null ? "&app=" + urlencode(app) : "")
 		    + (forcedId != null ? "&uid=" + urlencode(forcedId) : "");
 		response.sendRedirect(via_CAS(cas_login_url, final_url) + "&gateway=true");
