@@ -20,7 +20,7 @@
 	"grouper", "dsidoc", "pad", "hyperplanning-ens", "hyperplanning-gest", "esup-smsu-api-admin",
 	"sorbonnaute-management",
 	"se-apogee", "eee", "eee-ens", "sifac",
-	"horde5-imp", "horde5-kronolith",
+	"webmail", "agenda",
 	"CReservaLang","CReservaLang-etu","CReservaLang-ens","reservasport-gest","reservasport-ens","reservasport-etu",
 	"ipweb", "reins", "sesame",
         "userinfo",
