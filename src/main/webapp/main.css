@@ -13,10 +13,12 @@
   font-size:13px/1.231 !important;
   font-family: Verdana, Arial, Helvetica, sans-serif !important;
   font-weight: normal !important;
+  box-sizing: content-box;
 }
 
 .bandeau_ENT_Menu li {
   margin: 0;
+  box-sizing: content-box;
 }
 #bandeau_ENT_Inner a {
   color: #fff !important;
