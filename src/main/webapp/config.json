@@ -21,6 +21,7 @@
 	"sorbonnaute-management",
 	"se-apogee", "eee", "eee-ens", "sifac",
 	"webmail", "agenda",
+	"esup-smsu", "esup-smsu-api-admin",
 	"CReservaLang","CReservaLang-etu","CReservaLang-ens","reservasport-gest","reservasport-ens","reservasport-etu",
 	"ipweb", "reins", "sesame",
         "userinfo",
