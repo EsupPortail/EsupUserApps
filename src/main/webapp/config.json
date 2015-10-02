@@ -22,7 +22,7 @@
 	"se-apogee", 
 	"moodle-epi", "moodle-epi-ens", "eee", "eee-ens",
 	"sifac",
-	"webmail", "agenda",
+	"webmail", "agenda", "esup-messages",
 	"esup-smsu", "esup-smsu-api-admin",
 	"CReservaLang","CReservaLang-etu","CReservaLang-ens","reservasport-gest","reservasport-ens","reservasport-etu",
 	"ipweb", "reins", "sesame",
