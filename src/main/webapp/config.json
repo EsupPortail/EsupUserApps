@@ -26,6 +26,7 @@
 	"esup-smsu", "esup-smsu-api-admin",
 	"CReservaLang","CReservaLang-etu","CReservaLang-ens","reservasport-gest","reservasport-ens","reservasport-etu",
 	"ipweb", "reins", "sesame",
+	"CFilex", "g2t",
         "userinfo",
     ],
 
