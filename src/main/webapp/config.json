@@ -28,6 +28,7 @@
 	"ipweb", "reins", "sesame",
 	"CFilex", "g2t",
         "userinfo",
+	"rdvia", "rdvmed", "rdvia-gest", "rdvmed-gest",
     ],
 
     "wanted_user_attributes": [ "supannAliasLogin", "displayName", "mail", "eduPersonAffiliation", "memberOf" ],
