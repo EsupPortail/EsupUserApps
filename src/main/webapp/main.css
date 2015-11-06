@@ -29,7 +29,7 @@
 }
 
 /* Portal Page Bar */
-.portalPageBarLinks {position:absolute; right: 0; top: 0; z-index: 100003; padding:0;  }
+.portalPageBarLinks {position:absolute; right: 0; top: 0; z-index: 3; padding:0;  }
 /* for IE7 IE8, force the width: force the width and make it auto for browsers handling :not selector (all browsers except IE lt 9) */ 
 .portalPageBarLinks { width: 15em; padding-top: 0; }
 .portalPageBarLinks:not([dummy]) { width: auto; }
@@ -290,7 +290,7 @@ body {
 }
 
 .bandeau_ENT_Menu > li {
- z-index: 100002;
+ z-index: 2;
  float: left;
  padding: 5px 11px 0px 11px;
 }
