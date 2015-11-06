@@ -384,7 +384,12 @@ function asyncLogout() {
     return false;
 }
 window.bandeau_ENT_onAsyncLogout = function() {
-    simulateClickElt(logout_DOM_elt());
+    var elt = logout_DOM_elt();
+    if (elt) {
+	simulateClickElt(elt);
+    } else {
+	document.location = CONF.ent_logout_url;
+    }
 }
 function installLogout() {
     var logout_buttons = "#bandeau_ENT_Inner .portalPageBarLogout, #bandeau_ENT_Inner .portalPageBarAccountLogout";
@@ -482,7 +487,7 @@ function installBandeau() {
 
 	onReady(function () {
 	    if (b_E.account_links) installAccountLinks(currentAppId);
-	    if (logout_DOM_elt()) installLogout();
+	    if (b_E.logout) installLogout();
 	    if (!b_E.no_footer) installFooter();
 	});
 	installToggleMenu(smallMenu);
