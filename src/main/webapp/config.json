@@ -25,7 +25,7 @@
 	"webmail", "agenda", "esup-messages",
 	"esup-smsu", "esup-smsu-api-admin",
 	"CReservaLang","CReservaLang-etu","CReservaLang-ens","reservasport-gest","reservasport-ens","reservasport-etu",
-	"ipweb", "reins", "sesame",
+	"ipweb", "reins", "sesame", "SaisieNotes",
 	"CFilex", "g2t",
         "userinfo",
 	"rdvia", "rdvmed", "rdvia-gest", "rdvmed-gest",
