@@ -15,7 +15,7 @@
 
     "url_bandeau_direct": [
 	"Assistance_DSI", "intranet", 
-        "nuxeo", "memoire-etu", "memoire-ens", "memoire-gest",
+        "nuxeo", "stockage-en-ligne", "memoire-etu", "memoire-ens", "memoire-gest",
 	"aleph", "domino", "domino-presse",
 	"grouper", "dsidoc", "pad", "hyperplanning-ens", "hyperplanning-gest", "esup-smsu-api-admin",
 	"sorbonnaute-management",
