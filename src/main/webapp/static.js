@@ -277,7 +277,7 @@ function computeHelp(currentAppId) {
 function computeTitlebar(currentAppId) {
     var app = DATA.apps[currentAppId];
     if (app && app.title && !b_E.no_titlebar)
-	return "<div class='bandeau_ENT_Titlebar'>" + escapeQuotes(app.title) + "</div>";
+	return "<div class='bandeau_ENT_Titlebar'><a href='" + app.url + "'>" + escapeQuotes(app.title) + "</a></div>";
     else
 	return '';
 }

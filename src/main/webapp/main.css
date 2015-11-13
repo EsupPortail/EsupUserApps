@@ -423,15 +423,16 @@ body {
     margin-top: 10px;
 }
 
-.bandeau_ENT_Titlebar {
-    color: #263F82;
+#bandeau_ENT_Inner .bandeau_ENT_Titlebar > a {
+    color: #263F82 !important;
+    text-decoration: none;
 }
 .bandeau_ENT_Titlebar {
     background: white;
     padding: 13px 0 18px 13px;
     font-size: 200%;
 }
-.menuClosed .bandeau_ENT_Titlebar {
+.menuClosed .bandeau_ENT_Titlebar > a {
     font-size: 16px;
 }
 @media screen and (min-width: 450px) {
