@@ -429,7 +429,7 @@ body {
 }
 .bandeau_ENT_Titlebar {
     background: white;
-    padding: 13px 0 18px 13px;
+    padding: 13px 0 18px 13px !important;
     font-size: 200%;
 }
 .menuClosed .bandeau_ENT_Titlebar > a {
