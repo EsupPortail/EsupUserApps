@@ -23,9 +23,6 @@ if (!window.bandeau_ENT_maybe_loaded)
 	
 	if (!b_E.localStorage_prefix) b_E.localStorage_prefix = "bandeau_ENT:" + (b_E.uid ? b_E.uid + ":" : '');
 	if (!b_E.localStorage_js_text_field) b_E.localStorage_js_text_field = "v5:js_text";
-	var url = b_E.url + "/js?app=" +
-	    (b_E.currentAppIds ? b_E.currentAppIds : [b_E.current]).join(",") +
-	    (b_E.uid ? "&uid=" + b_E.uid : '');
 	
 	var storageName = b_E.localStorage_prefix + b_E.localStorage_js_text_field;
 	try {
@@ -41,7 +38,15 @@ if (!window.bandeau_ENT_maybe_loaded)
 		sessionStorage.setItem(storageName, '');
 	    } catch (err) { }
 	}
-	
+
+        var angle = window.orientation || '';
+        var res = (angle == 90 || angle == -90) && navigator.userAgent.match(/Android.*Chrome/) ? screen.height + 'x' + screen.width : screen.width + 'x' + screen.height;
+        res += ',' + (window.devicePixelRatio || 1).toFixed(2) + ',' + angle;
+
+	var url = b_E.url + "/js?app=" +
+	    (b_E.currentAppIds ? b_E.currentAppIds : [b_E.current]).join(",") +
+            "&res=" + res +
+	    (b_E.uid ? "&uid=" + b_E.uid : '');
 	loadScript(url);
     }
 

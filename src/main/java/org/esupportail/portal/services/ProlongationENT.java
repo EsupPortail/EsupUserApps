@@ -79,6 +79,7 @@ public class ProlongationENT extends HttpServlet {
 	boolean noCache = request.getParameter("noCache") != null;
 	String userId = noCache ? null : get_CAS_userId(request);
 	String app = request.getParameter("app");
+	String res = request.getParameter("res");
 	String forcedId = request.getParameter("uid");
 
 	if (noCache || userId == null) {
@@ -86,6 +87,7 @@ public class ProlongationENT extends HttpServlet {
 		cleanupSession(request);
 		String final_url = bandeau_ENT_url + "/js?auth_checked"
 		    + (app != null ? "&app=" + urlencode(app) : "")
+		    + (res != null ? "&res=" + urlencode(res) : "")
 		    + (forcedId != null ? "&uid=" + urlencode(forcedId) : "");
 		response.sendRedirect(via_CAS(cas_login_url, final_url) + "&gateway=true");
 	    } else {
@@ -344,7 +346,8 @@ public class ProlongationENT extends HttpServlet {
 		"[ID:" + userId + "] " +
 		"[APP:" + (apps.isEmpty() ? app_[0] : apps.get(0)) + "] " +
 		"[URL:" + request.getHeader("Referer") + "] " +
-		"[USER-AGENT:" + request.getHeader("User-Agent") +"]");
+		"[USER-AGENT:" + request.getHeader("User-Agent") +"] " +
+		"[RES:" + request.getParameter("res") +"]");
     }
     
     /* ******************************************************************************** */

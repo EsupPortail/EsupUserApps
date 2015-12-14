@@ -620,6 +620,12 @@ function loadBandeauJs(params) {
     if (b_E.uid)
 	params.push("uid=" + encodeURIComponent(b_E.uid));
     params.push("app=" + (b_E.currentAppIds ? b_E.currentAppIds : [b_E.current]).join(","));
+
+    var angle = window.orientation || '';
+    var res = (angle == 90 || angle == -90) && navigator.userAgent.match(/Android.*Chrome/) ? screen.height + 'x' + screen.width : screen.width + 'x' + screen.height;
+    res += ',' + (window.devicePixelRatio || 1).toFixed(2) + ',' + angle;
+    
+    params.push("res=" + res);
     loadScript(b_E.url + "/js" + (params.length ? "?" + params.join('&') : ''));
 }
 
