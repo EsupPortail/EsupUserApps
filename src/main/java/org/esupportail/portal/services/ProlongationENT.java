@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +50,10 @@ public class ProlongationENT extends HttpServlet {
 
     static String prev_host_attr = "org.esupportail.portal.services.ProlongationENT.prev_host";
     static String prev_time_attr = "org.esupportail.portal.services.ProlongationENT.prev_time";
+    static String request_last_time_attr_prefix = "org.esupportail.portal.services.ProlongationENT.request_last_time_";
+    static String visit_id_attr = "org.esupportail.portal.services.ProlongationENT.visit_id";    
+    static String global_visit_nb_attr = "org.esupportail.portal.services.ProlongationENT.global_visit_nb";
+    static String app_visit_nb_attr_prefix = "org.esupportail.portal.services.ProlongationENT.app_visit_nb_";
     
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	if (request.getServletPath().endsWith("detectReload")) {
@@ -336,18 +341,23 @@ public class ProlongationENT extends HttpServlet {
     }
     
     void stats(HttpServletRequest request, String userId, Set<String> userChannels) {
+        HttpSession session = request.getSession(false);
 	String app = request.getParameter("app");
 	if (app == null) return;
 	String[] app_ = app.split(",");
 	List<String> apps = intersect(app_, userChannels);
+        app = apps.isEmpty() ? app_[0] : apps.get(0);
+        
 	log.info(
 		"[" + new java.util.Date() + "] " +
 		"[IP:" + request.getRemoteAddr() + "] " +
 		"[ID:" + userId + "] " +
-		"[APP:" + (apps.isEmpty() ? app_[0] : apps.get(0)) + "] " +
+		"[APP:" + app + "] " +
 		"[URL:" + request.getHeader("Referer") + "] " +
 		"[USER-AGENT:" + request.getHeader("User-Agent") +"] " +
-		"[RES:" + request.getParameter("res") +"]");
+		"[RES:" + request.getParameter("res") +"] " +
+		"[VISIT:" + get_visit_id(session) + ":" + get_app_visit_nb(session, app) +"]");
+            
     }
     
     /* ******************************************************************************** */
@@ -519,6 +529,43 @@ public class ProlongationENT extends HttpServlet {
         return assertion == null ? null : assertion.getPrincipal().getName();
     }
 
+    boolean isNewVisit(HttpSession session, String app) {
+        String attr = request_last_time_attr_prefix + app;
+        Long last = (Long) session.getAttribute(attr);
+        long current = System.currentTimeMillis();
+
+        session.setAttribute(attr, current);
+
+        long max_inactive = conf.getInt("visit_max_inactive") * 1000;
+        return last == null || current - last > max_inactive;
+    }
+
+    Long counter(HttpSession session, String attr) {
+        Long nb = (Long) session.getAttribute(attr);
+        nb = (nb == null ? 0 : nb) + 1;
+        session.setAttribute(attr, nb);
+        return nb;
+    }
+
+    String get_visit_id(HttpSession session) {
+	String id = (String) session.getAttribute(visit_id_attr);
+        if (isNewVisit(session, "") || id == null) {
+            id = UUID.randomUUID().toString();
+            session.setAttribute(visit_id_attr, id);
+        }
+        return id;
+    }
+
+    Long get_app_visit_nb(HttpSession session, String app) {
+        String attr = app_visit_nb_attr_prefix + app;
+	Long nb = (Long) session.getAttribute(attr);
+        if (isNewVisit(session, app) || nb == null) {
+            nb = counter(session, global_visit_nb_attr);
+            session.setAttribute(attr, nb);
+        }
+        return nb;
+    }
+    
     long now() {
 	return System.currentTimeMillis() / 1000L;
     }   

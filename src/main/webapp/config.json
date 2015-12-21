@@ -33,6 +33,7 @@
     ],
 
     "wanted_user_attributes": [ "supannAliasLogin", "displayName", "mail", "eduPersonAffiliation", "memberOf" ],
+    "visit_max_inactive": 1800, // 30 min
     "time_before_checking_browser_cache_is_up_to_date": 60,
 
     "isCasSingleSignOutWorking": true,
