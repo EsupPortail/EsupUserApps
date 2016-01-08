@@ -30,6 +30,7 @@
         "userinfo",
 	"rdvia", "rdvmed", "rdvia-gest", "rdvmed-gest",
 	"ecards", "signature", "page-perso",
+        "Compilatio",
     ],
 
     "wanted_user_attributes": [ "supannAliasLogin", "displayName", "mail", "eduPersonAffiliation", "memberOf" ],
