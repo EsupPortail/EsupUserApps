@@ -399,6 +399,10 @@ body {
     color: #999 !important;
 }
 
+#bandeau_ENT_Inner .bandeau_ENT_Help a {
+    color: #263F82 !important;
+}
+
 .bandeau_ENT_Help a {
     position: relative;
     float: right;
