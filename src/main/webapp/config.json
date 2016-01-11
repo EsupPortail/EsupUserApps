@@ -32,7 +32,7 @@
 	"ecards", "signature", "page-perso",
         "Compilatio",
         "agasse",
-        "caccueil-etu", "caccueil-pers", "caccueil-default",
+        "caccueil",
     ],
 
     "wanted_user_attributes": [ "supannAliasLogin", "displayName", "mail", "eduPersonAffiliation", "memberOf" ],
