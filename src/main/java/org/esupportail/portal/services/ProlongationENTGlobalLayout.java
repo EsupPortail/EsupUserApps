@@ -100,6 +100,7 @@ class ProlongationENTGlobalLayout {
 		arrayS("fname", pdef.getFName(),
 		       "text", pdef.getName(),
 		       "title", pdef.getTitle(),
+                       "hashelp", pdef.hasHelp() ? "true" : "",
 		       "description", pdef.getDescription());
 
 	    for (IPortletPreference pref : PortletDefinitionRegistryLocator.getPortletDefinitionRegistry().getPortletDefinition(pdef.getId()).getPortletPreferences().getPortletPreferences()) {
@@ -157,6 +158,11 @@ class ProlongationENTGlobalLayout {
     static HashMap<String, String> arrayS(String key1, String val1, String key2, String val2, String key3, String val3, String key4, String val4) {
 	HashMap<String, String> r = arrayS(key1, val1, key2, val2, key3, val3);
 	r.put(key4, val4);
+	return r;
+    }        
+    static HashMap<String, String> arrayS(String key1, String val1, String key2, String val2, String key3, String val3, String key4, String val4, String key5, String val5) {
+	HashMap<String, String> r = arrayS(key1, val1, key2, val2, key3, val3, key4, val4);
+	r.put(key5, val5);
 	return r;
     }        
 }
