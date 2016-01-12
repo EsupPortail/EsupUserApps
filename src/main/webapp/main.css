@@ -408,7 +408,7 @@ body {
     float: right;
     z-index: 100006;
     margin-right: 1em;
-    margin-top: -4em;
+    margin-top: -3em;
 
     text-decoration: none;
     margin-left: 1.5em;
@@ -491,6 +491,10 @@ body {
     .bandeau_ENT_portalLogo a {
 	width: 74px;
 	height: 28px;
+    }
+
+    .bandeau_ENT_Help a {
+        margin-top: -4em;
     }
 
 }
