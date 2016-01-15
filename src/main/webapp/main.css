@@ -394,6 +394,7 @@ body {
 }
 #bandeau_ENT_Footer a {
     margin: 0 1em;
+    text-decoration: underline !important;
 }
 #bandeau_ENT_Footer, #bandeau_ENT_Footer a {
     color: #999 !important;
