@@ -33,6 +33,7 @@
         "Compilatio",
         "agasse", "pstage-ens", "pstage-etu", "pstage-pers",
         "caccueil",
+        "gun-pers", "gun-etu",
     ],
 
     "wanted_user_attributes": [ "supannAliasLogin", "displayName", "mail", "eduPersonAffiliation", "memberOf" ],
