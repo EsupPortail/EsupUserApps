@@ -19,7 +19,7 @@
 	"aleph", "domino", "domino-presse",
 	"grouper", "dsidoc", "pad", "hyperplanning-ens", "hyperplanning-gest", "esup-smsu-api-admin",
 	"sorbonnaute-management",
-	"se-apogee", 
+	"se-apogee", "CApogee",
 	"moodle-epi", "moodle-epi-ens", "eee", "eee-ens",
 	"sifac",
 	"webmail", "agenda", "esup-messages",
