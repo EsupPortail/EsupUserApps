@@ -96,7 +96,10 @@ public class ProlongationENT extends HttpServlet {
 		    + (forcedId != null ? "&uid=" + urlencode(forcedId) : "");
 		response.sendRedirect(via_CAS(cas_login_url, final_url) + "&gateway=true");
 	    } else {
-		// user is not authenticated. Empty response
+		// user is not authenticated.
+                String template = file_get_contents(request, "templates/notLogged.html");
+                response.setContentType("application/javascript; charset=utf8");
+                response.getWriter().println(String.format(template, json_encode(array("cas_login_url", cas_login_url))));
 	    }
 	    return;
 	}
