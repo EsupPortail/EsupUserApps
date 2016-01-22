@@ -626,6 +626,7 @@ function loadBandeauJs(params) {
     res += ',' + (window.devicePixelRatio || 1).toFixed(2) + ',' + angle;
     
     params.push("res=" + res);
+    if (b_E.loadTime) params.push("time=" + b_E.loadTime);
     loadScript(b_E.url + "/js" + (params.length ? "?" + params.join('&') : ''));
 }
 

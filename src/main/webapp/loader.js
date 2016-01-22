@@ -20,6 +20,8 @@ if (!window.bandeau_ENT_maybe_loaded)
 	if (!b_E) return;
 	b_E.url = "https://esup-test.univ-paris1.fr/ProlongationENT";
 
+        var navigationStart = window.performance && window.performance.timing && window.performance.timing.navigationStart;
+        b_E.loadTime = navigationStart && (new Date() - navigationStart);
 	
 	if (!b_E.localStorage_prefix) b_E.localStorage_prefix = "bandeau_ENT:" + (b_E.uid ? b_E.uid + ":" : '');
 	if (!b_E.localStorage_js_text_field) b_E.localStorage_js_text_field = "v5:js_text";
@@ -46,6 +48,7 @@ if (!window.bandeau_ENT_maybe_loaded)
 	var url = b_E.url + "/js?app=" +
 	    (b_E.currentAppIds ? b_E.currentAppIds : [b_E.current]).join(",") +
             "&res=" + res +
+            (b_E.loadTime ? "&time=" + b_E.loadTime : "") +
 	    (b_E.uid ? "&uid=" + b_E.uid : '');
 	loadScript(url);
     }
