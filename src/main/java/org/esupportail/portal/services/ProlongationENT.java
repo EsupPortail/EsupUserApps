@@ -359,7 +359,8 @@ public class ProlongationENT extends HttpServlet {
 		"[URL:" + request.getHeader("Referer") + "] " +
 		"[USER-AGENT:" + request.getHeader("User-Agent") +"] " +
 		"[RES:" + request.getParameter("res") +"] " +
-		"[VISIT:" + get_visit_id(session) + ":" + get_app_visit_nb(session, app) +"]");
+		"[VISIT:" + get_visit_id(session) + ":" + get_app_visit_nb(session, app) +"] " +
+                "[LOAD-TIME:" + request.getParameter("time") + "]");
             
     }
     
