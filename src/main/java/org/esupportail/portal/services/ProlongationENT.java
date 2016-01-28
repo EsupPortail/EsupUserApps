@@ -42,7 +42,7 @@ public class ProlongationENT extends HttpServlet {
     JSONObject conf = null;
 
     String bandeau_ENT_url, ent_base_url, ent_base_url_guest;// currentIdpId;
-    List<String> url_bandeau_compatible, url_bandeau_direct, wanted_user_attributes;
+    List<String> url_bandeau_compatible, apps_no_bandeau, wanted_user_attributes;
     String cas_login_url, cas_logout_url;
     ProlongationENTGlobalLayout globalLayout = null;
 
@@ -234,7 +234,7 @@ public class ProlongationENT extends HttpServlet {
 	//currentIdpId       = conf.getString("currentIdpId");
 
 	url_bandeau_compatible = getConfList("url_bandeau_compatible");
-	url_bandeau_direct     = getConfList("url_bandeau_direct");
+	apps_no_bandeau     = getConfList("apps_no_bandeau");
 
 	wanted_user_attributes = getConfList("wanted_user_attributes");
 
@@ -471,7 +471,7 @@ public class ProlongationENT extends HttpServlet {
     String get_url(Map<String,String> app, String appId, boolean isGuest, boolean noLogin, String idpAuthnRequest_url) {
 	String url = app.get("url");
 	//log.warn(json_encode(app));
-	if (url != null && (url_bandeau_direct.contains(appId) || idpAuthnRequest_url != null && url_bandeau_compatible.contains(appId))) {
+	if (url != null && (!apps_no_bandeau.contains(appId) || idpAuthnRequest_url != null && url_bandeau_compatible.contains(appId))) {
 	    url = url_maybe_adapt_idp(app.get("url"), idpAuthnRequest_url);
 	    return enhance_url(url, appId, app.keySet());
 	} else {

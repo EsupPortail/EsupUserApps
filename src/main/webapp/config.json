@@ -9,32 +9,10 @@
     "ent_base_url_guest": "https://ent.univ-paris1.fr",
     "_currentIdpId": "urn:mace:cru.fr:federation:univ-paris1.fr",
 
-    "url_bandeau_compatible": [
-	"caccueil-pers", "caccueil-etu", "caccueil-guest",
-	"journal-lemonde", "Compilatio", "CFilex", "moodle-cours" ],
-
-    "url_bandeau_direct": [
-	"Assistance_DSI", "intranet", 
-        "nuxeo", "stockage-en-ligne", "memoire-etu", "memoire-ens", "memoire-gest",
-	"aleph", "domino", "domino-presse",
-	"grouper", "dsidoc", "pad", "hyperplanning-ens", "hyperplanning-gest", "esup-smsu-api-admin",
-	"sorbonnaute-management",
-	"se-apogee", "CApogee",
-	"moodle-epi", "moodle-epi-ens", "eee", "eee-ens",
-	"sifac",
-	"webmail", "agenda", "esup-messages",
-	"esup-smsu", "esup-smsu-api-admin",
-	"CReservaLang","CReservaLang-etu","CReservaLang-ens","reservasport-gest","reservasport-ens","reservasport-etu",
-	"ipweb", "reins", "sesame", "SaisieNotes",
-	"CFilex", "g2t",
-        "userinfo",
-	"rdvia", "rdvmed", "rdvia-gest", "rdvmed-gest",
-	"ecards", "signature", "page-perso",
-        "Compilatio",
-        "agasse", "pstage-ens", "pstage-etu", "pstage-pers",
-        "caccueil",
-        "gun-pers", "gun-etu",
-    ],
+    "apps_no_bandeau": [ "CParis1prim", "FoodleP1",
+                         "caccueil-guest", "CContacts-guest",
+                         "accueil-BIS", "CMentions" ],
+    "url_bandeau_compatible": [],
 
     "wanted_user_attributes": [ "supannAliasLogin", "displayName", "mail", "eduPersonAffiliation", "memberOf" ],
     "visit_max_inactive": 1800, // 30 min
