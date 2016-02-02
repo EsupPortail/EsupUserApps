@@ -1,0 +1,155 @@
+<project default="help" basedir="." 
+	 xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors"
+	 xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+	<typedef resource="org/apache/maven/artifact/ant/antlib.xml"
+		 uri="antlib:org.apache.maven.artifact.ant"
+		 classpath="utils/ant/maven-ant-tasks-2.1.3.jar"/>
+	
+	<property name="build.dir" value="build"/>
+	<property name="build.classes" value="${build.dir}/WEB-INF/classes"/>
+
+
+	<target name="help">
+		<java classname="org.apache.tools.ant.Main"><arg value="-projecthelp"/></java>
+	</target>
+
+	<target name="clean" description="clean the project" >
+		<delete dir="src/main/webapp/libs" />
+		<delete dir="${build.dir}" />
+		<delete dir="tmp" />
+	</target>
+
+	<target name="prepare" >
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.classes}" />
+
+		<condition property="need-download-jars">
+		  <not>
+		    <and>
+		      <available file="${build.dir}/WEB-INF/lib" type="dir" /> 
+		      <available file="tmp/compile-lib" type="dir" /> 
+		    </and>
+		  </not>
+		</condition>
+	</target>
+
+	<target name="download" depends="download-jars" />
+		
+	<property name="jetty-version" value="8.1.9.v20130131" />
+
+	<target name="download-jars" depends="prepare" if="need-download-jars">
+	      <artifact:pom id="mypom" file="pom.xml" />
+	      <artifact:dependencies filesetId="runtime.jar.fileset" useScope="runtime" pomRefId="mypom" />
+	      <artifact:dependencies filesetId="compile.jar.fileset" useScope="compile" pomRefId="mypom" />
+
+	      <mkdir dir="${build.dir}/WEB-INF/lib" />
+	      <copy todir="${build.dir}/WEB-INF/lib">
+		<fileset refid="runtime.jar.fileset"/>
+		<mapper type="flatten"/>
+	      </copy>
+	      
+	      <mkdir dir="tmp/compile-lib" />
+	      <copy todir="tmp/compile-lib">
+		<fileset refid="compile.jar.fileset"/>
+		<mapper type="flatten"/>
+	      </copy>
+	</target>
+
+	<target name="compile" depends="download" description="compile the project" >
+		<property name="compile.debug" value="true" />
+		<property name="compile.deprecation" value="true" />
+		<property name="compile.optimize" value="true" />
+		<property name="compile.nowarn" value="false" />
+
+		<path id="compile.classpath">
+		  <fileset dir="tmp/compile-lib" includes="**/*.jar" />
+		</path>
+
+		<javac 
+			srcdir="src/main/java" 
+			destdir="${build.classes}" 
+			debug="${compile.debug}" 
+			nowarn="${compile.nowarn}" 
+			deprecation="${compile.deprecation}" 
+			includeantruntime="false"
+			optimize="${compile.optimize}">
+			<classpath refid="compile.classpath" />
+		</javac>
+	</target>
+
+	<target name="deploy" depends="compile" description="deploy the application" >
+		<property file="build.properties" />
+		<fail unless="deploy.home" message="Please set property deploy.home in build.properties" />
+
+		<sync todir="${deploy.home}" overwrite="true" >
+			<fileset dir="src/main/webapp" />
+			<fileset dir="${build.dir}" />
+		</sync>
+	</target>
+
+
+<!-- ******************************************************************************** -->
+<!-- * below are helper targets ***************************************************** -->
+<!-- ******************************************************************************** -->
+	<target name="hotswap" depends="tstamp,compile">
+		<taskdef name="hotswap" classname="dak.ant.taskdefs.Hotswap">
+		  <classpath>
+		    <pathelement location="utils/ant/hotswap.jar"/>
+		  </classpath>
+		</taskdef>
+
+		<property file="build.properties" />
+
+		<hotswap verbose="true" port="${jpdaAddress}">
+		  	<fileset dir="${build.classes}" includes="**/*.class">
+			  <date datetime="${date}" pattern="d-MMMM-yyyy HH:mma" when="after"/>
+			</fileset>
+		</hotswap>
+	</target>
+
+	<target name="tstamp">
+	  <tstamp>
+	    <!-- for hotswap target -->
+	    <format property="date" pattern="d-MMMM-yyyy HH:mma" locale="en"/>
+	  </tstamp>
+	</target>
+
+	<target name="prepare-ant-extra">
+	  <condition property="need-download-ant-extra">
+	    <not><available file="tmp/ant-extra" type="dir" /></not>
+	  </condition>
+	</target>
+
+	<target name="download-ant-extra" if="need-download-ant-extra">
+	      <artifact:dependencies filesetId="ant-extra.fileset">
+		<dependency groupId="org.mortbay.jetty" artifactId="jetty-ant" version="${jetty-version}" />
+		<dependency groupId="org.hibernate" artifactId="hibernate-tools" version="3.2.4.GA" />
+	      </artifact:dependencies>
+
+	      <copy todir="tmp/ant-extra">
+		<fileset refid="ant-extra.fileset"/>
+		<mapper type="flatten"/>
+	      </copy>
+	</target>
+	
+	<target name="ant-extra" depends="prepare-ant-extra,download-ant-extra" />
+	
+	<target name="jetty.run" depends="ant-extra,compile" description="test using jetty">
+	  <property file="build.properties" />
+	  <path id="jetty.plugin.classpath">
+	    <fileset dir="tmp/ant-extra" includes="*.jar"/>
+	  </path>
+	  <taskdef classpathref="jetty.plugin.classpath" resource="tasks.properties" loaderref="jetty.loader" />
+
+	  <jetty tempDirectory="tmp/jetty-temp" jettyPort="${jetty.port}">
+	    <webApp name="myApp" warfile="src/main/webapp" contextpath="/">
+	      <lib dir="${build.dir}/WEB-INF/lib" includes="*.jar" />
+	      <classes dir="${build.classes}" includes="*.class" />
+	    </webApp>
+	  </jetty>
+	</target>
+
+</project>
+
+
