@@ -5,10 +5,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -26,13 +24,6 @@ import org.apache.commons.io.IOUtils;
 import org.jasig.cas.client.util.AbstractCasFilter;
 import org.jasig.cas.client.validation.Assertion;
 
-import org.jasig.portal.groups.IEntity;
-import org.jasig.portal.security.IAuthorizationPrincipal;
-import org.jasig.portal.security.IPerson;
-import org.jasig.portal.services.AuthorizationService;
-import org.jasig.portal.services.GroupService;
-import org.jasig.portal.spring.locator.PersonAttributeDaoLocator;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
@@ -41,10 +32,10 @@ import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 public class ProlongationENT extends HttpServlet {	   
     JSONObject conf = null;
 
-    String bandeau_ENT_url, ent_base_url, ent_base_url_guest;// currentIdpId;
+    String bandeau_ENT_url, ent_base_url, ent_base_url_guest, current_idpAuthnRequest_url;
     List<String> url_bandeau_compatible, apps_no_bandeau, wanted_user_attributes;
     String cas_login_url, cas_logout_url;
-    ProlongationENTGlobalLayout globalLayout = null;
+    ProlongationENTGroups handleGroups;
 
     org.apache.commons.logging.Log log = LogFactory.getLog(ProlongationENT.class);
 
@@ -62,20 +53,12 @@ public class ProlongationENT extends HttpServlet {
 	    logout(request, response);
 	} else if (request.getServletPath().endsWith("redirect")) {
 	    if (conf == null) initConf(request);
-	    if (globalLayout == null) computeGlobalLayout();
 	    redirect(request, response);
 	} else if (request.getServletPath().endsWith("purgeCache")) {
 	    log.warn("purging cache");
-
-	    org.jasig.portal.utils.cache.CacheManagementHelper helper = new org.jasig.portal.utils.cache.CacheManagementHelper();
-	    helper.setCacheManager((net.sf.ehcache.CacheManager) org.jasig.portal.spring.PortalApplicationContextLocator.getApplicationContext().getBean("cacheManager"));
-	    helper.clearAllCaches();
-
 	    initConf(request);
-	    computeGlobalLayout();
 	} else {
 	    if (conf == null) initConf(request);
-	    if (globalLayout == null) computeGlobalLayout();
 	    js(request, response);	   
 	}
     }
@@ -105,7 +88,7 @@ public class ProlongationENT extends HttpServlet {
 	}
 
 	if (forcedId != null) {
-	    List<String> memberOf = getUser(userId).get("memberOf");
+	    List<String> memberOf = handleGroups.getLdapPeopleInfo(userId).get("memberOf");
 	    if (getConfList("admins").contains(userId) ||
 		memberOf != null && !org.apache.commons.collections.CollectionUtils.intersection(memberOf, getConfList("admins")).isEmpty()) {
 		// ok
@@ -118,12 +101,13 @@ public class ProlongationENT extends HttpServlet {
     }
 
     void js(HttpServletRequest request, HttpServletResponse response, String userId, String realUserId) throws ServletException, IOException {
-	//prev = 0;	
-	Map<String,List<String>> user = getUser(userId);
+	//prev = 0;
 
-	ProlongationENTGlobalLayout globalLayout = this.globalLayout;
-	Map<String,Map<String,String>> userChannels = userChannels(globalLayout.allChannels, userId);
-	List<Map<String, Object>> userLayout = userLayout(globalLayout.layout, userChannels.keySet());
+	Map<String,List<String>> attrs = handleGroups.getLdapPeopleInfo(userId);
+	Map<String,List<String>> user = getUser(userId, attrs);
+
+	Map<String,Map<String,String>> userChannels = userChannels(userId, attrs);
+	List<Map<String, Object>> userLayout = userLayout(handleGroups.LAYOUT, userChannels.keySet());
 
 	stats(request, realUserId, userChannels.keySet());
 	
@@ -201,13 +185,8 @@ public class ProlongationENT extends HttpServlet {
 	String appId = null;
 	String location = null;
 	if (activeTab != null) {
-	    if (!tab_has_non_https_url(activeTab, hasParameter(request, "guest"))) {
-		// ok: let uportal display all channels
-		location = ent_tab_url(activeTab);
-	    } else {
 		// gasp, there is a http:// iframe, display only one channel (nb: if the first channel is http-only, it will be displayed outside of uportal)
 		appId = request.getParameter("firstId");
-	    }
 	} else {
 	    appId = request.getParameter("id");
 	    if (appId == null) throw new RuntimeException("missing 'id=xxx' parameter");
@@ -215,7 +194,7 @@ public class ProlongationENT extends HttpServlet {
 	if (appId != null) { 
 	    Map<String,String> app = get_app(appId);
 	    if (app == null) throw new RuntimeException("invalid appId " + appId);
-	    location = get_url(app, appId, hasParameter(request, "guest"), !hasParameter(request, "login"), null);
+	    location = get_url(app, appId, hasParameter(request, "guest"), !hasParameter(request, "login"), current_idpAuthnRequest_url);
 	}
 	response.sendRedirect(location);
     }
@@ -224,28 +203,24 @@ public class ProlongationENT extends HttpServlet {
   	return different_referrer ? 10 : 120; // seconds
     }
 
-    ProlongationENTGlobalLayout getGlobalLayout() {
-	return globalLayout;
-    }
-
-    // better block until we compute one global layout instead of letting different threads compute the same thing concurrently
-    synchronized void computeGlobalLayout() {
-	globalLayout = new ProlongationENTGlobalLayout();
-    }
-
     synchronized void initConf(HttpServletRequest request) {
-	conf = JSONObject.fromObject(file_get_contents(request, "config.json"));
+	String raw_conf = private_file_get_contents(request, "config.json");
+	String apps_conf = private_file_get_contents(request, "config-apps.json");
+	String auth_conf = private_file_get_contents(request, "config-auth.json");
+	conf = JSONObject.fromObject(raw_conf);
+	
+	handleGroups = new ProlongationENTGroups(raw_conf, apps_conf, auth_conf);
 
 	ent_base_url       = conf.getString("ent_base_url");
 	ent_base_url_guest = conf.getString("ent_base_url_guest");
-	//currentIdpId       = conf.getString("currentIdpId");
+	current_idpAuthnRequest_url = conf.getString("current_idpAuthnRequest_url");
 
 	url_bandeau_compatible = getConfList("url_bandeau_compatible");
 	apps_no_bandeau     = getConfList("apps_no_bandeau");
 
 	wanted_user_attributes = getConfList("wanted_user_attributes");
 
-	bandeau_ENT_url    = ent_base_url + "/ProlongationENT";
+	bandeau_ENT_url    = ent_base_url_guest + "/ProlongationENT";
 
 	cas_login_url      = conf.getString("cas_base_url") + "/login";
 	cas_logout_url     = conf.getString("cas_base_url") + "/logout";		
@@ -287,16 +262,20 @@ public class ProlongationENT extends HttpServlet {
     }
 
     InputStream file_get_stream(HttpServletRequest request, String file) {
-	return request.getSession().getServletContext().getResourceAsStream("/ProlongationENT/" + file);
+	return request.getSession().getServletContext().getResourceAsStream(file);
     }
 
     String file_get_contents(HttpServletRequest request, String file) {
 	try {
-	    return IOUtils.toString(file_get_stream(request, file), "UTF-8");
+	    return IOUtils.toString(file_get_stream(request, "/" + file), "UTF-8");
 	} catch (IOException e) {
 	    log.error("error reading file " + file, e);
 	    return null;
 	}
+    }
+
+    String private_file_get_contents(HttpServletRequest request, String file) {
+        return file_get_contents(request, "WEB-INF/" + file);
     }
 
     /* ******************************************************************************** */
@@ -374,14 +353,12 @@ public class ProlongationENT extends HttpServlet {
     /* ******************************************************************************** */
     /* compute user's layout & channels using uportal API */
     /* ******************************************************************************** */   
-    Map<String,List<String>> getUser(String userId) {
-	Map<String,List<Object>> attrs = PersonAttributeDaoLocator.getPersonAttributeDao().getPerson(userId).getAttributes();
-
+    Map<String,List<String>> getUser(String userId, Map<String, List<String>> attrs) {
 	Map<String,List<String>> user = new HashMap<String,List<String>>();
 	for (String attr: wanted_user_attributes) {
-	    List<Object> val = attrs.get(attr);
+	    List<String> val = attrs.get(attr);
 	    if (val != null)
-		user.put(attr, (List) val);
+		user.put(attr, val);
 	}
 	user.put("id", java.util.Collections.singletonList(userId));
 	return user;
@@ -400,32 +377,16 @@ public class ProlongationENT extends HttpServlet {
  	return rslt;  
     }
     
-    Map<String,Map<String,String>> userChannels(Map<Long,Map<String,String>> channels, final String userId) {
-	String idpAuthnRequest_url = null;
-	
+    Map<String,Map<String,String>> userChannels(final String userId, Map<String, List<String>> person) {
         Map<String,Map<String,String>> rslt = new HashMap<String,Map<String,String>>();
-
-	if (userId == null) return rslt;
 	
-	IEntity user = GroupService.getEntity(userId, IPerson.class);
+	for (String fname : handleGroups.computeValidAppsRaw(person)) {
+		Map<String,String> def = get_app(fname);
 
-	//EntityIdentifier ei = user.getEntityIdentifier();
-	//IAuthorizationPrincipal ap = AuthorizationService.instance().newPrincipal(ei.getKey(), ei.getType());
-	IAuthorizationPrincipal ap = AuthorizationService.instance().newPrincipal(user);
-
-	int i = 0;
-	for (Map.Entry<Long, Map<String,String>> e : channels.entrySet()) {
-	    if (ap.canRender(e.getKey().intValue())) {
-		// clone
-		Map<String,String> def = new HashMap<String,String>(e.getValue());
-		String fname = def.get("fname");
-		def.remove("fname");
-
-		def.put("url", get_user_url(def, fname, idpAuthnRequest_url));
+		def.put("url", get_user_url(def, fname, current_idpAuthnRequest_url));
 
 		rslt.put(fname, def);
-	    }
-	}
+	  }
 	return rslt;
     }
     
@@ -438,29 +399,27 @@ public class ProlongationENT extends HttpServlet {
 
     String ent_url(Map<String,String> app, String fname, boolean isGuest, boolean noLogin, String idpAuthnRequest_url) {
 	String url = isGuest ? ent_base_url_guest + "/Guest" : ent_base_url + (noLogin ? "/render.userLayoutRootNode.uP" : "/Login");
-	String uportalActiveTab = app.get(isGuest ? "uportalActiveTabGuest": "uportalActiveTab");
-	String params = 
-	    "?uP_fname=" + fname
-	    + (uportalActiveTab != null ? "&uP_sparam=activeTab&activeTab=" + uportalActiveTab : "");
+	String params = "?uP_fname=" + fname;
 	url = url + params;
 	return isGuest || noLogin ? url : 
-	    idpAuthnRequest_url != null ? via_idpAuthnRequest_url(idpAuthnRequest_url, url) : via_CAS(cas_login_url, url);
+	    idpAuthnRequest_url != null ? via_idpAuthnRequest_url(idpAuthnRequest_url, url, app.get("shibbolethSPPrefix")) : via_CAS(cas_login_url, url);
     }
 
     // quick'n'dirty version: it expects a simple mapping from url to SP entityId and SP SAML v1 url
-    String via_idpAuthnRequest_url(String idpAuthnRequest_url, String url) {
-	String spId = url.replace("(://[^/]*)(.*)", "$1");
-	String shire = spId + "/Shibboleth.sso/SAML/POST";
-	return String.format("%s?shire=%s&target=%s&providerId=%s", idpAuthnRequest_url, urlencode(shire), urlencode(url), urlencode(spId));
+    public static String via_idpAuthnRequest_url(String idpAuthnRequest_url, String url, String shibbolethSPPrefix) {
+	String spId = url.replaceFirst("(://[^/]*)(.*)", "$1");
+	String shire = spId + shibbolethSPPrefix + "Shibboleth.sso/SAML/POST";
+	return String.format("%s?shire=%s&target=%s&providerId=%s", idpAuthnRequest_url, shire, urlencode(url), spId);
     }
 
-    String url_maybe_adapt_idp(String url, String idpAuthnRequest_url) {
-	if (idpAuthnRequest_url == null) return url;
-	String currentAuthnRequest = "xxxx"; //entityID_to_AuthnRequest_url[currentIdpId];
-	String url_ = removePrefixOrNull(url, currentAuthnRequest);
-	if (url_ != null) {
-	    url = idpAuthnRequest_url + url_;
-	    debug_msg("personalized shib url is now url");
+    public static String url_maybe_adapt_idp(String idpAuthnRequest_url, String url, String shibbolethSPPrefix) {
+        if (idpAuthnRequest_url != null && shibbolethSPPrefix != null) {
+            String realUrl = url;
+            url = via_idpAuthnRequest_url(idpAuthnRequest_url, url, shibbolethSPPrefix);
+            
+            // HACK for test ProlongationENT: handle apps using production federation
+            if (!realUrl.contains("test")) url = url.replace("idp-test", "idp");
+	    //debug_msg("personalized shib url is now " + url);
 	}
 	return url;
     }
@@ -479,10 +438,10 @@ public class ProlongationENT extends HttpServlet {
 	String url = app.get("url");
 	//log.warn(json_encode(app));
 	if (url != null && (!apps_no_bandeau.contains(appId) || idpAuthnRequest_url != null && url_bandeau_compatible.contains(appId))) {
-	    url = url_maybe_adapt_idp(app.get("url"), idpAuthnRequest_url);
+	    url = url_maybe_adapt_idp(idpAuthnRequest_url, app.get("url"), app.get("shibbolethSPPrefix"));
 	    return enhance_url(url, appId, app.keySet());
 	} else {
-	    return ent_url(app, appId, isGuest, noLogin, idpAuthnRequest_url);
+	    return ent_url(app, appId, isGuest, noLogin, null);
 	}
     }
 
@@ -492,31 +451,7 @@ public class ProlongationENT extends HttpServlet {
 
     
     Map<String,String> get_app(String appId) {
-	for (Map<String,String> app : globalLayout.allChannels.values()) {
-	    if (appId.equals(app.get("fname"))) {
-		return app;
-	    }
-	}
-	return null;
-    }
-
-    boolean tab_has_non_https_url(String uportalActiveTab, boolean isGuest) {
-	String key = isGuest ? "uportalActiveTabGuest" : "uportalActiveTab";
-	for (Map<String,String> app : globalLayout.allChannels.values()) {
-	    if (uportalActiveTab.equals(app.get(key))) {
-		String url = app.get("url");
-		if (url != null && urldecode(url).contains("http://")) {
-		    return true;
-		}
-	    }
-	}
-	return false;
-    }
-
-    String ent_tab_url(String uportalActiveTab) {
-	String url = ent_base_url + "/render.userLayoutRootNode.uP";
-	String params = "?uP_root=root" + "&uP_sparam=activeTab&activeTab=" + uportalActiveTab;
-	return url + params;
+    	return handleGroups.getApp(appId);
     }
 
     /* ******************************************************************************** */
@@ -655,15 +590,20 @@ public class ProlongationENT extends HttpServlet {
     }
 
     static String urldecode(String s) {
-	return ProlongationENTGlobalLayout.urldecode(s);
+       try {
+           return java.net.URLDecoder.decode(s, "UTF-8");
+       }
+       catch (java.io.UnsupportedEncodingException uee) {
+           return s;
+       }
     }
 
     static private boolean hasParameter(HttpServletRequest request, String attrName) {
 	return request.getParameter(attrName) != null;
     }
     
-    static private String removePrefixOrNull(String s, String prefix) {
-	return ProlongationENTGlobalLayout.removePrefixOrNull(s, prefix);
+    static String removePrefixOrNull(String s, String prefix) {
+	return s.startsWith(prefix) ? s.substring(prefix.length()) : null;
     }
 
     static Map<String, Object> array(String key1, Object val1) {
