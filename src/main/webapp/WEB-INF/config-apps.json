@@ -1,0 +1,711 @@
+{    
+
+    "LAYOUT": {
+        "Accueil": [
+            "accueil-BIS", "caccueil"
+        ],
+        "Intranet": [
+            "intranet"
+        ],
+        "Documents": [
+            "courriers-DGS", "stockage-en-ligne", "CFilex", "Compilatio", "CParis1prim"
+        ],
+        "Vie administrative": [
+            "esup-agent", "g2t", "missions", "page-perso", "CCompte-pers"
+        ],
+        "Scolarité": [
+            "MonDossierWeb", "moodle-epi", "eee",
+            "CReservaLang-etu", "reservasport-etu",
+            "reins", "pjweb", "ipweb",
+            "COraux", "pstage-etu", "memoire-etu",
+            "rdvia", "rdvmed",
+            "CCompte-etu"
+        ],
+        "Communication": [
+            "annuaire",
+            "webmail", "esup-messages",
+            "esup-smsu", "esup-smsu-api-admin",
+            "signature", "ecards",
+            "sorbonnaute-management",
+            "listes_de_diffusion" ],
+        "Collaboration": [
+            "FoodleP1", "agenda", "pad", "dsidoc", "nuxeo", "grouper"
+        ],
+        "Documentation": [
+            "aleph", "domino", "domino-presse", "signet"
+        ],
+        "Enseignement": [
+            "MonDossierWebEnseignant",
+            "CReservaLang-ens", "reservasport-ens",
+            "moodle-epi-ens", "eee-ens",
+            "SaisieNotes", "pstage-ens", "memoire-ens"
+        ],
+        "Gestion": [
+            "CApogee", "se-apogee",
+            "CSof",
+            "CReservaLang", "reservasport-gest",
+            "CRendez-vous", "pstage-pers",
+            "CHarpege", "sifac", "agasse",
+            "memoire-gest", "hyperplanning-gest", "rdvia-gest", "rdvmed-gest"
+        ],
+        "Administrateurs": [
+            "portal-administration", "portlet-admin", "groupsmanager", "IdentitySwapper", "fragment-admin", "ent-info"
+        ],
+        "Assistance": [
+            "Assistance_DSI", "gun-etu", "gun-pers", "userinfo"
+        ]
+    },
+
+    "APPS": {
+        "accueil-BIS": {
+            "title": "Ibis",
+            "description": "Intranet de la bibliothèque interuniversitaire de la Sorbonne",
+            "url": "https://www.univ-paris1.fr/fileadmin/ENT/accueil-ent-ibis.html",
+            "groups": [ "employees.library.IU2" ]
+        },
+        "caccueil": {
+            "title": "Accueil",
+            "description": "Page d'accueil de l'ENT",
+            "url": "https://ent-test.univ-paris1.fr/accueil/",
+            "hideFromMobile": true,
+            "groups": [
+                "paris1",
+                "not_paris1"
+            ]
+        },
+        "intranet": {
+            "title": "Intranet",
+            "description": "Espace de communication des services de l'université reservé aux personnels",
+            "url": "http://www.univ-paris1.fr/ent/intranet2",
+            "groups": [
+                "TousPers",
+                "applications.Typo3.intranet-temporary-users"
+            ]
+        },
+        "courriers-DGS": {
+            "title": "Courriers DGS",
+            "description": "Application nuxeo de gestion de courriers",
+            "url": "https://nuxeo-test.univ-paris1.fr/nuxeo/nxpath/default/courriers-dgs@view_documents",
+            "shibbolethSPPrefix": "/",
+            "groups": [
+                "applications.nuxeo.Courriers.dgs",
+                "applications.nuxeo.Courriers.secretariat-dgs"
+            ]
+        },
+        "stockage-en-ligne": {
+            "text": "Mes documents en ligne",
+            "title": "Documents en ligne",
+            "description": "Stockage en ligne",
+            "hashelp": true,
+            "url": "https://nuxeo-test.univ-paris1.fr/nuxeo/nxpath/default/default-domain/workspaces@view_documents",
+            "shibbolethSPPrefix": "/",
+            "groups": [ "paris1" ]
+        },
+        "CFilex": {
+            "text": "Mes fichiers à envoyer",
+            "title": "Envoi de fichiers avec Filex",
+            "description": "Envoi de gros fichiers utilisant le système Filex",
+            "hashelp": true,
+            "url": "https://filex.univ-paris1.fr/upload",
+            "shibbolethSPPrefix": "/",
+            "groups": [
+                "paris1",
+                "not_paris1"
+            ]
+        },
+        "Compilatio": {
+            "text": "Détection du plagiat",
+            "title": "Détection du plagiat avec Compilatio.net",
+            "description": "Détection du plagiat sur internet avec compilatio.net",
+            "url": "https://compilatio.univ-paris1.fr/sso/cas/univ-paris1/",
+            "hideFromMobile": true,
+            "groups": [ "TousPers" ]
+        },
+        "CParis1prim": {
+            "title": "Reprographie",
+            "description": "Service Reprographie Paris1prim",
+            "hashelp": true,
+            "url": "https://paris1prim.univ-paris1.fr",
+            "hideFromMobile": true,
+            "groups": [ "TousPers" ]
+        },
+        "esup-agent": {
+            "text": "Mon dossier Harpège",
+            "title": "Consultation du dossier Harpège",
+            "description": "Consultation du dossier Harpège pour un membre du personnel",
+            "groups": [ "TousPers" ]
+        },
+        "g2t": {
+            "text": "Mes congés",
+            "title": "Gestion des congés",
+            "description": "Logiciel G2t",
+            "hashelp": true,
+            "url": "https://g2t.univ-paris1.fr",
+            "groups": [ "applications.g2t.users" ]
+        },
+        "missions": {
+            "text": "Mes frais de missions",
+            "title": "Aperçu de vos frais de missions",
+            "groups": [ "TousPers" ]
+        },
+        "page-perso": {
+            "title": "Ma page perso",
+            "url": "https://www.univ-paris1.fr/ent/intranet2/dsiun/compte/modifier-ma-page-personnelle/",
+            "groups": [ "applications.Typo3.labeledURI" ]
+        },
+        "CCompte-pers": {
+            "title": "Mon compte Paris 1",
+            "description": "Gestion de votre compte à l'université Paris 1",
+            "groups": [
+                "TousPers",
+                "TousInvites"
+            ]
+        },
+        "MonDossierWeb": {
+            "title": "Mon dossier étudiant",
+            "description": "Consultation du dossier étudiant apogée",
+            "groups": [
+                "TousEtud",
+                "TousAnciens"
+            ]
+        },
+        "moodle-epi": {
+            "title": "Mes EPI",
+            "description": "Espaces pédagogiques interactifs",
+            "url": "https://ent.univ-paris1.fr/epi",
+            "users": [ "broques", "flagneau", "prigaux" ],
+            "groups": [ "TousEtud" ]
+        },
+        "eee": {
+            "title": "Mes questionnaires EEE",
+            "description": "Évaluation des enseignements par les étudiants",
+            "url": "https://eee.univ-paris1.fr/auth/shibboleth/index.php",
+            "shibbolethSPPrefix": "/",
+            "users": [ "broques", "flagneau", "prigaux" ],
+            "groups": [ "TousEtudMembre" ]
+        },
+        "CReservaLang-etu": {
+            "text": "Mes choix en langues",
+            "title": "Inscription en langues avec ReservaLang",
+            "url": "https://rlang.univ-paris1.fr",
+            "hideFromMobile": true,
+            "groups": [ "TousEtudMembre" ]
+        },
+        "reservasport-etu": {
+            "text": "Mes choix en sports",
+            "title": "Inscription en sports avec ReservaSport",
+            "url": "https://rsport.univ-paris1.fr",
+            "hideFromMobile": true,
+            "groups": [ "TousEtudMembre" ]
+        },
+        "reins": {
+            "text": "Mes inscriptions administratives",
+            "title": "Mes inscriptions administratives avec Réins",
+            "description": "Consultation et modification de vos inscriptions administratives",
+            "url": "https://iaconsulttest.univ-paris1.fr",
+            "groups": [ "TousEtudMembre" ]
+        },
+        "ipweb": {
+            "text": "Mes inscriptions pédagogiques",
+            "title": "Mes inscriptions pédagogiques avec IpWeb",
+            "description": "Inscriptions pédagogiques en ligne",
+            "url": "https://ipconsulttest.univ-paris1.fr",
+            "groups": [ "TousEtudMembre" ]
+        },
+        "COraux": {
+            "text": "Mes oraux",
+            "title": "Réservation épreuve orale",
+            "url": "https://rendez-vous.univ-paris1.fr/ctrlpnl.php",
+            "hideFromMobile": true,
+            "groups": [ ]
+        },
+        "pstage-etu": {
+            "title": "Mes stages",
+            "description": "Gestion des conventions de stage",
+            "url": "https://pstage.univ-paris1.fr/",
+            "hideFromMobile": true,
+            "groups": [ "TousEtudMembre" ]
+        },
+        "memoire-etu": {
+            "title": "Mes mémoires",
+            "description": "Dépôt de mémoire de master 2",
+            "url": "https://nuxeo-test.univ-paris1.fr/nuxeo/nxpath/default/memoires@view_documents",
+            "shibbolethSPPrefix": "/",
+            "groups": [ "applications.nuxeo.mem.etud" ]
+        },
+        "rdvia": {
+            "text": "Mes rendez-vous IA",
+            "title": "Rendez-vous inscriptions administratives",
+            "url": "https://rdviatest.univ-paris1.fr/",
+            "groups": [ "TousEtud" ]
+        },
+        "rdvmed": {
+            "text": "Mes rendez-vous médicaux",
+            "title": "Rendez-vous médicaux",
+            "url": "https://rdvmed.univ-paris1.fr/",
+            "groups": [ "TousEtudMembre" ]
+        },
+        "CCompte-etu": {
+            "title": "Mon compte étudiant",
+            "description": "Gestion de votre compte à l'université Paris 1",
+            "groups": [
+                "TousEtud",
+                "TousAnciens"
+            ]
+        },
+        "pjweb": {
+            "title": "Mes pièces justificatives",
+            "description": "Mes pièces justificatives avec pjweb",
+            "url": "https://pjwebtest.univ-paris1.fr/",
+            "groups": [
+                "TousEtudMembre"
+            ]
+        },
+        "annuaire": {
+            "title": "Annuaire",
+            "groups": [
+                "paris1",
+                "not_paris1"
+            ]
+        },
+        "webmail": {
+            "title": "Webmail",
+            "description": "Mails avec Horde5 Imp",
+            "url": "https://echange.univ-paris1.fr/imp/",
+            "groups": [ "applications.horde5.users" ]
+        },
+        "esup-messages": {
+            "text": "Ma boite mail",
+            "title": "Aperçu de la boite mail",
+            "groups": [
+                "TousEtud",
+                "TousPers",
+                "TousInvites",
+                "TousRetraite"
+            ]
+        },
+        "esup-smsu": {
+            "text": "Mes SMS",
+            "title": "Adhésion / envoi de SMS",
+            "description": "Canal d'envoi et d'adhésion au service SMS",
+            "hashelp": true,
+            "url": "https://sms-test.univ-paris1.fr",
+            "groups": [ "paris1" ]
+        },
+        "esup-smsu-api-admin": {
+            "text": "Gestion SMSU",
+            "title": "Canal d'administration de smsu-api",
+            "url": "https://sms-test.univ-paris1.fr/admin",
+            "groups": [ "applications.smsu.users.smsu-api-admin" ]
+        },
+        "signature": {
+            "title": "Ma signature de mail",
+            "description": "Application générant la signature de mail Paris 1",
+            "url": "https://signature.univ-paris1.fr",
+            "hideFromMobile": true,
+            "groups": [ "TousPers" ]
+        },
+        "ecards": {
+            "title": "Mes cartes",
+            "description": "Créez votre carte de visite ou de correspondance",
+            "url": "https://ecards.univ-paris1.fr/",
+            "groups": [ "TousPers" ]
+        },
+        "sorbonnaute-management": {
+            "title": "Envoi du Sorbonn@ute",
+            "description": "Application d'envoi de la newsletter étudiante",
+            "url": "https://sorbonnaute.univ-paris1.fr",
+            "groups": [ "applications.sorbonnaute.sorbonnaute-managers" ]
+        },
+        "listes_de_diffusion": {
+            "text": "Mes listes de diffusion",
+            "title": "Listes de diffusion sympa",
+            "description": "Les listes de diffusion sympa auxquelles je suis abonné",
+            "hashelp": true,
+            "groups": [ "paris1" ]
+        },
+        "FoodleP1": {
+            "text": "Planification de réunions",
+            "title": "Planification et organisation de réunions - Foodle",
+            "hashelp": true,
+            "url": "https://foodle.univ-paris1.fr/up1",
+            "groups": [
+                "paris1",
+                "not_paris1"
+            ]
+        },
+        "agenda": {
+            "title": "Agenda",
+            "description": "Agenda partagé avec Horde5 Kronolith",
+            "url": "https://echange.univ-paris1.fr/kronolith/",
+            "groups": [ "applications.horde5.users" ]
+        },
+        "pad": {
+            "title": "Éditeur de texte collaboratif",
+            "description": "Etherpad",
+            "hashelp": true,
+            "url": "https://pad.univ-paris1.fr",
+            "shibbolethSPPrefix": "/shibboleth/",
+            "hideFromMobile": true,
+            "groups": [
+                "paris1",
+                "not_paris1"
+            ]
+        },
+        "dsidoc": {
+            "title": "DSIUNDoc",
+            "url": "https://dsidoc.univ-paris1.fr",
+            "shibbolethSPPrefix": "/shibboleth/",
+            "groups": [ "employees.administration.DGH" ]
+        },
+        "nuxeo": {
+            "title": "Gestion de contenus",
+            "description": "Gestion de contenus avec Nuxeo",
+            "url": "https://nuxeo-test.univ-paris1.fr/nuxeo/nxpath/default/default-domain/workspaces@view_documents",
+            "shibbolethSPPrefix": "/",
+            "hideFromMobile": true,
+            "groups": [
+                "applications.nuxeo.phd-managers",
+                "applications.nuxeo.report-managers",
+                "not_paris1"
+            ]
+        },
+        "grouper": {
+            "text": "Gestion des groupes",
+            "title": "Gestion des groupes (Grouper)",
+            "url": "https://grouper-test.univ-paris1.fr",
+            "shibbolethSPPrefix": "/",
+            "groups": [
+                "applications.grouper.admins",
+                "applications.grouper.updaters"
+            ]
+        },
+        "aleph": {
+            "title": "Catalogue des bibliothèques (SCD)",
+            "description": "Compte lecteur et catalogue du Service Commun de la Documentation Paris 1",
+            "hashelp": true,
+            "url": "http://domino.univ-paris1.fr/pds?func=load-login&calling_system=aleph&institute=UPS&url=http://sushi-new.univ-paris1.fr:80?func=",
+            "groups": [
+                "TousPers",
+                "TousEtud",
+                "TousAnciens",
+                "TousInvites",
+                "TousRetraite"
+            ]
+        },
+        "domino": {
+            "text": "Ressources électroniques (Domino)",
+            "title": "Ressources électroniques - Domino",
+            "url": "http://domino.univ-paris1.fr/pds?func=load-login&calling_system=metalib&institute=UPS&url=http://domino.univ-paris1.fr:80/V/?func=find-db-1",
+            "groups": [
+                "TousPers",
+                "TousEtudMembre"
+            ]
+        },
+        "domino-presse": {
+            "title": "Presse et actualités",
+            "url": "http://dice.univ-paris1.fr/pds?func=load-login&calling_system=metalib&institute=UPS&url=http://dice.univ-paris1.fr:80/V/%3Ffunc%3Dfind-db-1-category%26mode%3Dcategory%26sequence%3D000000218",
+            "groups": [
+                "TousPers",
+                "TousEtudMembre"
+            ]
+        },
+        "signet": {
+            "text": "Mes signets",
+            "title": "Stockage de vos signets",
+            "hashelp": true,
+            "hideFromMobile": true,
+            "groups": [
+                "paris1",
+                "not_paris1"
+            ]
+        },
+        "MonDossierWebEnseignant": {
+            "title": "Listes des étudiants",
+            "description": "Consultation du dossier étudiant apogée et des listes d'étudiants",
+            "groups": [ "TousEns" ]
+        },
+        "CReservaLang-ens": {
+            "text": "Mes groupes en langue",
+            "title": "Groupes de TD en langue avec ReservaLang",
+            "url": "https://rlang.univ-paris1.fr/",
+            "hideFromMobile": true,
+            "groups": [ "ufr_SX5_teacher" ]
+        },
+        "reservasport-ens": {
+            "text": "Mes groupes en sport",
+            "title": "Groupes de TD en sport avec ReservaSport",
+            "url": "https://rsport.univ-paris1.fr",
+            "hideFromMobile": true,
+            "groups": [ "ufr_SC3_teacher" ]
+        },
+        "moodle-epi-ens": {
+            "title": "Mes EPI (enseignant)",
+            "description": "Espaces pédagogiques interactifs",
+            "url": "https://ent.univ-paris1.fr/epi-ens",
+            "groups": [
+                "TousEns",
+                "applications.moodle.Mcours-managers"
+            ]
+        },
+        "eee-ens": {
+            "title": "Questionnaires EEE",
+            "url": "https://eee.univ-paris1.fr",
+            "groups": [ "applications.moodle.eee-teachers" ]
+        },
+        "SaisieNotes": {
+            "title": "Saisie des notes",
+            "url": "https://notes.univ-paris1.fr/",
+            "hideFromMobile": true,
+            "groups": [ "applications.SNW.users" ]
+        },
+        "pstage-ens": {
+            "title": "Suivi des stages",
+            "description": "Gestion des stages (pour les enseignants)",
+            "url": "https://pstage.univ-paris1.fr",
+            "hideFromMobile": true,
+            "groups": [ "TousEns" ]
+        },
+        "memoire-ens": {
+            "title": "Mémoires d'étudiants",
+            "description": "Gestion des mémoires de master 2",
+            "url": "https://nuxeo-test.univ-paris1.fr/nuxeo/nxpath/default/memoires@view_documents",
+            "shibbolethSPPrefix": "/",
+            "groups": [ "TousEns" ]
+        },
+        "CApogee": {
+            "title": "Apogée",
+            "description": "Application pour l'Organisation et la Gestion des Étudiants et des Enseignements",
+            "url": "https://apogee.univ-paris1.fr/",
+            "hideFromMobile": true,
+            "groups": [ "applications.apogee.users" ]
+        },
+        "se-apogee": {
+            "title": "SE Apogée",
+            "description": "Affichage de la structure des enseignements d'apogée",
+            "hashelp": true,
+            "url": "https://se-apogee.univ-paris1.fr/",
+            "groups": [ "applications.apogee.users" ]
+        },
+        "CSof": {
+            "text": "Offre de formation",
+            "title": "Publication de l'offre de formation",
+            "hashelp": true,
+            "hideFromMobile": true,
+            "groups": [ "applications.sof.users" ]
+        },
+        "CReservaLang": {
+            "text": "Inscriptions en langues",
+            "title": "Gestion des inscriptions de langues avec ReservaLang",
+            "url": "https://rlang.univ-paris1.fr",
+            "hideFromMobile": true,
+            "groups": [ "applications.reserva.reservalang-managers" ]
+        },
+        "reservasport-gest": {
+            "text": "Inscriptions en sports",
+            "title": "Gestion des reservations de sports",
+            "description": "Gestion des reservations de sports avec ReservaSport",
+            "url": "https://rsport.univ-paris1.fr",
+            "hideFromMobile": true,
+            "users": [ "aanli", "gcassilde", "querment", "vertus", "yktorza" ],
+            "groups": [ "applications.reserva.reservasport-managers" ]
+        },
+        "CRendez-vous": {
+            "title": "Gestion des oraux",
+            "description": "Gestion réservation des oraux",
+            "url": "https://rendez-vous.univ-paris1.fr/ctrlpnl.php",
+            "hideFromMobile": true,
+            "groups": [ ]
+        },
+        "pstage-pers": {
+            "title": "Gestion des stages",
+            "description": "Gestion des stages (pour le personnel)",
+            "url": "https://pstage.univ-paris1.fr",
+            "hideFromMobile": true,
+            "groups": [ "applications.pstage.managers" ]
+        },
+        "CHarpege": {
+            "title": "Harpège",
+            "description": "HARmonisation de la Gestion des Personnels",
+            "hideFromMobile": true,
+            "groups": [ "applications.harpege.users" ]
+        },
+        "sifac": {
+            "title": "Sifac",
+            "description": "Application de gestion financière",
+            "url": "https://sifac.univ-paris1.fr/",
+            "hideFromMobile": true,
+            "groups": [ "applications.sifac.users" ]
+        },
+        "agasse": {
+            "title": "Agasse",
+            "description": "Gestion des heures complémentaires",
+            "url": "https://agasse-test.univ-paris1.fr/",
+            "groups": [ "applications.agasse.users" ]
+        },
+        "memoire-gest": {
+            "title": "Mémoires",
+            "description": "Gestion des mémoires de master 2",
+            "url": "https://nuxeo-test.univ-paris1.fr/nuxeo/nxpath/default/memoires@view_documents",
+            "shibbolethSPPrefix": "/",
+            "groups": [ "applications.nuxeo.mem.gestion" ]
+        },
+        "hyperplanning-gest": {
+            "title": "Consultation des salles",
+            "description": "Consultation des salles avec Hyperplanning",
+            "url": "https://hyperplanning.univ-paris1.fr/appariteur",
+            "groups": [ "applications.hyperplanning.users-net" ]
+        },
+        "rdvia-gest": {
+            "title": "RDVIA",
+            "description": "Administration des rendez-vous",
+            "url": "https://rdviatest.univ-paris1.fr/rdviatest/admin/",
+            "groups": [ "applications.rdvia.managers" ]
+        },
+        "rdvmed-gest": {
+            "title": "RDVMED",
+            "description": "Administration des rendez-vous",
+            "url": "https://rdvmedtest.univ-paris1.fr/rdvmedtest/admin/",
+            "groups": [ "applications.rdvmed.managers" ]
+        },
+        "Assistance_DSI": {
+            "title": "Assistance DSIUN",
+            "url": "https://glpi-front.univ-paris1.fr",
+            "groups": [
+                "TousPers",
+                "TousInvites"
+            ]
+        },
+        "gun-etu": {
+            "title": "Guide des usages du numérique étudiant",
+            "description": "Guide des usages du numérique de l'étudiant",
+            "url": "https://ent.univ-paris1.fr/gun-flipbook",
+            "groups": [
+                "Anonymes",
+                "TousEtud",
+                "TousAnciens"
+            ]
+        },
+        "gun-pers": {
+            "title": "Guide des usages du numérique personnel",
+            "description": "Guide des usages du numérique pour le personnel",
+            "url": "https://ent.univ-paris1.fr/gun-pers-flipbook",
+            "groups": [
+                "Anonymes",
+                "TousPers",
+                "TousInvites",
+                "TousRetraite"
+            ]
+        },
+        "userinfo": {
+            "title": "Userinfo",
+            "description": "Informations sur les utilisateurs Paris1",
+            "url": "https://userinfo.univ-paris1.fr/",
+            "groups": [
+                "applications.userinfo.l1-users",
+                "applications.userinfo.l2-users"
+            ]
+        },
+        "CActivation": {
+            "title": "Compte Paris 1",
+            "description": "gestion de compte à l'université",
+            "groups": [ "Anonymes", "paris1" ]
+        },
+        "CMentions": {
+            "title": "Mentions légales",
+            "url": "https://www.univ-paris1.fr/index.php?id=520160",
+            "groups": [
+                "paris1",
+                "not_paris1"
+            ]
+        },
+        "CContacts": {
+            "title": "Nous contacter",
+            "url": "https://www.univ-paris1.fr/ent/esup/contacts/",
+            "groups": [ "paris1" ]
+        },
+
+        "portal-administration": {
+            "title": "Administration du portail",
+            "groups": [ "Administrateurs Portail" ]
+        },
+        "portlet-admin": {
+            "title": "Administration des portlets",
+            "hideFromMobile": true,
+            "groups": [ "Administrateurs Portail" ]
+        },
+        "groupsmanager": {
+            "title": "Gestion des groupes portail",
+            "hideFromMobile": true,
+            "groups": [ "Administrateurs Portail" ]
+        },
+        "IdentitySwapper": {
+            "title": "Echange d'identité uportal",
+            "groups": [ "Administrateurs Portail" ]
+        },
+        "fragment-admin": {
+            "title": "Administration de fragments",
+            "hideFromMobile": true,
+            "groups": [ "Administrateurs Portail" ]
+        },
+        "ent-info": {
+            "title": "Informations ENT uportal",
+            "groups": [ "Administrateurs Portail" ]
+        }
+    },
+    "GROUPS": {
+        "paris1": {
+            "uid": ".+"
+        },
+        "not_paris1": {
+            "Shib-Identity-Provider": "^(?!urn:mace:cru.fr:federation:univ-paris1.fr).+"
+        },
+
+        "Anonymes": {
+            // for transition with uportal
+        },
+        "Administrateurs Portail": {
+            "uid": "^(aanli|prigaux)$"
+        },
+
+        "TousPers": {
+            "eduPersonAffiliation": "^(teacher|staff|employee|researcher|emeritus)$"
+        },
+        "TousBiatos": {
+            "eduPersonAffiliation": "^staff$"
+        },
+        "TousCher": {
+            "eduPersonAffiliation": "^researcher$"
+        },
+        "TousEme": {
+            "eduPersonAffiliation": "^emeritus$"
+        },
+        "TousEns": {
+            "eduPersonAffiliation": "^teacher$"
+        },
+        "TousInvites": {
+            "eduPersonAffiliation": "^affiliate$"
+        },
+        "TousAnciens": {
+            "eduPersonAffiliation": "^alum$"
+        },
+        "TousRetraite": {
+            "eduPersonAffiliation": "^retired$"
+        },
+        "TousEtud": {
+            "eduPersonAffiliation": "^student$"
+        },
+        "TousEtudMembre": {
+            "eduPersonAffiliation": [ "^student$", "^member$" ]
+        },
+        
+        "ufr_SX5_teacher": {
+            "memberOf": "^cn=employees\\.pedagogy\\.SX5,ou=groups,dc=univ-paris1,dc=fr$",
+            "eduPersonAffiliation": "^teacher$"
+        },
+        "ufr_SC3_teacher": {
+            "memberOf": "^cn=employees\\.pedagogy\\.SC3,ou=groups,dc=univ-paris1,dc=fr$",
+            "eduPersonAffiliation": "^teacher$"
+        }
+    }
+}
