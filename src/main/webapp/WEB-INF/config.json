@@ -6,19 +6,20 @@
 
     "cas_base_url": "https://cas-test.univ-paris1.fr/cas",
     "ent_base_url": "https://esup-test.univ-paris1.fr",
-    "ent_base_url_guest": "https://ent.univ-paris1.fr",
+    "ent_base_url_guest": "https://ent-test.univ-paris1.fr",
     "_currentIdpId": "urn:mace:cru.fr:federation:univ-paris1.fr",
+    "current_idpAuthnRequest_url": "https://idp-test.univ-paris1.fr/idp/profile/Shibboleth/SSO",
 
     "apps_no_bandeau": [ "CParis1prim", "FoodleP1",
                          "caccueil-guest", "CContacts-guest",
                          "accueil-BIS", "CMentions" ],
     "url_bandeau_compatible": [],
 
-    "wanted_user_attributes": [ "supannAliasLogin", "displayName", "mail", "eduPersonAffiliation", "memberOf" ],
+    "wanted_user_attributes": [ "supannAliasLogin", "displayName", "mail", "eduPersonAffiliation" ],
     "visit_max_inactive": 1800, // 30 min
     "time_before_checking_browser_cache_is_up_to_date": 60,
 
     "isCasSingleSignOutWorking": true,
-    "disableLocalStorage": true
+    "disableLocalStorage": false
 
 }
