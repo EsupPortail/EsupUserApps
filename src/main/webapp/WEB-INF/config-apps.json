@@ -49,7 +49,7 @@
             "memoire-gest", "hyperplanning-gest", "rdvia-gest", "rdvmed-gest"
         ],
         "Administrateurs": [
-            "portal-administration", "portlet-admin", "groupsmanager", "IdentitySwapper", "fragment-admin", "ent-info"
+            "portal-administration", "portlet-admin", "groupsmanager", "IdentitySwapper", "ent-info"
         ],
         "Assistance": [
             "Assistance_DSI", "gun-etu", "gun-pers", "userinfo"
@@ -641,11 +641,6 @@
         },
         "IdentitySwapper": {
             "title": "Echange d'identité uportal",
-            "groups": [ "Administrateurs Portail" ]
-        },
-        "fragment-admin": {
-            "title": "Administration de fragments",
-            "hideFromMobile": true,
             "groups": [ "Administrateurs Portail" ]
         },
         "ent-info": {
