@@ -662,7 +662,7 @@
         },
 
         "Anonymes": {
-            // for transition with uportal
+            "eduPersonAffiliation": "xxxx"
         },
         "Administrateurs Portail": {
             "uid": "^(aanli|prigaux)$"
