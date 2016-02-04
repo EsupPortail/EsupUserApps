@@ -38,7 +38,7 @@
         </init-param>
         <init-param>
           <param-name>serverName</param-name>
-          <param-value>esup-test.univ-paris1.fr</param-value>
+          <param-value>ent-test.univ-paris1.fr</param-value>
         </init-param>
         <init-param>
           <param-name>redirectAfterValidation</param-name>
@@ -48,11 +48,11 @@
 	
     <filter-mapping>
         <filter-name>CAS Single Sign Out Filter</filter-name>
-        <url-pattern>/ProlongationENT/js</url-pattern>
+        <url-pattern>/js</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>CAS Validate Filter Simple</filter-name>
-        <url-pattern>/ProlongationENT/js</url-pattern>
+        <url-pattern>/js</url-pattern>
     </filter-mapping>
 
 	<servlet>
@@ -62,27 +62,27 @@
 
 	<servlet-mapping>
 	    <servlet-name>ProlongationENT</servlet-name> 
-	    <url-pattern>/ProlongationENT/js</url-pattern> 
+	    <url-pattern>/js</url-pattern> 
 	</servlet-mapping>
 
 	<servlet-mapping>
 	    <servlet-name>ProlongationENT</servlet-name> 
-	    <url-pattern>/ProlongationENT/detectReload</url-pattern> 
+	    <url-pattern>/detectReload</url-pattern> 
 	</servlet-mapping>
 
 	<servlet-mapping>
 	    <servlet-name>ProlongationENT</servlet-name> 
-	    <url-pattern>/ProlongationENT/redirect</url-pattern> 
+	    <url-pattern>/redirect</url-pattern> 
 	</servlet-mapping>
 
 	<servlet-mapping>
 	    <servlet-name>ProlongationENT</servlet-name> 
-	    <url-pattern>/ProlongationENT/purgeCache</url-pattern> 
+	    <url-pattern>/purgeCache</url-pattern> 
 	</servlet-mapping>
 
 	<servlet-mapping>
 	    <servlet-name>ProlongationENT</servlet-name> 
-	    <url-pattern>/ProlongationENT/logout</url-pattern> 
+	    <url-pattern>/logout</url-pattern> 
 	</servlet-mapping>
 
 </web-app>
