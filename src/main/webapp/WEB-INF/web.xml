@@ -8,15 +8,6 @@
     
     <display-name>uPortal</display-name>
 
-    <!--
-        - Location of the Log4J config file, for initialization and refresh checks.
-        - Applied by Log4jConfigListener.
-    -->
-    <context-param>
-        <param-name>log4jConfigLocation</param-name>
-        <param-value>/WEB-INF/log4j.properties</param-value>
-    </context-param>
-
     <context-param>
         <!-- the default log4j.properties does not make use of the webapp root feature -->
         <param-name>log4jExposeWebAppRoot</param-name>
