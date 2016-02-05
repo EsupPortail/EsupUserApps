@@ -154,15 +154,22 @@ public class ProlongationENT extends HttpServlet {
 	js_text_middle = js_text_middle.replace("var CONF = undefined", "var CONF = " + json_encode(js_conf));
 	js_text_middle = js_text_middle.replace("var DATA = undefined", "var DATA = " + json_encode(js_data));
 	js_text_middle = js_text_middle.replace("var CSS = undefined", "var CSS = " + json_encode(js_css));
-	
+
+	String hash = computeMD5(js_text_middle);
 	Map<String, Object> js_params =
 	    array("is_old", is_old,
-		  "hash", computeMD5(js_text_middle));
+		  "hash", hash);
 
 	String js_text = js_text_middle.replace("var PARAMS = undefined", "var PARAMS = " + json_encode(js_params));
 
 	response.setContentType("application/javascript; charset=utf8");
 	PrintWriter out = response.getWriter();
+	
+	if (hash.equals(request.getParameter("if_none_match"))) {
+	    out.println("// not update needed");
+	    return;
+	}
+
 	out.println("window.bandeau_ENT.notFromLocalStorage = true;");
 
 	if (conf.getBoolean("disableLocalStorage")) {
