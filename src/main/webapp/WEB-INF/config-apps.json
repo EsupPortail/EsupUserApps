@@ -269,7 +269,7 @@
             ]
         },
         "webmail": {
-            "title": "Webmail",
+            "title": "Webmail (expérimental)",
             "description": "Mails avec Horde5 Imp",
             "url": "https://echange.univ-paris1.fr/imp/",
             "groups": [ "applications.horde5.users" ]
