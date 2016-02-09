@@ -73,6 +73,7 @@
 			nowarn="${compile.nowarn}" 
 			deprecation="${compile.deprecation}" 
 			includeantruntime="false"
+                        encoding="UTF-8"
 			optimize="${compile.optimize}">
 			<classpath refid="compile.classpath" />
 		</javac>
