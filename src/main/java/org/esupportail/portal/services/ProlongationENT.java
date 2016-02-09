@@ -267,7 +267,12 @@ public class ProlongationENT extends HttpServlet {
 
     String file_get_contents(HttpServletRequest request, String file) {
 	try {
-	    return IOUtils.toString(file_get_stream(request, "/" + file), "UTF-8");
+            InputStream in = file_get_stream(request, "/" + file);
+            if (in == null) {
+                log.error("error reading file " + file);
+                return null;
+            }
+	    return IOUtils.toString(in, "UTF-8");
 	} catch (IOException e) {
 	    log.error("error reading file " + file, e);
 	    return null;
