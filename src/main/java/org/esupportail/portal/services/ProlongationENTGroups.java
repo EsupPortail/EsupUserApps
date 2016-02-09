@@ -13,7 +13,8 @@ import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import java.io.PrintWriter;
-    
+
+import javax.naming.CommunicationException;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -97,7 +98,7 @@ class ProlongationENTGroups {
     @SuppressWarnings("unchecked")
 	Map<String, List<String>> getLdapInfo(String dn, Set<String> wanted_attributes) {
     	try {
-	        Attributes attrs = getDirContext().getAttributes(dn, wanted_attributes.toArray(new String[0]));
+	        Attributes attrs = getAttributes(dn, wanted_attributes.toArray(new String[0]));
 	        Map<String, List<String>> r = new HashMap<String, List<String>>();
 	        for (String attr : wanted_attributes) {
                     Attribute vals = attrs.get(attr.toLowerCase());
@@ -110,6 +111,16 @@ class ProlongationENTGroups {
     	}
     }
 
+    private Attributes getAttributes(String dn, String[] wanted_attributes) throws NamingException {
+        try {
+            return getDirContext().getAttributes(dn, wanted_attributes);
+        } catch (CommunicationException e) {
+            // retry, maybe a new LDAP connection will work
+            dirContext = null;
+            return getDirContext().getAttributes(dn, wanted_attributes);
+        }
+    }
+    
     public Map<String, List<String>> getLdapPeopleInfo(String uid) {
         return getLdapInfo("uid=" + uid + "," + ldapConf.peopleDN, compute_wanted_attributes());
     }
