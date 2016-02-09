@@ -553,36 +553,12 @@ public class ProlongationENT extends HttpServlet {
 	}
     }
     
-    private static String json_encode_raw(Object o) {
+    private static String json_encode(Object o) {
 	if (o instanceof String) {
 	    return JSONUtils.valueToString(o);
 	} else {    
 	    return "" + JSONObject.fromObject(o);
 	}
-    }
-    
-    static String json_encode(Object o) {
-	String s = json_encode_raw(o);
-	// IE11 does not trust the js script charset and will interpret with html page charset
-	// so we must escape accents since json-lib does not do it...
-	s = s.replace("É", "\\u00c9");
-	s = s.replace("À", "\\u00c0");
-	s = s.replace("à", "\\u00e0");
-	s = s.replace("â", "\\u00e2");
-	s = s.replace("ä", "\\u00e4");
-	s = s.replace("ç", "\\u00e7");
-	s = s.replace("è", "\\u00e8");
-	s = s.replace("é", "\\u00e9");
-	s = s.replace("ê", "\\u00ea");
-	s = s.replace("ë", "\\u00eb");
-	s = s.replace("î", "\\u00ee");
-	s = s.replace("ï", "\\u00ef");
-	s = s.replace("ô", "\\u00f4");
-	s = s.replace("ö", "\\u00f6");
-	s = s.replace("ù", "\\u00f9");
-	s = s.replace("û", "\\u00fb");
-	s = s.replace("ü", "\\u00fc");
-	return s;
     }
 
     static private String urlencode(String s) {
