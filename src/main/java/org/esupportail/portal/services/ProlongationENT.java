@@ -68,6 +68,7 @@ public class ProlongationENT extends HttpServlet {
 	String userId = noCache ? null : get_CAS_userId(request);
 	String app = request.getParameter("app");
 	String res = request.getParameter("res");
+	String time = request.getParameter("time");
 	String forcedId = request.getParameter("uid");
 
 	if (noCache || userId == null) {
@@ -76,6 +77,7 @@ public class ProlongationENT extends HttpServlet {
 		String final_url = bandeau_ENT_url + "/js?auth_checked"
 		    + (app != null ? "&app=" + urlencode(app) : "")
 		    + (res != null ? "&res=" + urlencode(res) : "")
+		    + (time != null ? "&time=" + urlencode(time) : "")
 		    + (forcedId != null ? "&uid=" + urlencode(forcedId) : "");
 		response.sendRedirect(via_CAS(cas_login_url, final_url) + "&gateway=true");
 	    } else {
