@@ -120,6 +120,7 @@ public class ProlongationENT extends HttpServlet {
 	Map<String, Object> js_conf =
 	    array("bandeau_ENT_url", bandeau_ENT_url,
 		  "ent_logout_url", via_CAS(cas_logout_url, ent_base_url + "/Logout"), // nb: esup logout may not logout of CAS if user was not logged in esup portail, so forcing CAS logout in case
+                  "cas_impersonate", conf.get("cas_impersonate"),
 		  "time_before_checking_browser_cache_is_up_to_date", conf.get("time_before_checking_browser_cache_is_up_to_date"));
 
 

@@ -383,7 +383,7 @@ function simulateClickElt(elt) {
 
 function asyncLogout() {
     removeSessionStorageCache();
-    removeCookie(IMPERSONATE_COOKIE, IMPERSONATE_COOKIE_DOMAIN);
+    if (CONF.cas_impersonate) removeCookie(CONF.cas_impersonate.cookie_name, CONF.cas_impersonate.cookie_domain);
     loadScript(CONF.bandeau_ENT_url + '/logout?callback=window.bandeau_ENT_onAsyncLogout');
     return false;
 }
@@ -518,12 +518,10 @@ function triggerWindowResize() {
     window.dispatchEvent(evt);
 }
 
-var CAN_IMPERSONATE_URL = "https://bandeau-ent.univ-paris1.fr/canImpersonate.php?test";
-var IMPERSONATE_COOKIE = 'CAS_TEST_IMPERSONATE';
-var IMPERSONATE_COOKIE_DOMAIN = 'univ-paris1.fr';
 function getCanImpersonate() {
+    if (!CONF.cas_impersonate) return;
     var uid = DATA.realUserId || DATA.person.id;
-    loadScript(CAN_IMPERSONATE_URL + "&callback=window.bandeau_ENT_onCanImpersonate&uid=" + uid);
+    loadScript(CONF.cas_impersonate.check_url + "&callback=window.bandeau_ENT_onCanImpersonate&uid=" + uid);
 }
 window.bandeau_ENT_onCanImpersonate = function(canImpersonate) {
     if (DATA.realUserId) {	
@@ -568,7 +566,7 @@ function currentAppShouldBeImpersonated(canImpersonate) {
 }
 
 function getImpersonateCookie() {
-    return getCookie(IMPERSONATE_COOKIE);
+    return CONF.cas_impersonate && getCookie(CONF.cas_impersonate.cookie_name);
 }
 
 function mayInstallBandeau() {

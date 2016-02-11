@@ -19,6 +19,12 @@
     "visit_max_inactive": 1800, // 30 min
     "time_before_checking_browser_cache_is_up_to_date": 60,
 
+    "cas_impersonate": {
+        "cookie_name": "CAS_TEST_IMPERSONATE",
+        "cookie_domain": "univ-paris1.fr",
+        "check_url": "https://bandeau-ent.univ-paris1.fr/canImpersonate.php?test"
+    },
+    
     "isCasSingleSignOutWorking": true,
     "disableLocalStorage": false
 
