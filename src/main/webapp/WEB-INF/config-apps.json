@@ -156,6 +156,7 @@
         "CCompte-pers": {
             "title": "Mon compte Paris 1",
             "description": "Gestion de votre compte à l'université Paris 1",
+            "url": "https://ent.univ-paris1.fr/compte",
             "groups": [
                 "TousPers",
                 "TousInvites"
@@ -248,6 +249,7 @@
         "CCompte-etu": {
             "title": "Mon compte étudiant",
             "description": "Gestion de votre compte à l'université Paris 1",
+            "url": "https://ent.univ-paris1.fr/compte",
             "groups": [
                 "TousEtud",
                 "TousAnciens"
@@ -610,6 +612,7 @@
         "CActivation": {
             "title": "Compte Paris 1",
             "description": "gestion de compte à l'université",
+            "url": "https://ent.univ-paris1.fr/compte/stylesheets/welcome.faces",
             "groups": [ "Anonymes", "paris1" ]
         },
         "CMentions": {
