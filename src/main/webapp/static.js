@@ -600,7 +600,7 @@ function sessionStorageSet(field, value) {
 function setSessionStorageCache() {
     sessionStorageSet(b_E.localStorage_js_text_field, b_E.js_text);
     sessionStorageSet("url", b_E.url);
-    sessionStorageSet("time", now());
+    sessionStorageSet(currentAppId + ":time", now());
 
     // for old Prolongation, cleanup our mess
     if (window.localStorage) {
@@ -650,10 +650,10 @@ function mayUpdate() {
 	    loadBandeauJs(['noCache=1']);
 	}
     } else {
-	var age = now() - sessionStorageGet("time");
+	var age = now() - sessionStorageGet(currentAppId + ":time");
 	if (age > CONF.time_before_checking_browser_cache_is_up_to_date) {
 	    mylog("cached bandeau is old (" + age + "s), updating it softly");
-            sessionStorageSet("time", now()); // the new bandeau will update "time", but only if bandeau has changed!
+            sessionStorageSet(currentAppId + ":time", now()); // the new bandeau will update "time", but only if bandeau has changed!
 	    loadBandeauJs(['if_none_match=' + PARAMS.hash]);
 	} else {
 	    // if user used "reload", the cached version of detectReload will change
