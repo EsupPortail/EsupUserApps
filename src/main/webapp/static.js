@@ -653,6 +653,7 @@ function mayUpdate() {
 	var age = now() - sessionStorageGet("time");
 	if (age > CONF.time_before_checking_browser_cache_is_up_to_date) {
 	    mylog("cached bandeau is old (" + age + "s), updating it softly");
+            sessionStorageSet("time", now()); // the new bandeau will update "time", but only if bandeau has changed!
 	    loadBandeauJs(['if_none_match=' + PARAMS.hash]);
 	} else {
 	    // if user used "reload", the cached version of detectReload will change
