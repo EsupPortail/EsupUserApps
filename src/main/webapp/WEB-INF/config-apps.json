@@ -527,6 +527,7 @@
         "CHarpege": {
             "title": "Harpège",
             "description": "HARmonisation de la Gestion des Personnels",
+            "url": "https://harpege.univ-paris1.fr/",
             "hideFromMobile": true,
             "groups": [ "applications.harpege.users" ]
         },
