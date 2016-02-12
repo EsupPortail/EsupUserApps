@@ -417,12 +417,8 @@ body {
     text-decoration: underline;
     background-image: url(https://esup.univ-paris1.fr/media/skins/universality/uportal3/images/portlet_icons_flat_hover.png);
 }
-.menuClosed .bandeau_ENT_Help {
-    height: 2.3em;
-    background-color: white;
-}
 .menuClosed .bandeau_ENT_Help a {
-    margin-top: 10px;
+    margin-top: -2.7em;
 }
 
 #bandeau_ENT_Inner .bandeau_ENT_Titlebar > a {
