@@ -277,6 +277,8 @@ body {
  margin: 0;
  padding-left: 0;
  display: block;
+
+ column-width: 16em; -moz-column-width: 16em; -webkit-column-width: 16em;
 }
 
 .bandeau_ENT_Menu a, .bandeau_ENT_Menu span {
@@ -291,14 +293,9 @@ body {
 
 .bandeau_ENT_Menu > li {
  z-index: 2;
- float: left;
  padding: 5px 11px 0px 11px;
-}
 
-@media screen and (max-width: 450px) {
-  .bandeau_ENT_Menu > li {
-    float: none;
-  }
+  break-inside: avoid; page-break-inside: avoid; -webkit-column-break-inside: avoid;
 }
 
 *:first-child+html .bandeau_ENT_Menu > li {

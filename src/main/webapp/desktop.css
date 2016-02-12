@@ -13,6 +13,7 @@
 
 .bandeau_ENT_Menu {
    height: 28px;
+   column-width: auto; -moz-column-width: auto; -webkit-column-width: auto;
 }
 
 .toggleMenuSpacer {
@@ -66,6 +67,7 @@
 }
 
 .bandeau_ENT_Menu > li {
+  float: left;
   height: 23px;
 }
 
