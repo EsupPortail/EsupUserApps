@@ -385,7 +385,6 @@
         "aleph": {
             "title": "Catalogue des bibliothèques (SCD)",
             "description": "Compte lecteur et catalogue du Service Commun de la Documentation Paris 1",
-            "hashelp": true,
             "url": "http://domino.univ-paris1.fr/pds?func=load-login&calling_system=aleph&institute=UPS&url=http://sushi-new.univ-paris1.fr:80?func=",
             "groups": [
                 "TousPers",
