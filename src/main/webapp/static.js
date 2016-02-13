@@ -79,8 +79,8 @@ function getCookie(name) {
     var m = document.cookie.match(new RegExp(name + '=([^;]+)'));
     return m && m[1];
 }
-function removeCookie(name, domain) {
-    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:01 GMT" + (domain ? ";domain=" + domain : '');
+function removeCookie(name, domain, path) {
+    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:01 GMT" + (domain ? ";domain=" + domain : '') + (path ? ";path=" + path : '');
 }
 
 function simpleContains(a, val) {
@@ -384,7 +384,7 @@ function simulateClickElt(elt) {
 
 function asyncLogout() {
     removeSessionStorageCache();
-    if (CONF.cas_impersonate) removeCookie(CONF.cas_impersonate.cookie_name, CONF.cas_impersonate.cookie_domain);
+    if (CONF.cas_impersonate) removeCookie(CONF.cas_impersonate.cookie_name, CONF.cas_impersonate.cookie_domain, '/');
     loadScript(CONF.bandeau_ENT_url + '/logout?callback=window.bandeau_ENT_onAsyncLogout');
     return false;
 }
