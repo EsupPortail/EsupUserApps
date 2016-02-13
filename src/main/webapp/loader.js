@@ -12,6 +12,7 @@ if (!window.bandeau_ENT_maybe_loaded)
 	script.setAttribute("type", "text/javascript");
 	script.setAttribute("src", url);
 	script.setAttribute("async", "async");
+	script.setAttribute("charset", "utf-8"); // workaround IE ignoring Content-Type
 	document.getElementsByTagName("head")[0].appendChild(script);
     }
       

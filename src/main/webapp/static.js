@@ -327,6 +327,7 @@ function loadScript (url) {
     elt.setAttribute("type", "text/javascript");
     elt.setAttribute("src", url);
     elt.setAttribute("async", "async");
+    elt.setAttribute("charset", "utf-8"); // workaround IE ignoring Content-Type
     head().appendChild(elt);
 }
 
