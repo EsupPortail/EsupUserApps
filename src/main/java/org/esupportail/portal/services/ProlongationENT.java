@@ -406,11 +406,8 @@ public class ProlongationENT extends HttpServlet {
     }
 
     String ent_url(Map<String,String> app, String fname, boolean isGuest, boolean noLogin, String idpAuthnRequest_url) {
-	String url = isGuest ? ent_base_url_guest + "/Guest" : ent_base_url + (noLogin ? "/render.userLayoutRootNode.uP" : "/Login");
-	String params = "?uP_fname=" + fname;
-	url = url + params;
-	return isGuest || noLogin ? url : 
-	    idpAuthnRequest_url != null ? via_idpAuthnRequest_url(idpAuthnRequest_url, url, app.get("shibbolethSPPrefix")) : via_CAS(cas_login_url, url);
+	String url = isGuest ? ent_base_url_guest + "/Guest" : ent_base_url + (noLogin ? "/render.userLayoutRootNode.uP" : "/MayLogin");
+	return url + "?uP_fname=" + fname;
     }
 
     // quick'n'dirty version: it expects a simple mapping from url to SP entityId and SP SAML v1 url
