@@ -230,13 +230,7 @@ public class ProlongationENT extends HttpServlet {
     }   
 
     String computeBandeauHeaderLinkMyAccount(HttpServletRequest request, Map<String,Map<String,String>> validApps) {
-	Map<String,String> def_activation = validApps.get("CActivation");
-	if (def_activation == null) return "";
-      
-	String template = file_get_contents(request, "templates/headerLinkMyAccount.html");      
-	String activation_url = get_user_url(def_activation, "CActivation", null);
-
-	return String.format(template, activation_url);
+	return file_get_contents(request, "templates/headerLinkMyAccount.html");
     }
 
     String computeBandeauHeaderLinks(HttpServletRequest request, Map<String,List<String>> user, Map<String,Map<String,String>> validApps) {
