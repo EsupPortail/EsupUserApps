@@ -12,7 +12,7 @@
 
     "apps_no_bandeau": [ "CParis1prim", "FoodleP1",
                          "caccueil-guest", "CContacts-guest",
-                         "accueil-BIS", "CMentions" ],
+                         "CMentions" ],
     "url_bandeau_compatible": [],
 
     "wanted_user_attributes": [ "supannAliasLogin", "displayName", "mail", "eduPersonAffiliation" ],
