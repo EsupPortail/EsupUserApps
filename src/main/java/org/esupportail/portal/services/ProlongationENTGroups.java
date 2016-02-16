@@ -8,11 +8,8 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
-
-import java.io.PrintWriter;
 
 import javax.naming.CommunicationException;
 import javax.naming.Context;
@@ -65,8 +62,6 @@ class ProlongationENTGroups {
 				new TypeToken< Map<String, List<String>> >() {}.getType());
 		APPS = gson.fromJson(apps_conf.get("APPS"), 
 				new TypeToken< Map<String, ProlongationENTApp> >() {}.getType());
-
-                exportToUportal("/usr/local/esup/db-export");
     }
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -225,152 +220,6 @@ class ProlongationENTGroups {
 	    log.error("error connecting to ldap server", e);
             throw new RuntimeException("error connecting to ldap server");
         }
-    }
-
-
-    private void exportToUportal(String destDir) {
-        exportLayout(destDir + "/fragment-layout/all-lo.fragment-layout");
-        for (String appId : APPS.keySet()) {
-            exportAPP(destDir + "/channel/" + appId + ".channel", appId);
-        }
-    }
-
-    private void exportLayout(String destFile) {
-        try {
-            PrintWriter writer = new PrintWriter(destFile, "UTF-8");
-            writer.println("<layout xmlns:dlm='http://www.uportal.org/layout/dlm' script='classpath://org/jasig/portal/io/import-layout_v3-2.crn' username='all-lo'>");
-            writer.println("  <folder ID='s1' hidden='false' immutable='true' name='Root folder' type='root' unremovable='true'>");    
-            writer.println("    <folder ID='s2' hidden='false' immutable='true' name='Header folder' type='header' unremovable='true'>");
-            writer.println("      <channel dlm:moveAllowed='false' dlm:deleteAllowed='false' fname='fragment-admin-exit' unremovable='true' hidden='false' immutable='true' ID='n3'/>");
-            writer.println("    </folder>");
-            writer.println("    <folder ID='s4' hidden='false' immutable='true' name='Footer folder' type='footer' unremovable='true'/>");
-            writer.println("");
-
-            int nb = 10;
-            for (Map.Entry<String, List<String>> e : LAYOUT.entrySet()) {
-                writer.println("    <folder ID='s" + nb++ + "' hidden='false' immutable='true' name='" + e.getKey() + "' type='regular' dlm:addChildAllowed='false' dlm:deleteAllowed='false' dlm:editAllowed='false' dlm:moveAllowed='false'  unremovable='true'>");
-                writer.println("      <folder ID='s" + nb++ + "' hidden='false' immutable='true' name='Column' type='regular' dlm:addChildAllowed='false' dlm:deleteAllowed='false' dlm:editAllowed='false' dlm:moveAllowed='false'  unremovable='true'>");
-                for (String fname : e.getValue())
-                    writer.println("        <channel dlm:moveAllowed='false' dlm:deleteAllowed='false' fname='" + fname + "' unremovable='true' hidden='false' immutable='true' ID='n" + nb++ + "'/>");
-                writer.println("      </folder>");
-                writer.println("    </folder>");
-            }
-            writer.println("  </folder>");
-            writer.println("</layout>");
-            writer.close();
-        } catch (Exception e) {
-            log.warn("error creating " + destFile, e);
-        }
-    }
-
-    private void exportAPP(String destFile, String appId) {
-        ProlongationENTApp app = APPS.get(appId);
-        if (app.url == null) return;
-
-        String url = ProlongationENT.url_maybe_adapt_idp(current_idpAuthnRequest_url, app.url, app.shibbolethSPPrefix);
-        try {
-            PrintWriter writer = new PrintWriter(destFile, "UTF-8");
-
-    writer.println("");
-    writer.println("<channel-definition script=\"classpath://org/jasig/portal/io/import-channel_v3-2.crn\">");
-    writer.println("  <title>" + app.title + "</title>");
-    writer.println("  <name>" + app.getTexte() + "</name>");
-    writer.println("  <fname>" + appId + "</fname>");
-    writer.println("  <desc>" + app.getDescription() + "</desc>");
-    writer.println("  <type>Inline Frame</type>");
-    writer.println("  <class>org.jasig.portal.channels.portlet.CSpringPortletAdaptor</class>");
-    writer.println("  <timeout>5000000</timeout>");
-    writer.println("  <hasedit>N</hasedit>");
-    writer.println("  <hashelp>" + (app.hashelp ? "Y" : "N") + "</hashelp>");
-    writer.println("  <hasabout>N</hasabout>");
-    writer.println("  <secure>N</secure>");
-    writer.println("  <locale>en_US</locale>");
-    writer.println("  <categories>");
-    writer.println("  </categories>");
-    writer.println("  <groups>");
-    if (app.groups != null) {
-        for (String group : new TreeSet<String>(app.groups)) {
-            writer.println("    <group>" + group + "</group>");
-        }
-    }
-    writer.println("  </groups>");
-    writer.println("  <users>");
-    if (app.users != null) {
-        for (String user : new TreeSet<String>(app.users)) {
-            writer.println("    <user>" + user + "</user>");
-        }
-    }
-    writer.println("    <user>all-lo</user>");
-    writer.println("  </users>");
-    writer.println("  <parameters>");
-    writer.println("    <parameter> ");
-    writer.println("      <name>alternate</name>  ");
-    writer.println("      <value>false</value>  ");
-    writer.println("      <description></description>  ");
-    writer.println("      <ovrd>N</ovrd> ");
-    writer.println("    </parameter>");
-    writer.println("    <parameter> ");
-    writer.println("      <name>disableDynamicTitle</name>  ");
-    writer.println("      <value>true</value>  ");
-    writer.println("      <description></description>  ");
-    writer.println("      <ovrd>N</ovrd> ");
-    writer.println("    </parameter>");
-    writer.println("    <parameter> ");
-    writer.println("      <name>hideFromMobile</name>  ");
-    writer.println("      <value>" + app.hideFromMobile + "</value>  ");
-    writer.println("      <description></description>  ");
-    writer.println("      <ovrd>N</ovrd> ");
-    writer.println("    </parameter>");
-    writer.println("    <parameter> ");
-    writer.println("      <name>portletName</name>  ");
-    writer.println("      <value>IFrame</value>  ");
-    writer.println("      <description></description>  ");
-    writer.println("      <ovrd>N</ovrd> ");
-    writer.println("    </parameter>");
-    writer.println("    <parameter> ");
-    writer.println("      <name>showChrome</name>  ");
-    writer.println("      <value>true</value>  ");
-    writer.println("      <description></description>  ");
-    writer.println("      <ovrd>N</ovrd> ");
-    writer.println("    </parameter>");
-    writer.println("    <parameter> ");
-    writer.println("      <name>highlight</name>  ");
-    writer.println("      <value>false</value>  ");
-    writer.println("      <description></description>  ");
-    writer.println("      <ovrd>N</ovrd> ");
-    writer.println("    </parameter>");
-    writer.println("    <parameter> ");
-    writer.println("      <name>isFrameworkPortlet</name>  ");
-    writer.println("      <value>true</value>  ");
-    writer.println("      <description></description>  ");
-    writer.println("      <ovrd>N</ovrd> ");
-    writer.println("    </parameter>");
-    writer.println("  </parameters>");
-    writer.println("  <portletPreferences>");
-    writer.println("    <portletPreference> ");
-    writer.println("      <name>height</name>  ");
-    writer.println("      <read-only>true</read-only>  ");
-    writer.println("      <values>");
-    writer.println("        <value>600</value>");
-    writer.println("      </values> ");
-    writer.println("    </portletPreference>");
-    writer.println("    <portletPreference> ");
-    writer.println("      <name>url</name>  ");
-    writer.println("      <read-only>true</read-only>  ");
-    writer.println("      <values>");
-    writer.println("        <value>" + escapeXml(url) + "</value>");
-    writer.println("      </values> ");
-    writer.println("    </portletPreference>");
-    writer.println("  </portletPreferences>");
-    writer.print("</channel-definition>");
-            writer.close();
-        } catch (Exception e) {
-            log.warn("error creating " + destFile, e);
-        }
-    }
-
-    String escapeXml(String s) {
-        return s.replace("&", "&amp;");
     }
     
 }
