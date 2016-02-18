@@ -49,7 +49,7 @@
             "memoire-gest", "hyperplanning-gest", "rdvia-gest", "rdvmed-gest"
         ],
         "Administrateurs": [
-            "portal-administration", "portlet-admin", "groupsmanager", "ent-info"
+            "portal-administration", "portlet-admin", "ent-info"
         ],
         "Assistance": [
             "Assistance_DSI", "gun-etu", "gun-pers", "userinfo"
@@ -634,11 +634,6 @@
         },
         "portlet-admin": {
             "title": "Administration des portlets",
-            "hideFromMobile": true,
-            "groups": [ "Administrateurs Portail" ]
-        },
-        "groupsmanager": {
-            "title": "Gestion des groupes portail",
             "hideFromMobile": true,
             "groups": [ "Administrateurs Portail" ]
         },
