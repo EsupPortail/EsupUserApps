@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +21,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.logging.LogFactory;
+import org.esupportail.portal.services.prolongationENT.Stats;
 import org.apache.commons.io.IOUtils;
 import org.jasig.cas.client.util.AbstractCasFilter;
 import org.jasig.cas.client.validation.Assertion;
@@ -44,10 +44,6 @@ public class ProlongationENT extends HttpServlet {
 
     static String prev_host_attr = "prev_host";
     static String prev_time_attr = "prev_time";
-    static String request_last_time_attr_prefix = "request_last_time_";
-    static String visit_id_attr = "visit_id";    
-    static String global_visit_nb_attr = "global_visit_nb";
-    static String app_visit_nb_attr_prefix = "app_visit_nb_";
     
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	if (request.getServletPath().endsWith("detectReload")) {
@@ -114,7 +110,7 @@ public class ProlongationENT extends HttpServlet {
 	Map<String,Map<String,String>> userChannels = userChannels(userId, attrs);
 	List<Map<String, Object>> userLayout = userLayout(handleGroups.LAYOUT, userChannels.keySet());
 
-	stats(request, realUserId, userChannels.keySet());
+	stats.log(request, realUserId, userChannels.keySet());
 	
 	boolean is_old =
 	    !conf.get("isCasSingleSignOutWorking").getAsBoolean() &&
@@ -214,7 +210,8 @@ public class ProlongationENT extends HttpServlet {
 	String apps_conf = private_file_get_contents(request, "config-apps.json");
 	String auth_conf = private_file_get_contents(request, "config-auth.json");
 	conf = new JsonParser().parse(raw_conf).getAsJsonObject();
-	
+
+        stats = new Stats(conf);
 	handleGroups = new ProlongationENTGroups(raw_conf, apps_conf, auth_conf);
 
 	ent_base_url       = conf.get("ent_base_url").getAsString();
@@ -324,35 +321,6 @@ public class ProlongationENT extends HttpServlet {
 	    session.removeAttribute(prev_time_attr);
 	    session.removeAttribute(prev_host_attr);
 	}
-    }
-
-    List<String> intersect(String[] l1, Set<String> l2) {
-	List<String> r = new ArrayList<String>();
-	for (String e : l1)
-	    if (l2.contains(e))
-		r.add(e);
-	return r;	    
-    }
-    
-    void stats(HttpServletRequest request, String userId, Set<String> userChannels) {
-        HttpSession session = request.getSession(false);
-	String app = request.getParameter("app");
-	if (app == null) return;
-	String[] app_ = app.split(",");
-	List<String> apps = intersect(app_, userChannels);
-        app = apps.isEmpty() ? app_[0] : apps.get(0);
-        
-	log.info(
-		"[" + new java.util.Date() + "] " +
-		"[IP:" + request.getRemoteAddr() + "] " +
-		"[ID:" + userId + "] " +
-		"[APP:" + app + "] " +
-		"[URL:" + request.getHeader("Referer") + "] " +
-		"[USER-AGENT:" + request.getHeader("User-Agent") +"] " +
-		"[RES:" + request.getParameter("res") +"] " +
-		"[VISIT:" + get_visit_id(session) + ":" + get_app_visit_nb(session, app) +"] " +
-                "[LOAD-TIME:" + request.getParameter("time") + "]");
-            
     }
     
     /* ******************************************************************************** */
@@ -479,43 +447,6 @@ public class ProlongationENT extends HttpServlet {
 					   .getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION) : session
 					   .getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION));
         return assertion == null ? null : assertion.getPrincipal().getName();
-    }
-
-    boolean isNewVisit(HttpSession session, String app) {
-        String attr = request_last_time_attr_prefix + app;
-        Long last = (Long) session.getAttribute(attr);
-        long current = System.currentTimeMillis();
-
-        session.setAttribute(attr, current);
-
-        long max_inactive = conf.get("visit_max_inactive").getAsInt() * 1000;
-        return last == null || current - last > max_inactive;
-    }
-
-    Long counter(HttpSession session, String attr) {
-        Long nb = (Long) session.getAttribute(attr);
-        nb = (nb == null ? 0 : nb) + 1;
-        session.setAttribute(attr, nb);
-        return nb;
-    }
-
-    String get_visit_id(HttpSession session) {
-	String id = (String) session.getAttribute(visit_id_attr);
-        if (isNewVisit(session, "") || id == null) {
-            id = UUID.randomUUID().toString();
-            session.setAttribute(visit_id_attr, id);
-        }
-        return id;
-    }
-
-    Long get_app_visit_nb(HttpSession session, String app) {
-        String attr = app_visit_nb_attr_prefix + app;
-	Long nb = (Long) session.getAttribute(attr);
-        if (isNewVisit(session, app) || nb == null) {
-            nb = counter(session, global_visit_nb_attr);
-            session.setAttribute(attr, nb);
-        }
-        return nb;
     }
     
     long now() {
