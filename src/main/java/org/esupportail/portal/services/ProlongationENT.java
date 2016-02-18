@@ -38,15 +38,16 @@ public class ProlongationENT extends HttpServlet {
     List<String> url_bandeau_compatible, apps_no_bandeau, wanted_user_attributes;
     String cas_login_url, cas_logout_url;
     ProlongationENTGroups handleGroups;
+    Stats stats;
 
     org.apache.commons.logging.Log log = LogFactory.getLog(ProlongationENT.class);
 
-    static String prev_host_attr = "org.esupportail.portal.services.ProlongationENT.prev_host";
-    static String prev_time_attr = "org.esupportail.portal.services.ProlongationENT.prev_time";
-    static String request_last_time_attr_prefix = "org.esupportail.portal.services.ProlongationENT.request_last_time_";
-    static String visit_id_attr = "org.esupportail.portal.services.ProlongationENT.visit_id";    
-    static String global_visit_nb_attr = "org.esupportail.portal.services.ProlongationENT.global_visit_nb";
-    static String app_visit_nb_attr_prefix = "org.esupportail.portal.services.ProlongationENT.app_visit_nb_";
+    static String prev_host_attr = "prev_host";
+    static String prev_time_attr = "prev_time";
+    static String request_last_time_attr_prefix = "request_last_time_";
+    static String visit_id_attr = "visit_id";    
+    static String global_visit_nb_attr = "global_visit_nb";
+    static String app_visit_nb_attr_prefix = "app_visit_nb_";
     
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	if (request.getServletPath().endsWith("detectReload")) {
