@@ -16,9 +16,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.sf.json.util.JSONUtils;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.io.IOUtils;
 import org.jasig.cas.client.util.AbstractCasFilter;
@@ -30,7 +32,7 @@ import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
 
 public class ProlongationENT extends HttpServlet {	   
-    JSONObject conf = null;
+    JsonObject conf = null;
 
     String bandeau_ENT_url, ent_base_url, ent_base_url_guest, current_idpAuthnRequest_url;
     List<String> url_bandeau_compatible, apps_no_bandeau, wanted_user_attributes;
@@ -91,8 +93,8 @@ public class ProlongationENT extends HttpServlet {
 
 	if (forcedId != null) {
 	    List<String> memberOf = handleGroups.getLdapPeopleInfo(userId).get("memberOf");
-	    if (getConfList("admins").contains(userId) ||
-		memberOf != null && firstCommonElt(memberOf, getConfList("admins")) != null) {
+	    if (getConfSet("admins").contains(userId) ||
+		memberOf != null && firstCommonElt(memberOf, getConfSet("admins")) != null) {
 		// ok
 	    } else {
 		forcedId = null;
@@ -114,7 +116,7 @@ public class ProlongationENT extends HttpServlet {
 	stats(request, realUserId, userChannels.keySet());
 	
 	boolean is_old =
-	    !conf.getBoolean("isCasSingleSignOutWorking") &&
+	    !conf.get("isCasSingleSignOutWorking").getAsBoolean() &&
 	    is_old(request) && request.getParameter("auth_checked") == null; // checking auth_checked should not be necessary since having "auth_checked" implies having gone through cleanupSession & CAS and so prev_time should not be set. But it seems firefox can bypass the initial redirect and go straight to CAS without us having cleaned the session... and then a dead-loop always asking for not-old version
 	String bandeauHeader = computeBandeauHeader(request, user, userChannels);
 	String static_js = file_get_contents(request, "static.js");
@@ -159,7 +161,7 @@ public class ProlongationENT extends HttpServlet {
 
 	out.println("window.bandeau_ENT.notFromLocalStorage = true;");
 
-	if (conf.getBoolean("disableLocalStorage")) {
+	if (conf.get("disableLocalStorage").getAsBoolean()) {
 	    out.println(js_text);
 	    js_text = "";
 	}
@@ -210,13 +212,13 @@ public class ProlongationENT extends HttpServlet {
 	String raw_conf = private_file_get_contents(request, "config.json");
 	String apps_conf = private_file_get_contents(request, "config-apps.json");
 	String auth_conf = private_file_get_contents(request, "config-auth.json");
-	conf = JSONObject.fromObject(raw_conf);
+	conf = new JsonParser().parse(raw_conf).getAsJsonObject();
 	
 	handleGroups = new ProlongationENTGroups(raw_conf, apps_conf, auth_conf);
 
-	ent_base_url       = conf.getString("ent_base_url");
-	ent_base_url_guest = conf.getString("ent_base_url_guest");
-	current_idpAuthnRequest_url = conf.getString("current_idpAuthnRequest_url");
+	ent_base_url       = conf.get("ent_base_url").getAsString();
+	ent_base_url_guest = conf.get("ent_base_url_guest").getAsString();
+	current_idpAuthnRequest_url = conf.get("current_idpAuthnRequest_url").getAsString();
 
 	url_bandeau_compatible = getConfList("url_bandeau_compatible");
 	apps_no_bandeau     = getConfList("apps_no_bandeau");
@@ -225,8 +227,8 @@ public class ProlongationENT extends HttpServlet {
 
 	bandeau_ENT_url    = ent_base_url_guest + "/ProlongationENT";
 
-	cas_login_url      = conf.getString("cas_base_url") + "/login";
-	cas_logout_url     = conf.getString("cas_base_url") + "/logout";		
+	cas_login_url      = conf.get("cas_base_url").getAsString() + "/login";
+	cas_logout_url     = conf.get("cas_base_url").getAsString() + "/logout";
     }   
 
     String computeBandeauHeaderLinkMyAccount(HttpServletRequest request, Map<String,Map<String,String>> validApps) {
@@ -458,7 +460,11 @@ public class ProlongationENT extends HttpServlet {
     /* ******************************************************************************** */   
 
     List<String> getConfList(String key) {
-	return JSONArray.toList(conf.getJSONArray(key));
+	return new Gson().fromJson(conf.get(key), new TypeToken< List<String> >() {}.getType());
+    }   
+
+    Set<String> getConfSet(String key) {
+	return new Gson().fromJson(conf.get(key), new TypeToken< Set<String> >() {}.getType());
     }   
 
     void debug_msg(String msg) {
@@ -481,7 +487,7 @@ public class ProlongationENT extends HttpServlet {
 
         session.setAttribute(attr, current);
 
-        long max_inactive = conf.getInt("visit_max_inactive") * 1000;
+        long max_inactive = conf.get("visit_max_inactive").getAsInt() * 1000;
         return last == null || current - last > max_inactive;
     }
 
@@ -548,11 +554,8 @@ public class ProlongationENT extends HttpServlet {
     }
     
     private static String json_encode(Object o) {
-	if (o instanceof String) {
-	    return JSONUtils.valueToString(o);
-	} else {    
-	    return "" + JSONObject.fromObject(o);
-	}
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        return gson.toJson(o);
     }
 
     static private String urlencode(String s) {
