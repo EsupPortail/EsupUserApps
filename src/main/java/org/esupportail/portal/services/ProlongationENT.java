@@ -92,7 +92,7 @@ public class ProlongationENT extends HttpServlet {
 	if (forcedId != null) {
 	    List<String> memberOf = handleGroups.getLdapPeopleInfo(userId).get("memberOf");
 	    if (getConfList("admins").contains(userId) ||
-		memberOf != null && !org.apache.commons.collections.CollectionUtils.intersection(memberOf, getConfList("admins")).isEmpty()) {
+		memberOf != null && firstCommonElt(memberOf, getConfList("admins")) != null) {
 		// ok
 	    } else {
 		forcedId = null;
@@ -600,6 +600,11 @@ public class ProlongationENT extends HttpServlet {
 	Map<String, Object> r = array(key1, val1, key2, val2, key3, val3);
 	r.put(key4, val4);
 	return r;
+    }
+
+    private String firstCommonElt(Iterable<String> l1, Set<String> l2) {
+        for (String e : l1) if (l2.contains(e)) return e;
+        return null;
     }
 
     /*
