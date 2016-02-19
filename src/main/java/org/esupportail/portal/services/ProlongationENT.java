@@ -206,13 +206,9 @@ public class ProlongationENT extends HttpServlet {
     }
 
     synchronized void initConf(HttpServletRequest request) {
-	String raw_conf = private_file_get_contents(request, "config.json");
-	String apps_conf = private_file_get_contents(request, "config-apps.json");
-	String auth_conf = private_file_get_contents(request, "config-auth.json");
-	conf = new JsonParser().parse(raw_conf).getAsJsonObject();
-
+	conf = getConf(request, "config.json");
         stats = new Stats(conf);
-	handleGroups = new ProlongationENTGroups(conf, apps_conf, auth_conf);
+	handleGroups = new ProlongationENTGroups(conf, getConf(request, "config-apps.json"), getConf(request, "config-auth.json"));
 
 	ent_base_url       = conf.get("ent_base_url").getAsString();
 	ent_base_url_guest = conf.get("ent_base_url_guest").getAsString();
@@ -428,6 +424,11 @@ public class ProlongationENT extends HttpServlet {
     /* simple helper functions */
     /* ******************************************************************************** */   
 
+    JsonObject getConf(HttpServletRequest request, String jsonFile) {
+        String s = private_file_get_contents(request, jsonFile);
+    	return new JsonParser().parse(s).getAsJsonObject();
+    }
+    
     List<String> getConfList(String key) {
 	return new Gson().fromJson(conf.get(key), new TypeToken< List<String> >() {}.getType());
     }   

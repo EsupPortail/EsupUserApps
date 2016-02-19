@@ -25,7 +25,6 @@ import org.apache.commons.logging.LogFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 
@@ -45,11 +44,7 @@ class ProlongationENTGroups {
     DirContext dirContext;
     Log log = LogFactory.getLog(ProlongationENTGroups.class);
     
-    public ProlongationENTGroups(JsonObject conf, String raw_apps_conf, String raw_auth_conf) {
-    	JsonParser parser = new JsonParser();
-    	JsonObject apps_conf = parser.parse(raw_apps_conf).getAsJsonObject();
-    	JsonObject auth_conf = parser.parse(raw_auth_conf).getAsJsonObject();
-    	
+    public ProlongationENTGroups(JsonObject conf, JsonObject apps_conf, JsonObject auth_conf) {
     	Gson gson = new Gson();
         current_idpAuthnRequest_url = conf.get("current_idpAuthnRequest_url").getAsString();
     	minimal_attrs = gson.fromJson(conf.get("wanted_user_attributes"), 
