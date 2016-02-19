@@ -1,4 +1,4 @@
-// NB: not pure json, comments are allowed :)
+// NB: not pure json, comments & some trailing commas are allowed :)
 {
     "admins": ["prigaux",
 	       "cn=applications.userinfo.l1-users,ou=groups,dc=univ-paris1,dc=fr",

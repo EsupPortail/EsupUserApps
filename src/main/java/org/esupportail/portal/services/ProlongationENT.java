@@ -426,6 +426,8 @@ public class ProlongationENT extends HttpServlet {
 
     JsonObject getConf(HttpServletRequest request, String jsonFile) {
         String s = private_file_get_contents(request, jsonFile);
+        // allow trailing commas
+        s = s.replaceAll(",(\\s*[\\]}])", "$1");
     	return new JsonParser().parse(s).getAsJsonObject();
     }
     
