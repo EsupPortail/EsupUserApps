@@ -45,9 +45,8 @@ class ProlongationENTGroups {
     DirContext dirContext;
     Log log = LogFactory.getLog(ProlongationENTGroups.class);
     
-    public ProlongationENTGroups(String raw_json_conf, String raw_apps_conf, String raw_auth_conf) {
+    public ProlongationENTGroups(JsonObject conf, String raw_apps_conf, String raw_auth_conf) {
     	JsonParser parser = new JsonParser();
-    	JsonObject conf = parser.parse(raw_json_conf).getAsJsonObject();
     	JsonObject apps_conf = parser.parse(raw_apps_conf).getAsJsonObject();
     	JsonObject auth_conf = parser.parse(raw_auth_conf).getAsJsonObject();
     	

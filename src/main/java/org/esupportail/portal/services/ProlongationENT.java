@@ -212,7 +212,7 @@ public class ProlongationENT extends HttpServlet {
 	conf = new JsonParser().parse(raw_conf).getAsJsonObject();
 
         stats = new Stats(conf);
-	handleGroups = new ProlongationENTGroups(raw_conf, apps_conf, auth_conf);
+	handleGroups = new ProlongationENTGroups(conf, apps_conf, auth_conf);
 
 	ent_base_url       = conf.get("ent_base_url").getAsString();
 	ent_base_url_guest = conf.get("ent_base_url_guest").getAsString();
