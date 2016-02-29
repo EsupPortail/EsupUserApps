@@ -160,7 +160,7 @@
         "CCompte-pers": {
             "title": "Mon compte Paris 1",
             "description": "Gestion de votre compte à l'université Paris 1",
-            "url": "https://ent.univ-paris1.fr/compte",
+            "url": "https://ent.univ-paris1.fr/compte/",
             "groups": [
                 "TousPers",
                 "TousInvites",
@@ -178,7 +178,7 @@
         "moodle-epi": {
             "title": "Mes EPI",
             "description": "Espaces pédagogiques interactifs",
-            "url": "https://ent.univ-paris1.fr/epi",
+            "url": "https://ent.univ-paris1.fr/epi/",
             "users": [ "broques", "flagneau", "prigaux" ],
             "groups": [ "TousEtud" ],
         },
@@ -254,7 +254,7 @@
         "CCompte-etu": {
             "title": "Mon compte étudiant",
             "description": "Gestion de votre compte à l'université Paris 1",
-            "url": "https://ent.univ-paris1.fr/compte",
+            "url": "https://ent.univ-paris1.fr/compte/",
             "groups": [
                 "TousEtud",
                 "TousAnciens",
@@ -449,7 +449,7 @@
         "moodle-epi-ens": {
             "title": "Mes EPI (enseignant)",
             "description": "Espaces pédagogiques interactifs",
-            "url": "https://ent.univ-paris1.fr/epi-ens",
+            "url": "https://ent.univ-paris1.fr/epi-ens/",
             "groups": [
                 "TousEns",
                 "applications.moodle.Mcours-managers",
