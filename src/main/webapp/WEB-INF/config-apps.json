@@ -136,6 +136,7 @@
             "title": "Consultation du dossier Harpège",
             "description": "Consultation du dossier Harpège pour un membre du personnel",
             "groups": [ "TousPers" ],
+            "inherit": "esup-uportal",
         },
         "g2t": {
             "text": "Mes congés",
@@ -149,6 +150,7 @@
             "text": "Mes frais de missions",
             "title": "Aperçu de vos frais de missions",
             "groups": [ "TousPers" ],
+            "inherit": "esup-uportal",
         },
         "page-perso": {
             "title": "Ma page perso",
@@ -171,6 +173,7 @@
                 "TousEtud",
                 "TousAnciens",
             ],
+            "inherit": "esup-uportal",
         },
         "moodle-epi": {
             "title": "Mes EPI",
@@ -427,6 +430,7 @@
             "title": "Listes des étudiants",
             "description": "Consultation du dossier étudiant apogée et des listes d'étudiants",
             "groups": [ "TousEns" ],
+            "inherit": "esup-uportal",
         },
         "CReservaLang-ens": {
             "text": "Mes groupes en langue",
@@ -496,6 +500,7 @@
             "hashelp": true,
             "hideFromMobile": true,
             "groups": [ "applications.sof.users" ],
+            "inherit": "esup-uportal",
         },
         "CReservaLang": {
             "text": "Inscriptions en langues",
@@ -642,6 +647,13 @@
         "ent-info": {
             "title": "Informations ENT uportal",
             "groups": [ "Administrateurs Portail" ],
+        },
+    },
+    "APPS_ATTRS": {
+        "esup-uportal": {
+            "admins": { "groups": [ "Administrateurs Portail" ] },
+            "serviceRegex": "https://esup-test.univ-paris1.fr/.*",
+            "cookies": { "path": "/" },
         },
     },
     "GROUPS": {

@@ -1,5 +1,6 @@
 package org.esupportail.portal.services;
 
+import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
+import org.esupportail.portal.services.prolongationENT.ACLs;
 
 class ProlongationENTGroups {
 
@@ -56,6 +58,16 @@ class ProlongationENTGroups {
 				new TypeToken< Map<String, List<String>> >() {}.getType());
 		APPS = gson.fromJson(apps_conf.get("APPS"), 
 				new TypeToken< Map<String, ProlongationENTApp> >() {}.getType());
+
+		Map<String, ProlongationENTApp> APPS_ATTRS = gson.fromJson(apps_conf.get("APPS_ATTRS"), 
+				new TypeToken< Map<String, ProlongationENTApp> >() {}.getType());
+                for (ProlongationENTApp app : APPS.values()) {
+                    if (app.inherit != null) {
+                        app.merge(APPS_ATTRS.get(app.inherit));
+                    }
+                }
+
+                compute_default_cookies_path_and_serviceRegex();
     }
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -164,13 +176,19 @@ class ProlongationENTGroups {
         return r;
     }
 
-    public Set<String> computeValidAppsRaw(Map<String, List<String>> person) {        
+    public Set<String> computeValidApps(String uid, boolean wantImpersonate) {
+        return computeValidAppsRaw(getLdapPeopleInfo(uid), wantImpersonate);
+    }
+    
+    public Set<String> computeValidAppsRaw(Map<String, List<String>> person, boolean wantImpersonate) {
         String user = person.get("uid").get(0);
         Map<String, Boolean> groupsCache = new HashMap<String, Boolean>();
 
         Set<String> r = new HashSet<String>();
         for (String appId : APPS.keySet()) {
-            ProlongationENTApp app = APPS.get(appId);
+            ProlongationENTApp app_ = APPS.get(appId);
+            ACLs app = wantImpersonate ? app_.admins : app_;
+            if (app == null) continue;
             Boolean found = false;
 
             if (app.users != null) {
@@ -198,7 +216,35 @@ class ProlongationENTGroups {
         }
         return r;
   }
+
+    private void compute_default_cookies_path_and_serviceRegex() {
+        for (ProlongationENTApp app : APPS.values()) {
+            if (app.url != null && app.admins != null) {
+                compute_default_cookies_path_and_serviceRegex(app);
+            }
+        }
+    }
     
+    private void compute_default_cookies_path_and_serviceRegex(ProlongationENTApp app) {
+        URL url = toURL(app.url);
+
+        // default path is:
+        // /     for http://foo/bar
+        // /bar/ for http://foo/bar/ or http://foo/bar/boo/xxx
+        String path = url.getPath().replaceFirst("/[^/]*$", "").replaceFirst("^(/[^/]*)/.*", "$1") + "/";
+        
+        if (app.cookies.path == null) app.cookies.path = path;
+        if (app.serviceRegex == null) app.serviceRegex = Pattern.quote(url.getProtocol() + "://" + url.getHost() + path) + ".*";
+    }
+
+    URL toURL(String url) {
+	try {
+	    return new URL(url);
+	} catch (java.net.MalformedURLException e) {
+	    log.error(e, e);
+	    return null;
+	}
+    }
 
     private DirContext ldap_connect() {
 	Hashtable<String,String> env = new Hashtable<String,String>();

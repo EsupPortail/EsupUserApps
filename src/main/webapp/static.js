@@ -219,9 +219,20 @@ function computeHeader() {
     return replaceAll(DATA.bandeauHeader, "<%logout_url%>", logout_url);
 }
 
+function relogUrl(appId, app) {
+    return app.url.replace(/^(https?:\/\/[^\/]*).*/, "$1") + "/ProlongationENT/redirect?relog&impersonate&id=" + appId;
+}
 function computeLink(appId, app) {
-    var a = "<a title='" + escapeQuotes(app.description) + "' href='" + app.url + "'>" + escapeQuotes(app.text) + "</a>";
-    return "<li class='bandeau_ENT_Menu_Entry_" + appId + "'>" + a + "</li>";
+    var url = app.url
+    var classes = '';
+    if (DATA.canImpersonate) {
+	url = relogUrl(appId, app);
+    	if (!simpleContains(DATA.canImpersonate, appId)) {
+	    classes = "class='bandeau_ENT_Menu_Entry__Forbidden'";
+	}
+    }
+    var a = "<a title='" + escapeQuotes(app.description) + "' href='" + url + "'>" + escapeQuotes(app.text) + "</a>";
+    return "<li " + classes + ">" + a + "</li>";
 }
 
 function computeMenu(currentAppId) {
@@ -488,7 +499,7 @@ function installBandeau() {
 	var barAccount = document.getElementById('portalPageBarAccount');
 	if (barAccount) barAccount.onclick = bandeau_ENT_Account_toggleOpen;
 
-	if (DATA.realUserId || b_E.uid && getImpersonateCookie()) getCanImpersonate();
+        if (CONF.cas_impersonate && !b_E.forced_uid) detectImpersonationPbs();
 
 	onReady(function () {
 	    if (b_E.account_links) installAccountLinks(currentAppId);
@@ -519,55 +530,14 @@ function triggerWindowResize() {
     window.dispatchEvent(evt);
 }
 
-function getCanImpersonate() {
-    if (!CONF.cas_impersonate) return;
-    var uid = DATA.realUserId || DATA.person.id;
-    loadScript(CONF.cas_impersonate.check_url + "&callback=window.bandeau_ENT_onCanImpersonate&uid=" + uid);
-}
-window.bandeau_ENT_onCanImpersonate = function(canImpersonate) {
-    if (DATA.realUserId) {	
-	disableMenuItemsUserCannotImpersonate(canImpersonate);
-    }
-    if (b_E.uid) {
-	detectImpersonationPbs(canImpersonate);
-    }
-};
-
-function disableMenuItemsUserCannotImpersonate(canImpersonate) {
-    simpleEach(getValidAppIds(), function (id) {
-	if (!simpleContains(canImpersonate, id)) {
-	    var elt = simpleQuerySelector(".bandeau_ENT_Menu_Entry_" + id);
-	    if (elt) toggleClass(elt, "bandeau_ENT_Menu_Entry__Forbidden");
+function detectImpersonationPbs() {
+    var want = getCookie(CONF.cas_impersonate.cookie_name);
+    if (want !== b_E.uid && (b_E.uid || simpleContains(DATA.canImpersonate, currentAppId))) {
+        var msg = "Vous êtes encore identifié sous l'utilisateur " + DATA.person.id + ". Acceptez vous de perdre la session actuelle ?";
+	if (window.confirm(msg)) {
+	    document.location = relogUrl(currentAppId, DATA.apps[currentAppId]);
 	}
-    });
-}
-
-function detectImpersonationPbs(canImpersonate) {
-    // application tells us what uid is logged, yeepee
-    if (DATA.realUserId) {
-	// app is impersonated
-	if (!getImpersonateCookie()) 
-	    impersonationPb("you are still impersonated");
-	else if (getImpersonateCookie() !== b_E.uid)
-	    impersonationPb("you are still impersonated as " + b_E.uid);
-    } else {
-	// app is not impersonated
-	if (getImpersonateCookie() && currentAppShouldBeImpersonated(canImpersonate))
-	    impersonationPb("you are not impersonated");
     }
-}
-function impersonationPb(err) {
-    alert(err + ", please logout and log again.");
-    //var barAccount = document.getElementById('portalPageBarAccount');
-    //barAccount.innerHTML = 'warning: ' + err;
-}
-function currentAppShouldBeImpersonated(canImpersonate) {
-    var appIds = b_E.current ? [b_E.current] : b_E.currentAppIds;
-    return intersect(appIds, canImpersonate).length > 0;
-}
-
-function getImpersonateCookie() {
-    return CONF.cas_impersonate && getCookie(CONF.cas_impersonate.cookie_name);
 }
 
 function mayInstallBandeau() {

@@ -15,7 +15,12 @@ if (!window.bandeau_ENT_maybe_loaded)
 	script.setAttribute("charset", "utf-8"); // workaround IE ignoring Content-Type
 	document.getElementsByTagName("head")[0].appendChild(script);
     }
-      
+
+    function getCookie(name) {
+	var m = document.cookie.match(new RegExp(name + '=([^;]+)'));
+	return m && m[1];
+    }
+
     function load_bandeau_ENT() {
 	var b_E = window.bandeau_ENT;
 	if (!b_E) return;
@@ -23,7 +28,11 @@ if (!window.bandeau_ENT_maybe_loaded)
 
         var navigationStart = window.performance && window.performance.timing && window.performance.timing.navigationStart;
         b_E.loadTime = navigationStart && (new Date() - navigationStart);
-	
+
+        if (b_E.uid)
+            b_E.forced_uid = true;
+        else 
+	    b_E.uid = getCookie("CAS_IMPERSONATED");
 	if (!b_E.localStorage_prefix) b_E.localStorage_prefix = "bandeau_ENT:" + (b_E.uid ? b_E.uid + ":" : '');
 	if (!b_E.localStorage_js_text_field) b_E.localStorage_js_text_field = "v5:js_text";
 	

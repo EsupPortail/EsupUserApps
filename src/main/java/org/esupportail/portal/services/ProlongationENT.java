@@ -7,9 +7,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,6 +32,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
+import org.esupportail.portal.services.prolongationENT.Cookies;
 
 public class ProlongationENT extends HttpServlet {	   
     JsonObject conf = null;
@@ -37,6 +40,7 @@ public class ProlongationENT extends HttpServlet {
     String bandeau_ENT_url, ent_base_url, ent_base_url_guest, current_idpAuthnRequest_url;
     List<String> url_bandeau_compatible, apps_no_bandeau, wanted_user_attributes;
     String cas_login_url, cas_logout_url;
+    String casImpersonateCookieName;
     ProlongationENTGroups handleGroups;
     Stats stats;
 
@@ -50,6 +54,8 @@ public class ProlongationENT extends HttpServlet {
 	    detectReload(request, response);
 	} else if (request.getServletPath().endsWith("logout")) {
 	    logout(request, response);
+	} else if (request.getServletPath().endsWith("canImpersonate")) {
+	    canImpersonate(request, response);
 	} else if (request.getServletPath().endsWith("redirect")) {
 	    if (conf == null) initConf(request);
 	    redirect(request, response);
@@ -131,6 +137,9 @@ public class ProlongationENT extends HttpServlet {
 		  "apps", userChannels,
 		  "layout", userLayout);
 	if (!realUserId.equals(userId)) js_data.put("realUserId", realUserId);
+        if (getCookie(request, casImpersonateCookieName) != null) {
+            js_data.put("canImpersonate", handleGroups.computeValidApps(realUserId, true));
+        }
 
 	Map<String, Object> js_css =
 	    array("base",    get_css_with_absolute_url(request, "main.css"),
@@ -181,6 +190,28 @@ public class ProlongationENT extends HttpServlet {
 	response.getWriter().println(callback + "();");
     }
     
+    void canImpersonate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String uid = request.getParameter("uid");
+        String service = request.getParameter("service");
+        Set<String> appIds = handleGroups.computeValidApps(uid, true);
+        if (service != null) {
+            // cleanup url
+	    service = service.replace(":443/", "/");
+            for (String appId : new HashSet<String>(appIds)) {
+                ProlongationENTApp app = handleGroups.APPS.get(appId);
+                boolean keep = app.serviceRegex != null && service.matches(app.serviceRegex);
+                if (!keep) appIds.remove(appId);
+            }
+        }
+
+        if (appIds.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        } else {
+            response.setContentType("application/json; charset=utf8");
+            response.getWriter().println(json_encode(appIds));
+        }
+    }
+    
     void redirect(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 	String activeTab = request.getParameter("uportalActiveTab");
@@ -194,11 +225,49 @@ public class ProlongationENT extends HttpServlet {
 	    if (appId == null) throw new RuntimeException("missing 'id=xxx' parameter");
 	}
 	if (appId != null) { 
-	    Map<String,String> app = get_app(appId);
+            ProlongationENTApp app_raw = handleGroups.APPS.get(appId);
+	    Map<String,String> app = app_raw.export();
 	    if (app == null) throw new RuntimeException("invalid appId " + appId);
-	    location = get_url(app, appId, hasParameter(request, "guest"), !hasParameter(request, "login"), current_idpAuthnRequest_url);
+            boolean isGuest = !hasParameter(request, "login") && !hasParameter(request, "relog");
+	    location = get_url(app, appId, hasParameter(request, "guest"), isGuest, current_idpAuthnRequest_url);
+
+            // Below rely on /ProlongationENT/redirect proxied in applications.
+            // Example for Apache:
+            //   ProxyPass /ProlongationENT https://ent.univ.fr/ProlongationENT
+            if (hasParameter(request, "relog")) {
+                removeCookies(request, response, app_raw.cookies);
+            }
+            if (hasParameter(request, "impersonate")) {
+                String wantedUid = getCookie(request, casImpersonateCookieName);
+                response.addCookie(newCookie("CAS_IMPERSONATED", wantedUid, app_raw.cookies.path));
+            }
 	}
 	response.sendRedirect(location);
+    }
+
+    void removeCookies(HttpServletRequest request, HttpServletResponse response, Cookies toRemove) {
+        for (String prefix : toRemove.name_prefixes()) {
+            for(Cookie c : request.getCookies()) { 
+                if (!c.getName().startsWith(prefix)) continue;
+                response.addCookie(newCookie(c.getName(), null, toRemove.path()));
+            }
+        }
+        for (String name : toRemove.names()) {
+            response.addCookie(newCookie(name, null, toRemove.path()));
+        }
+    }
+    
+    String getCookie(HttpServletRequest request, String name) {
+	for(Cookie c : request.getCookies()) { 
+            if (c.getName().equals(name)) return c.getValue();
+        }  
+	return null;
+    }
+    Cookie newCookie(String name, String val, String path) {
+        Cookie c = new Cookie(name, val);
+        c.setPath(path);
+        if (val == null) c.setMaxAge(0);
+        return c;
     }
     
     static long time_before_forcing_CAS_authentication_again(boolean different_referrer) {
@@ -223,6 +292,8 @@ public class ProlongationENT extends HttpServlet {
 
 	cas_login_url      = conf.get("cas_base_url").getAsString() + "/login";
 	cas_logout_url     = conf.get("cas_base_url").getAsString() + "/logout";
+
+        casImpersonateCookieName = conf.getAsJsonObject("cas_impersonate").get("cookie_name").getAsString();
     }   
 
     String computeBandeauHeaderLinkMyAccount(HttpServletRequest request, Map<String,Map<String,String>> validApps) {
@@ -349,7 +420,7 @@ public class ProlongationENT extends HttpServlet {
     Map<String,Map<String,String>> userChannels(final String userId, Map<String, List<String>> person) {
         Map<String,Map<String,String>> rslt = new HashMap<String,Map<String,String>>();
 	
-	for (String fname : handleGroups.computeValidAppsRaw(person)) {
+	for (String fname : handleGroups.computeValidAppsRaw(person, false)) {
 		Map<String,String> def = get_app(fname);
 
 		def.put("url", get_user_url(def, fname, current_idpAuthnRequest_url));
