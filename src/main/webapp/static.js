@@ -532,7 +532,8 @@ function triggerWindowResize() {
 
 function detectImpersonationPbs() {
     var want = getCookie(CONF.cas_impersonate.cookie_name);
-    if (want !== b_E.uid && (b_E.uid || simpleContains(DATA.canImpersonate, currentAppId))) {
+    // NB: explicit check with "!=" since we do not want null !== undefined
+    if (want != b_E.uid && (b_E.uid || simpleContains(DATA.canImpersonate, currentAppId))) {
         var msg = "Vous êtes encore identifié sous l'utilisateur " + DATA.person.id + ". Acceptez vous de perdre la session actuelle ?";
 	if (window.confirm(msg)) {
 	    document.location = relogUrl(currentAppId, DATA.apps[currentAppId]);
