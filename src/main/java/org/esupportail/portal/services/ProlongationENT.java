@@ -1,6 +1,5 @@
 package org.esupportail.portal.services;
 
-import java.io.InputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
@@ -18,19 +17,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.logging.LogFactory;
 import org.esupportail.portal.services.prolongationENT.Stats;
-import org.apache.commons.io.IOUtils;
 import org.jasig.cas.client.util.AbstractCasFilter;
 import org.jasig.cas.client.validation.Assertion;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
 import org.esupportail.portal.services.prolongationENT.Cookies;
 import org.esupportail.portal.services.prolongationENT.Utils;
@@ -98,7 +91,7 @@ public class ProlongationENT extends HttpServlet {
 	if (forcedId != null) {
 	    List<String> memberOf = handleGroups.getLdapPeopleInfo(userId).get("memberOf");
 	    if (getConfSet("admins").contains(userId) ||
-		memberOf != null && firstCommonElt(memberOf, getConfSet("admins")) != null) {
+		memberOf != null && Utils.firstCommonElt(memberOf, getConfSet("admins")) != null) {
 		// ok
 	    } else {
 		forcedId = null;
@@ -138,7 +131,7 @@ public class ProlongationENT extends HttpServlet {
 	     .add("apps", userChannels)
 	     .add("layout", userLayout);
 	if (!realUserId.equals(userId)) js_data.put("realUserId", realUserId);
-        if (getCookie(request, casImpersonateCookieName) != null) {
+        if (Utils.getCookie(request, casImpersonateCookieName) != null) {
             js_data.put("canImpersonate", handleGroups.computeValidApps(realUserId, true));
         }
 
@@ -151,7 +144,7 @@ public class ProlongationENT extends HttpServlet {
 	js_text_middle = js_text_middle.replace("var DATA = undefined", "var DATA = " + json_encode(js_data));
 	js_text_middle = js_text_middle.replace("var CSS = undefined", "var CSS = " + json_encode(js_css));
 
-	String hash = computeMD5(js_text_middle);
+	String hash = Utils.computeMD5(js_text_middle);
 	Map<String, Object> js_params =
 	    asMap("is_old", is_old)
 	     .add("hash", hash);
@@ -239,8 +232,8 @@ public class ProlongationENT extends HttpServlet {
                 removeCookies(request, response, app_raw.cookies);
             }
             if (hasParameter(request, "impersonate")) {
-                String wantedUid = getCookie(request, casImpersonateCookieName);
-                response.addCookie(newCookie("CAS_IMPERSONATED", wantedUid, app_raw.cookies.path));
+                String wantedUid = Utils.getCookie(request, casImpersonateCookieName);
+                response.addCookie(Utils.newCookie("CAS_IMPERSONATED", wantedUid, app_raw.cookies.path));
             }
 	}
 	response.sendRedirect(location);
@@ -250,25 +243,12 @@ public class ProlongationENT extends HttpServlet {
         for (String prefix : toRemove.name_prefixes()) {
             for(Cookie c : request.getCookies()) { 
                 if (!c.getName().startsWith(prefix)) continue;
-                response.addCookie(newCookie(c.getName(), null, toRemove.path()));
+                response.addCookie(Utils.newCookie(c.getName(), null, toRemove.path()));
             }
         }
         for (String name : toRemove.names()) {
-            response.addCookie(newCookie(name, null, toRemove.path()));
+            response.addCookie(Utils.newCookie(name, null, toRemove.path()));
         }
-    }
-    
-    String getCookie(HttpServletRequest request, String name) {
-	for(Cookie c : request.getCookies()) { 
-            if (c.getName().equals(name)) return c.getValue();
-        }  
-	return null;
-    }
-    Cookie newCookie(String name, String val, String path) {
-        Cookie c = new Cookie(name, val);
-        c.setPath(path);
-        if (val == null) c.setMaxAge(0);
-        return c;
     }
     
     static long time_before_forcing_CAS_authentication_again(boolean different_referrer) {
@@ -326,28 +306,10 @@ public class ProlongationENT extends HttpServlet {
 	return s.replaceAll("(url\\(['\" ]*)(?!['\" ])(?!https?:|/)", "$1" + bandeau_ENT_url + "/");
     }
 
-    InputStream file_get_stream(HttpServletRequest request, String file) {
-	return request.getSession().getServletContext().getResourceAsStream(file);
-    }
-
-    String file_get_contents(HttpServletRequest request, String file) {
-	try {
-            InputStream in = file_get_stream(request, "/" + file);
-            if (in == null) {
-                log.error("error reading file " + file);
-                return null;
-            }
-	    return IOUtils.toString(in, "UTF-8");
-	} catch (IOException e) {
-	    log.error("error reading file " + file, e);
-	    return null;
-	}
-    }
-
     String private_file_get_contents(HttpServletRequest request, String file) {
         return file_get_contents(request, "WEB-INF/" + file);
     }
-
+    
     /* ******************************************************************************** */
     /* heuristics to detect if user may have changed (unneeded if CAS single logout?) */
     /* ******************************************************************************** */   
@@ -529,12 +491,8 @@ public class ProlongationENT extends HttpServlet {
     }   
 
     String url2host(String url) {
-	try {
-	    return new URL(url).getHost();
-	} catch (java.net.MalformedURLException e) {
-	    log.error(e, e);
-	    return null;
-	}
+	URL url_ = Utils.toURL(url);
+	return url_ != null ? url_.getHost() : null;
     }
 
     void session_invalidate(HttpServletRequest request) {
@@ -548,56 +506,21 @@ public class ProlongationENT extends HttpServlet {
 	    // it need not insist that it be the one to perform the invalidating.
 	}
     }
-
-    String computeMD5(String s) {
-	try {
-	    //System.out.println("computing digest of " + file);
-	    MessageDigest md = MessageDigest.getInstance("MD5");
-	    byte[] digest = md.digest(s.getBytes());
-	    return (new HexBinaryAdapter()).marshal(digest);
-	} catch (NoSuchAlgorithmException e) {
-	    throw new RuntimeException(e);
-	}
-    }
     
     private static String json_encode(Object o) {
-        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-        return gson.toJson(o);
+	return Utils.json_encode(o);
     }
-
-    static private String urlencode(String s) {
-	try {
-	    return java.net.URLEncoder.encode(s, "UTF-8");
-	}
-	catch (java.io.UnsupportedEncodingException uee) {
-	    return s;
-	}
+    private static String urlencode(String s) {
+	return Utils.urlencode(s);
     }
-
-    static String urldecode(String s) {
-       try {
-           return java.net.URLDecoder.decode(s, "UTF-8");
-       }
-       catch (java.io.UnsupportedEncodingException uee) {
-           return s;
-       }
+    private static boolean hasParameter(HttpServletRequest request, String attrName) {
+	return Utils.hasParameter(request, attrName);
     }
-
-    static private boolean hasParameter(HttpServletRequest request, String attrName) {
-	return request.getParameter(attrName) != null;
-    }
-    
-    static String removePrefixOrNull(String s, String prefix) {
-	return s.startsWith(prefix) ? s.substring(prefix.length()) : null;
-    }
-
-    static Utils.MapBuilder<Object> asMap(String k, Object v) {
+    private static Utils.MapBuilder<Object> asMap(String k, Object v) {
 	return Utils.asMap(k, v);
     }
-
-    private String firstCommonElt(Iterable<String> l1, Set<String> l2) {
-        for (String e : l1) if (l2.contains(e)) return e;
-        return null;
+    private static String file_get_contents(HttpServletRequest request, String file) {
+	return Utils.file_get_contents(request, file);
     }
 
     /*
