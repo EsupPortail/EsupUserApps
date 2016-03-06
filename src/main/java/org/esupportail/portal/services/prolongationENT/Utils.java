@@ -18,5 +18,22 @@ public class Utils {
             return this;
         }
     }
+
+    private static Log log() {
+	return log(Utils.class);
+    }
+    
+    public static Log log(Class clazz) {
+	return LogFactory.getLog(clazz);
+    }
+    
+    public static URL toURL(String url) {
+	try {
+	    return new URL(url);
+	} catch (java.net.MalformedURLException e) {
+	    log().error(e, e);
+	    return null;
+	}
+    }
     
 }

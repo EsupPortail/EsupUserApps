@@ -227,7 +227,7 @@ class ProlongationENTGroups {
     }
     
     private void compute_default_cookies_path_and_serviceRegex(ProlongationENTApp app) {
-        URL url = toURL(app.url);
+        URL url = Utils.toURL(app.url);
 
         // default path is:
         // /     for http://foo/bar
@@ -236,15 +236,6 @@ class ProlongationENTGroups {
         
         if (app.cookies.path == null) app.cookies.path = path;
         if (app.serviceRegex == null) app.serviceRegex = Pattern.quote(url.getProtocol() + "://" + url.getHost() + path) + ".*";
-    }
-
-    URL toURL(String url) {
-	try {
-	    return new URL(url);
-	} catch (java.net.MalformedURLException e) {
-	    log.error(e, e);
-	    return null;
-	}
     }
 
     private DirContext ldap_connect() {
