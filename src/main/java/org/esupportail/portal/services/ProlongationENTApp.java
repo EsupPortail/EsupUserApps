@@ -2,6 +2,7 @@ package org.esupportail.portal.services;
 
 import org.esupportail.portal.services.prolongationENT.ACLs;
 import org.esupportail.portal.services.prolongationENT.Cookies;
+import org.esupportail.portal.services.prolongationENT.Utils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,11 +38,11 @@ class ProlongationENTApp extends ACLs {
     }
     
     public Map<String, String> export() {
-    	Map<String,String> r = new HashMap<>();
-    	r.put("text", getTexte());
-    	r.put("title", title);
-    	r.put("description", getDescription());
-    	r.put("url", url);
+    	Map<String,String> r =
+	    Utils.asMap("text", getTexte())
+	    .add("title", title)
+	    .add("description", getDescription())
+	    .add("url", url);
     	if (shibbolethSPPrefix != null) r.put("shibbolethSPPrefix", shibbolethSPPrefix);
     	if (hashelp) r.put("hashelp", "" + hashelp);
     	return r;

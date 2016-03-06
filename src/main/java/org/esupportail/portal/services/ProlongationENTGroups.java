@@ -29,6 +29,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.esupportail.portal.services.prolongationENT.ACLs;
+import org.esupportail.portal.services.prolongationENT.Utils;
 
 class ProlongationENTGroups {
 
@@ -247,15 +248,15 @@ class ProlongationENTGroups {
     }
 
     private DirContext ldap_connect() {
-	Hashtable<String,String> env = new Hashtable<>();
-	env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-	env.put(Context.PROVIDER_URL, ldapConf.url);
-	env.put(Context.SECURITY_AUTHENTICATION, "simple");
-	env.put(Context.SECURITY_PRINCIPAL, ldapConf.bindDN);
-	env.put(Context.SECURITY_CREDENTIALS, ldapConf.bindPasswd);
+	Map<String,String> env =
+	    Utils.asMap(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory")
+	           .add(Context.PROVIDER_URL, ldapConf.url)
+	           .add(Context.SECURITY_AUTHENTICATION, "simple")
+	           .add(Context.SECURITY_PRINCIPAL, ldapConf.bindDN)
+	           .add(Context.SECURITY_CREDENTIALS, ldapConf.bindPasswd);
 
 	try {
-	    return new InitialDirContext(env);
+	    return new InitialDirContext(new Hashtable<>(env));
 	} catch (NamingException e) {
 	    log.error("error connecting to ldap server", e);
             throw new RuntimeException("error connecting to ldap server");

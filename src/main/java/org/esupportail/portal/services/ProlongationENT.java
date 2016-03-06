@@ -33,6 +33,7 @@ import java.security.NoSuchAlgorithmException;
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
 import org.esupportail.portal.services.prolongationENT.Cookies;
+import org.esupportail.portal.services.prolongationENT.Utils;
 
 public class ProlongationENT extends HttpServlet {	   
     JsonObject conf = null;
@@ -89,7 +90,7 @@ public class ProlongationENT extends HttpServlet {
 		// user is not authenticated.
                 String template = file_get_contents(request, "templates/notLogged.html");
                 response.setContentType("application/javascript; charset=utf8");
-                response.getWriter().println(String.format(template, json_encode(array("cas_login_url", cas_login_url))));
+                response.getWriter().println(String.format(template, json_encode(asMap("cas_login_url", cas_login_url))));
 	    }
 	    return;
 	}
@@ -125,25 +126,25 @@ public class ProlongationENT extends HttpServlet {
 	String static_js = file_get_contents(request, "static.js");
 
 	Map<String, Object> js_conf =
-	    array("bandeau_ENT_url", bandeau_ENT_url,
-		  "ent_logout_url", via_CAS(cas_logout_url, ent_base_url + "/Logout"), // nb: esup logout may not logout of CAS if user was not logged in esup portail, so forcing CAS logout in case
-                  "cas_impersonate", conf.get("cas_impersonate"),
-		  "time_before_checking_browser_cache_is_up_to_date", conf.get("time_before_checking_browser_cache_is_up_to_date"));
+	    asMap("bandeau_ENT_url", bandeau_ENT_url)
+	     .add("ent_logout_url", via_CAS(cas_logout_url, ent_base_url + "/Logout")) // nb: esup logout may not logout of CAS if user was not logged in esup portail, so forcing CAS logout in case
+             .add("cas_impersonate", conf.get("cas_impersonate"))
+	     .add("time_before_checking_browser_cache_is_up_to_date", conf.get("time_before_checking_browser_cache_is_up_to_date"));
 
 
 	Map<String, Object> js_data =
-	    array("person", user,
-		  "bandeauHeader", bandeauHeader,
-		  "apps", userChannels,
-		  "layout", userLayout);
+	    asMap("person", user)
+	     .add("bandeauHeader", bandeauHeader)
+	     .add("apps", userChannels)
+	     .add("layout", userLayout);
 	if (!realUserId.equals(userId)) js_data.put("realUserId", realUserId);
         if (getCookie(request, casImpersonateCookieName) != null) {
             js_data.put("canImpersonate", handleGroups.computeValidApps(realUserId, true));
         }
 
 	Map<String, Object> js_css =
-	    array("base",    get_css_with_absolute_url(request, "main.css"),
-		  "desktop", get_css_with_absolute_url(request, "desktop.css"));
+	    asMap("base",    get_css_with_absolute_url(request, "main.css"))
+	     .add("desktop", get_css_with_absolute_url(request, "desktop.css"));
 	    
 	String js_text_middle = static_js;
 	js_text_middle = js_text_middle.replace("var CONF = undefined", "var CONF = " + json_encode(js_conf));
@@ -152,8 +153,8 @@ public class ProlongationENT extends HttpServlet {
 
 	String hash = computeMD5(js_text_middle);
 	Map<String, Object> js_params =
-	    array("is_old", is_old,
-		  "hash", hash);
+	    asMap("is_old", is_old)
+	     .add("hash", hash);
 
 	String js_text = js_text_middle.replace("var PARAMS = undefined", "var PARAMS = " + json_encode(js_params));
 
@@ -412,7 +413,7 @@ public class ProlongationENT extends HttpServlet {
 		if (userChannels.contains(fname))
 		    fnames.add(fname);
 	    if (!fnames.isEmpty())
-		rslt.add(array("title", e.getKey(), "apps", fnames));
+		rslt.add(asMap("title", e.getKey()).add("apps", fnames));
 	}
  	return rslt;  
     }
@@ -590,25 +591,8 @@ public class ProlongationENT extends HttpServlet {
 	return s.startsWith(prefix) ? s.substring(prefix.length()) : null;
     }
 
-    static Map<String, Object> array(String key1, Object val1) {
-	Map<String, Object> r = new HashMap<>();
-	r.put(key1, val1);
-	return r;
-    }
-    static Map<String, Object> array(String key1, Object val1, String key2, Object val2) {
-	Map<String, Object> r = array(key1, val1);
-	r.put(key2, val2);
-	return r;
-    }
-    static Map<String, Object> array(String key1, Object val1, String key2, Object val2, String key3, Object val3) {
-	Map<String, Object> r = array(key1, val1, key2, val2);
-	r.put(key3, val3);
-	return r;
-    }
-    static Map<String, Object> array(String key1, Object val1, String key2, Object val2, String key3, Object val3, String key4, Object val4) {
-	Map<String, Object> r = array(key1, val1, key2, val2, key3, val3);
-	r.put(key4, val4);
-	return r;
+    static Utils.MapBuilder<Object> asMap(String k, Object v) {
+	return Utils.asMap(k, v);
     }
 
     private String firstCommonElt(Iterable<String> l1, Set<String> l2) {
