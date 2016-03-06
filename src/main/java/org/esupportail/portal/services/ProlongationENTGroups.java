@@ -29,6 +29,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.esupportail.portal.services.prolongationENT.ACLs;
+import org.esupportail.portal.services.prolongationENT.Groups;
 import org.esupportail.portal.services.prolongationENT.Ldap;
 import org.esupportail.portal.services.prolongationENT.Utils;
 
@@ -36,7 +37,7 @@ class ProlongationENTGroups {
 
     String current_idpAuthnRequest_url;
     List<String> minimal_attrs;
-    Map<String, Map<String, List<Pattern>>> GROUPS;
+    Groups groups;
     Map<String, ProlongationENTApp> APPS;
     Map<String, List<String>> LAYOUT;
     Ldap ldap;
@@ -48,8 +49,8 @@ class ProlongationENTGroups {
     	minimal_attrs = gson.fromJson(conf.get("wanted_user_attributes"), 
     			new TypeToken< List<String> >() {}.getType());
         ldap = new Ldap(gson.fromJson(auth_conf.get("ldap"), Ldap.LdapConf.class));
-        GROUPS = prepareRegexes(gson.<Map<String, Map<String, Object>>>fromJson(apps_conf.get("GROUPS"), 
-		        new TypeToken< Map<String, Map<String, Object>> >() {}.getType()));
+        groups = new Groups(gson.<Map<String, Map<String, Object>>>fromJson(apps_conf.get("GROUPS"), 
+											   new TypeToken< Map<String, Map<String, Object>> >() {}.getType()));
 		LAYOUT = gson.fromJson(apps_conf.get("LAYOUT"), 
 				new TypeToken< Map<String, List<String>> >() {}.getType());
 		APPS = gson.fromJson(apps_conf.get("APPS"), 
@@ -65,74 +66,9 @@ class ProlongationENTGroups {
 
                 compute_default_cookies_path_and_serviceRegex();
     }
-    
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-	private Map<String, Map<String, List<Pattern>>> prepareRegexes(Map<String, Map<String, Object>> m) {
-        for (Map<String,Object> attr2regexes : m.values()) {
-            for (String attr : attr2regexes.keySet()) {
-                Object regexes = attr2regexes.get(attr);
-                List<Pattern> p = new LinkedList<>();
-                if (regexes instanceof String) {
-                    regexes = Collections.singletonList(regexes);
-                }
-                for (String regex : (List<String>) regexes) {
-                    p.add(Pattern.compile(regex));
-                }
-                attr2regexes.put(attr, p);
-            }
-        }
-        // down casting to precise type since we've done the job now
-        return (Map) m;
-    }
 
     public Map<String, String> getApp(String appId) {
     	return APPS.get(appId).export();
-    }
-
-    public boolean hasGroup(Map<String, List<String>> person, String name) {
-        if (!GROUPS.containsKey(name)) {
-            return hasPlainLdapGroup(person, name);
-        }
-            
-        for (Entry<String, List<Pattern>> attr_regexes : GROUPS.get(name).entrySet()) {
-            String attr = attr_regexes.getKey();
-                
-            List<String> attrValues = person.get(attr);
-            if (attrValues == null) {
-                log.warn("missing attribute " + attr);
-                return false;
-            }
-            for (Pattern regex : attr_regexes.getValue()) {
-                boolean okOne = false;
-                for (String v : attrValues) {
-                    if (regex.matcher(v).matches()) {
-                        okOne = true;
-                        break;
-                    }
-                }
-                if (!okOne) return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean hasPlainLdapGroup(Map<String, List<String>> person, String name) {
-        // check memberOf
-        List<String> vals = person.get("memberOf");
-        if (vals != null) {
-            for (String val : vals)
-                if (val.startsWith("cn=" + name + ",")) return true;
-        }
-        return false;
-    }
-
-    public boolean hasGroup(Map<String, List<String>> person, String name, Map<String, Boolean> cache) {
-        Boolean r = cache.get(name);
-        if (r == null) {
-            r = hasGroup(person, name);
-            cache.put(name, r);
-        }
-        return r;
     }
 
     public Set<String> computeValidApps(String uid, boolean wantImpersonate) {
@@ -161,7 +97,7 @@ class ProlongationENTGroups {
 
             if (!found && app.groups != null) {
                 for (String group : app.groups) {
-                    if (hasGroup(person, group, groupsCache))
+                    if (groups.hasGroup(person, group, groupsCache))
                         found = true;
                 }
             }
@@ -171,12 +107,9 @@ class ProlongationENTGroups {
     }
   
     private Set<String> compute_wanted_attributes() {
-        Set<String> r = new HashSet<>(minimal_attrs);
+        Set<String> r = groups.needed_ldap_attributes();
         r.add("memberOf"); // hard code memberOf
-
-        for (Map<String, List<Pattern>> attr2regexes : GROUPS.values()) {
-            r.addAll(attr2regexes.keySet());
-        }
+	r.addAll(minimal_attrs);
         return r;
   }
 
