@@ -29,6 +29,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.esupportail.portal.services.prolongationENT.ACLs;
+import org.esupportail.portal.services.prolongationENT.Ldap;
 import org.esupportail.portal.services.prolongationENT.Utils;
 
 class ProlongationENTGroups {
@@ -38,13 +39,7 @@ class ProlongationENTGroups {
     Map<String, Map<String, List<Pattern>>> GROUPS;
     Map<String, ProlongationENTApp> APPS;
     Map<String, List<String>> LAYOUT;
-
-    class LdapConf {
-        String url, bindDN, bindPasswd, peopleDN;
-    }
-    LdapConf ldapConf;
-
-    DirContext dirContext;
+    Ldap ldap;
     Log log = LogFactory.getLog(ProlongationENTGroups.class);
     
     public ProlongationENTGroups(JsonObject conf, JsonObject apps_conf, JsonObject auth_conf) {
@@ -52,7 +47,7 @@ class ProlongationENTGroups {
         current_idpAuthnRequest_url = conf.get("current_idpAuthnRequest_url").getAsString();
     	minimal_attrs = gson.fromJson(conf.get("wanted_user_attributes"), 
     			new TypeToken< List<String> >() {}.getType());
-        ldapConf = gson.fromJson(auth_conf.get("ldap"), LdapConf.class);
+        ldap = new Ldap(gson.fromJson(auth_conf.get("ldap"), Ldap.LdapConf.class));
         GROUPS = prepareRegexes(gson.<Map<String, Map<String, Object>>>fromJson(apps_conf.get("GROUPS"), 
 		        new TypeToken< Map<String, Map<String, Object>> >() {}.getType()));
 		LAYOUT = gson.fromJson(apps_conf.get("LAYOUT"), 
@@ -88,43 +83,6 @@ class ProlongationENTGroups {
         }
         // down casting to precise type since we've done the job now
         return (Map) m;
-    }
-    
-    synchronized DirContext getDirContext() {
-        if (dirContext == null) {
-            dirContext = ldap_connect();
-        }
-        return dirContext;
-    }
-
-    @SuppressWarnings("unchecked")
-	Map<String, List<String>> getLdapInfo(String dn, Set<String> wanted_attributes) {
-    	try {
-	        Attributes attrs = getAttributes(dn, wanted_attributes.toArray(new String[0]));
-	        Map<String, List<String>> r = new HashMap<>();
-	        for (String attr : wanted_attributes) {
-                    Attribute vals = attrs.get(attr.toLowerCase());
-					if (vals != null)
-                        r.put(attr, Collections.list((NamingEnumeration<String>) vals.getAll()));
-	        }
-	        return r;
-    	} catch (NamingException e) {
-    		return null;
-    	}
-    }
-
-    private Attributes getAttributes(String dn, String[] wanted_attributes) throws NamingException {
-        try {
-            return getDirContext().getAttributes(dn, wanted_attributes);
-        } catch (CommunicationException e) {
-            // retry, maybe a new LDAP connection will work
-            dirContext = null;
-            return getDirContext().getAttributes(dn, wanted_attributes);
-        }
-    }
-    
-    public Map<String, List<String>> getLdapPeopleInfo(String uid) {
-        return getLdapInfo("uid=" + uid + "," + ldapConf.peopleDN, compute_wanted_attributes());
     }
 
     public Map<String, String> getApp(String appId) {
@@ -179,6 +137,10 @@ class ProlongationENTGroups {
 
     public Set<String> computeValidApps(String uid, boolean wantImpersonate) {
         return computeValidAppsRaw(getLdapPeopleInfo(uid), wantImpersonate);
+    }
+
+    public Map<String, List<String>> getLdapPeopleInfo(String uid) {
+	return ldap.getLdapPeopleInfo(uid, compute_wanted_attributes());
     }
     
     public Set<String> computeValidAppsRaw(Map<String, List<String>> person, boolean wantImpersonate) {
@@ -236,22 +198,6 @@ class ProlongationENTGroups {
         
         if (app.cookies.path == null) app.cookies.path = path;
         if (app.serviceRegex == null) app.serviceRegex = Pattern.quote(url.getProtocol() + "://" + url.getHost() + path) + ".*";
-    }
-
-    private DirContext ldap_connect() {
-	Map<String,String> env =
-	    Utils.asMap(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory")
-	           .add(Context.PROVIDER_URL, ldapConf.url)
-	           .add(Context.SECURITY_AUTHENTICATION, "simple")
-	           .add(Context.SECURITY_PRINCIPAL, ldapConf.bindDN)
-	           .add(Context.SECURITY_CREDENTIALS, ldapConf.bindPasswd);
-
-	try {
-	    return new InitialDirContext(new Hashtable<>(env));
-	} catch (NamingException e) {
-	    log.error("error connecting to ldap server", e);
-            throw new RuntimeException("error connecting to ldap server");
-        }
     }
     
 }
