@@ -75,7 +75,7 @@ class ProlongationENTGroups {
         for (Map<String,Object> attr2regexes : m.values()) {
             for (String attr : attr2regexes.keySet()) {
                 Object regexes = attr2regexes.get(attr);
-                List<Pattern> p = new LinkedList<Pattern>();
+                List<Pattern> p = new LinkedList<>();
                 if (regexes instanceof String) {
                     regexes = Collections.singletonList(regexes);
                 }
@@ -100,7 +100,7 @@ class ProlongationENTGroups {
 	Map<String, List<String>> getLdapInfo(String dn, Set<String> wanted_attributes) {
     	try {
 	        Attributes attrs = getAttributes(dn, wanted_attributes.toArray(new String[0]));
-	        Map<String, List<String>> r = new HashMap<String, List<String>>();
+	        Map<String, List<String>> r = new HashMap<>();
 	        for (String attr : wanted_attributes) {
                     Attribute vals = attrs.get(attr.toLowerCase());
 					if (vals != null)
@@ -182,9 +182,9 @@ class ProlongationENTGroups {
     
     public Set<String> computeValidAppsRaw(Map<String, List<String>> person, boolean wantImpersonate) {
         String user = person.get("uid").get(0);
-        Map<String, Boolean> groupsCache = new HashMap<String, Boolean>();
+        Map<String, Boolean> groupsCache = new HashMap<>();
 
-        Set<String> r = new HashSet<String>();
+        Set<String> r = new HashSet<>();
         for (String appId : APPS.keySet()) {
             ProlongationENTApp app_ = APPS.get(appId);
             ACLs app = wantImpersonate ? app_.admins : app_;
@@ -208,7 +208,7 @@ class ProlongationENTGroups {
     }
   
     private Set<String> compute_wanted_attributes() {
-        Set<String> r = new HashSet<String>(minimal_attrs);
+        Set<String> r = new HashSet<>(minimal_attrs);
         r.add("memberOf"); // hard code memberOf
 
         for (Map<String, List<Pattern>> attr2regexes : GROUPS.values()) {
@@ -247,7 +247,7 @@ class ProlongationENTGroups {
     }
 
     private DirContext ldap_connect() {
-	Hashtable<String,String> env = new Hashtable<String,String>();
+	Hashtable<String,String> env = new Hashtable<>();
 	env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
 	env.put(Context.PROVIDER_URL, ldapConf.url);
 	env.put(Context.SECURITY_AUTHENTICATION, "simple");

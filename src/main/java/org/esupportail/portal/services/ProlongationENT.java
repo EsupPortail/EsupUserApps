@@ -197,7 +197,7 @@ public class ProlongationENT extends HttpServlet {
         if (service != null) {
             // cleanup url
 	    service = service.replace(":443/", "/");
-            for (String appId : new HashSet<String>(appIds)) {
+            for (String appId : new HashSet<>(appIds)) {
                 ProlongationENTApp app = handleGroups.APPS.get(appId);
                 boolean keep = app.serviceRegex != null && service.matches(app.serviceRegex);
                 if (!keep) appIds.remove(appId);
@@ -394,7 +394,7 @@ public class ProlongationENT extends HttpServlet {
     /* compute user's layout & channels using uportal API */
     /* ******************************************************************************** */   
     Map<String,List<String>> getUser(String userId, Map<String, List<String>> attrs) {
-	Map<String,List<String>> user = new HashMap<String,List<String>>();
+	Map<String,List<String>> user = new HashMap<>();
 	for (String attr: wanted_user_attributes) {
 	    List<String> val = attrs.get(attr);
 	    if (val != null)
@@ -405,9 +405,9 @@ public class ProlongationENT extends HttpServlet {
     }
     
     List<Map<String, Object>> userLayout(Map<String, List<String>> layout, Set<String> userChannels) {
-	List<Map<String, Object>> rslt = new ArrayList<Map<String, Object>>();
+	List<Map<String, Object>> rslt = new ArrayList<>();
 	for (Map.Entry<String, List<String>> e : layout.entrySet()) {
-	    List<String> fnames = new ArrayList<String>();
+	    List<String> fnames = new ArrayList<>();
 	    for (String fname : e.getValue())
 		if (userChannels.contains(fname))
 		    fnames.add(fname);
@@ -418,7 +418,7 @@ public class ProlongationENT extends HttpServlet {
     }
     
     Map<String,Map<String,String>> userChannels(final String userId, Map<String, List<String>> person) {
-        Map<String,Map<String,String>> rslt = new HashMap<String,Map<String,String>>();
+        Map<String,Map<String,String>> rslt = new HashMap<>();
 	
 	for (String fname : handleGroups.computeValidAppsRaw(person, false)) {
 		Map<String,String> def = get_app(fname);
@@ -591,7 +591,7 @@ public class ProlongationENT extends HttpServlet {
     }
 
     static Map<String, Object> array(String key1, Object val1) {
-	Map<String, Object> r = new HashMap<String, Object>();
+	Map<String, Object> r = new HashMap<>();
 	r.put(key1, val1);
 	return r;
     }

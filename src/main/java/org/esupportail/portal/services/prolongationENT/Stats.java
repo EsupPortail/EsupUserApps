@@ -85,7 +85,7 @@ public class Stats {
     }
 
     List<String> intersect(String[] l1, Set<String> l2) {
-	List<String> r = new ArrayList<String>();
+	List<String> r = new ArrayList<>();
 	for (String e : l1)
 	    if (l2.contains(e))
 		r.add(e);

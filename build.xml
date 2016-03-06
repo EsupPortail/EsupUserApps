@@ -67,6 +67,8 @@
 		</path>
 
 		<javac 
+			source="1.7"
+			target="1.7"
 			srcdir="src/main/java" 
 			destdir="${build.classes}" 
 			debug="${compile.debug}" 

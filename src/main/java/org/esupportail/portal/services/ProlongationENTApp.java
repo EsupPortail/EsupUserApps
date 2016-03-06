@@ -37,7 +37,7 @@ class ProlongationENTApp extends ACLs {
     }
     
     public Map<String, String> export() {
-    	Map<String,String> r = new HashMap<String,String>();
+    	Map<String,String> r = new HashMap<>();
     	r.put("text", getTexte());
     	r.put("title", title);
     	r.put("description", getDescription());

@@ -17,14 +17,14 @@ public class Cookies {
     }
 
     public List<String> names() {
-        List<String> r = new LinkedList<String>();
+        List<String> r = new LinkedList<>();
         if (names != null) r.addAll(names);
         for (String name : default_names) r.add(name);
         return r;
     }
     
     public List<String> name_prefixes() {
-        List<String> r = new LinkedList<String>();
+        List<String> r = new LinkedList<>();
         if (name_prefixes != null) r.addAll(name_prefixes);
         for (String prefix : default_name_prefixes) r.add(prefix);
         return r;
