@@ -51,6 +51,10 @@ class Utils {
     static String removePrefixOrNull(String s, String prefix) {
 	return s.startsWith(prefix) ? s.substring(prefix.length()) : null;
     }
+
+    static String via_CAS(String cas_login_url, String href) {
+	return cas_login_url + "?service="  + urlencode(href);
+    }
     
     static URL toURL(String url) {
 	try {
@@ -156,7 +160,7 @@ class Utils {
 	}
     }
     
-    long now() {
+    static long now() {
 	return System.currentTimeMillis() / 1000L;
     }   
     
