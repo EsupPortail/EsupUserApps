@@ -134,7 +134,7 @@ public class Main extends HttpServlet {
             App app = conf.APPS.get(appId);
     	    if (app == null) throw new RuntimeException("invalid appId " + appId);
             boolean isGuest = !hasParameter(request, "login") && !hasParameter(request, "relog");
-	    location = computeBandeau.get_url(app, appId, hasParameter(request, "guest"), isGuest, null);
+	    location = computeBandeau.get_url(app, appId, hasParameter(request, "guest"), isGuest, conf.current_idpAuthnRequest_url);
 
             // Below rely on /ProlongationENT/redirect proxied in applications.
             // Example for Apache:

@@ -208,7 +208,7 @@ public class ComputeBandeau {
 	
 	for (String fname : handleGroups.computeValidApps(person, false)) {
 		App app = conf.APPS.get(fname);
-		rslt.put(fname, new AppDTO(app, get_user_url(app, fname, null)));
+		rslt.put(fname, new AppDTO(app, get_user_url(app, fname, conf.current_idpAuthnRequest_url)));
 	  }
 	return rslt;
     }
