@@ -66,7 +66,7 @@ public class Main extends HttpServlet {
     
     void js(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	boolean noCache = request.getParameter("noCache") != null;
-	String userId = noCache ? null : get_CAS_userId(request);
+	String userId = noCache ? null : Utils.get_CAS_userId(request);
 	String app = request.getParameter("app");
 	String res = request.getParameter("res");
 	String time = request.getParameter("time");
@@ -178,7 +178,7 @@ public class Main extends HttpServlet {
     }
     
     void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	session_invalidate(request);
+	Utils.session_invalidate(request);
 
 	String callback = request.getParameter("callback");
 	response.setContentType("application/javascript; charset=utf8");
@@ -305,7 +305,7 @@ public class Main extends HttpServlet {
 	String referer = (String) request.getHeader("Referer");
 	if (referer == null) return false;
 
-	String current_host = url2host(referer);
+	String current_host = Utils.url2host(referer);
 	debug_msg("current_host " + current_host);
 	boolean changed = false;
 	String prev_host = (String) session.getAttribute(prev_host_attr);
@@ -438,37 +438,7 @@ public class Main extends HttpServlet {
     void debug_msg(String msg) {
 	//log.warn("DEBUG " + msg);
     }
-    
-    // inspired from java-cas-client code
-    String get_CAS_userId(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        Assertion assertion = (Assertion) (session == null ? request
-					   .getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION) : session
-					   .getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION));
-        return assertion == null ? null : assertion.getPrincipal().getName();
-    }
-    
-    long now() {
-	return System.currentTimeMillis() / 1000L;
-    }   
-
-    String url2host(String url) {
-	URL url_ = Utils.toURL(url);
-	return url_ != null ? url_.getHost() : null;
-    }
-
-    void session_invalidate(HttpServletRequest request) {
-	HttpSession session = request.getSession(false);
-	if (session == null) return;
-	try {
-	    session.invalidate();
-	} catch (IllegalStateException ise) {
-	    // IllegalStateException indicates session was already invalidated.
-	    // This is fine.  LogoutServlet is looking to guarantee the logged out session is invalid;
-	    // it need not insist that it be the one to perform the invalidating.
-	}
-    }
-    
+        
     private static String json_encode(Object o) {
 	return Utils.json_encode(o);
     }
@@ -484,6 +454,7 @@ public class Main extends HttpServlet {
     private static String file_get_contents(HttpServletRequest request, String file) {
 	return Utils.file_get_contents(request, file);
     }
+    private long now() { return now(); }
 
     /*
     long prev = 0;

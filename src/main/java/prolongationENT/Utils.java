@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Set;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -18,6 +19,8 @@ import com.google.gson.GsonBuilder;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jasig.cas.client.util.AbstractCasFilter;
+import org.jasig.cas.client.validation.Assertion;
 
 class Utils {
     
@@ -56,6 +59,11 @@ class Utils {
 	    log().error(e, e);
 	    return null;
 	}
+    }
+
+    static String url2host(String url) {
+	URL url_ = Utils.toURL(url);
+	return url_ != null ? url_.getHost() : null;
     }
 
     static String urlencode(String s) {
@@ -126,5 +134,30 @@ class Utils {
 	    return null;
 	}
     }
+    
+    // inspired from java-cas-client code
+    static String get_CAS_userId(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Assertion assertion = (Assertion) (session == null ? request
+					   .getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION) : session
+					   .getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION));
+        return assertion == null ? null : assertion.getPrincipal().getName();
+    }
+    
+    static void session_invalidate(HttpServletRequest request) {
+	HttpSession session = request.getSession(false);
+	if (session == null) return;
+	try {
+	    session.invalidate();
+	} catch (IllegalStateException ise) {
+	    // IllegalStateException indicates session was already invalidated.
+	    // This is fine.  LogoutServlet is looking to guarantee the logged out session is invalid;
+	    // it need not insist that it be the one to perform the invalidating.
+	}
+    }
+    
+    long now() {
+	return System.currentTimeMillis() / 1000L;
+    }   
     
 }
