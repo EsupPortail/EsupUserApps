@@ -27,15 +27,11 @@ import org.jasig.cas.client.validation.Assertion;
 
 import org.esupportail.portal.services.prolongationENT.Cookies;
 import org.esupportail.portal.services.prolongationENT.Ldap;
+import org.esupportail.portal.services.prolongationENT.MainConf;
 import org.esupportail.portal.services.prolongationENT.Utils;
 
 public class ProlongationENT extends HttpServlet {	   
-    JsonObject conf = null;
-
-    String bandeau_ENT_url, ent_base_url, ent_base_url_guest, current_idpAuthnRequest_url;
-    List<String> url_bandeau_compatible, apps_no_bandeau, wanted_user_attributes;
-    String cas_login_url, cas_logout_url;
-    String casImpersonateCookieName;
+    MainConf conf = null;
     ProlongationENTGroups handleGroups;
     Stats stats;
 
@@ -74,25 +70,25 @@ public class ProlongationENT extends HttpServlet {
 	if (noCache || userId == null) {
 	    if (request.getParameter("auth_checked") == null) {
 		cleanupSession(request);
-		String final_url = bandeau_ENT_url + "/js?auth_checked"
+		String final_url = conf.bandeau_ENT_url + "/js?auth_checked"
 		    + (app != null ? "&app=" + urlencode(app) : "")
 		    + (res != null ? "&res=" + urlencode(res) : "")
 		    + (time != null ? "&time=" + urlencode(time) : "")
 		    + (forcedId != null ? "&uid=" + urlencode(forcedId) : "");
-		response.sendRedirect(via_CAS(cas_login_url, final_url) + "&gateway=true");
+		response.sendRedirect(via_CAS(conf.cas_login_url, final_url) + "&gateway=true");
 	    } else {
 		// user is not authenticated.
                 String template = file_get_contents(request, "templates/notLogged.html");
                 response.setContentType("application/javascript; charset=utf8");
-                response.getWriter().println(String.format(template, json_encode(asMap("cas_login_url", cas_login_url))));
+                response.getWriter().println(String.format(template, json_encode(asMap("cas_login_url", conf.cas_login_url))));
 	    }
 	    return;
 	}
 
 	if (forcedId != null) {
 	    List<String> memberOf = handleGroups.getLdapPeopleInfo(userId).get("memberOf");
-	    if (getConfSet("admins").contains(userId) ||
-		memberOf != null && Utils.firstCommonElt(memberOf, getConfSet("admins")) != null) {
+	    if (conf.admins.contains(userId) ||
+		memberOf != null && Utils.firstCommonElt(memberOf, conf.admins) != null) {
 		// ok
 	    } else {
 		forcedId = null;
@@ -114,16 +110,16 @@ public class ProlongationENT extends HttpServlet {
 	stats.log(request, realUserId, userChannels.keySet());
 	
 	boolean is_old =
-	    !conf.get("isCasSingleSignOutWorking").getAsBoolean() &&
+	    !conf.isCasSingleSignOutWorking &&
 	    is_old(request) && request.getParameter("auth_checked") == null; // checking auth_checked should not be necessary since having "auth_checked" implies having gone through cleanupSession & CAS and so prev_time should not be set. But it seems firefox can bypass the initial redirect and go straight to CAS without us having cleaned the session... and then a dead-loop always asking for not-old version
 	String bandeauHeader = computeBandeauHeader(request, user, userChannels);
 	String static_js = file_get_contents(request, "static.js");
 
 	Map<String, Object> js_conf =
-	    asMap("bandeau_ENT_url", bandeau_ENT_url)
-	     .add("ent_logout_url", via_CAS(cas_logout_url, ent_base_url + "/Logout")) // nb: esup logout may not logout of CAS if user was not logged in esup portail, so forcing CAS logout in case
-             .add("cas_impersonate", conf.get("cas_impersonate"))
-	     .add("time_before_checking_browser_cache_is_up_to_date", conf.get("time_before_checking_browser_cache_is_up_to_date"));
+	    asMap("bandeau_ENT_url", conf.bandeau_ENT_url)
+	     .add("ent_logout_url", via_CAS(conf.cas_logout_url, conf.ent_base_url + "/Logout")) // nb: esup logout may not logout of CAS if user was not logged in esup portail, so forcing CAS logout in case
+             .add("cas_impersonate", conf.cas_impersonate)
+	     .add("time_before_checking_browser_cache_is_up_to_date", conf.time_before_checking_browser_cache_is_up_to_date);
 
 
 	Map<String, Object> js_data =
@@ -132,7 +128,7 @@ public class ProlongationENT extends HttpServlet {
 	     .add("apps", userChannels)
 	     .add("layout", userLayout);
 	if (!realUserId.equals(userId)) js_data.put("realUserId", realUserId);
-        if (Utils.getCookie(request, casImpersonateCookieName) != null) {
+        if (Utils.getCookie(request, conf.cas_impersonate.cookie_name) != null) {
             js_data.put("canImpersonate", handleGroups.computeValidApps(realUserId, true));
         }
 
@@ -162,7 +158,7 @@ public class ProlongationENT extends HttpServlet {
 
 	out.println("window.bandeau_ENT.notFromLocalStorage = true;");
 
-	if (conf.get("disableLocalStorage").getAsBoolean()) {
+	if (conf.disableLocalStorage) {
 	    out.println(js_text);
 	    js_text = "";
 	}
@@ -224,7 +220,7 @@ public class ProlongationENT extends HttpServlet {
 	    Map<String,String> app = app_raw.export();
 	    if (app == null) throw new RuntimeException("invalid appId " + appId);
             boolean isGuest = !hasParameter(request, "login") && !hasParameter(request, "relog");
-	    location = get_url(app, appId, hasParameter(request, "guest"), isGuest, current_idpAuthnRequest_url);
+	    location = get_url(app, appId, hasParameter(request, "guest"), isGuest, null);
 
             // Below rely on /ProlongationENT/redirect proxied in applications.
             // Example for Apache:
@@ -233,7 +229,7 @@ public class ProlongationENT extends HttpServlet {
                 removeCookies(request, response, app_raw.cookies);
             }
             if (hasParameter(request, "impersonate")) {
-                String wantedUid = Utils.getCookie(request, casImpersonateCookieName);
+                String wantedUid = Utils.getCookie(request, conf.cas_impersonate.cookie_name);
                 response.addCookie(Utils.newCookie("CAS_IMPERSONATED", wantedUid, app_raw.cookies.path));
             }
 	}
@@ -257,25 +253,11 @@ public class ProlongationENT extends HttpServlet {
     }
 
     synchronized void initConf(HttpServletRequest request) {
-	conf = getConf(request, "config.json");
+    	Gson gson = new Gson();
+    	conf = gson.fromJson(getConf(request, "config.json"), MainConf.class);
+        conf.init();
         stats = new Stats(conf);
 	handleGroups = new ProlongationENTGroups(conf, getConf(request, "config-apps.json"), getConf(request, "config-auth.json"));
-
-	ent_base_url       = conf.get("ent_base_url").getAsString();
-	ent_base_url_guest = conf.get("ent_base_url_guest").getAsString();
-	current_idpAuthnRequest_url = conf.get("current_idpAuthnRequest_url").getAsString();
-
-	url_bandeau_compatible = getConfList("url_bandeau_compatible");
-	apps_no_bandeau     = getConfList("apps_no_bandeau");
-
-	wanted_user_attributes = getConfList("wanted_user_attributes");
-
-	bandeau_ENT_url    = ent_base_url_guest + "/ProlongationENT";
-
-	cas_login_url      = conf.get("cas_base_url").getAsString() + "/login";
-	cas_logout_url     = conf.get("cas_base_url").getAsString() + "/logout";
-
-        casImpersonateCookieName = conf.getAsJsonObject("cas_impersonate").get("cookie_name").getAsString();
     }   
 
     String computeBandeauHeaderLinkMyAccount(HttpServletRequest request, Map<String,Map<String,String>> validApps) {
@@ -304,7 +286,7 @@ public class ProlongationENT extends HttpServlet {
     
     String get_css_with_absolute_url(HttpServletRequest request, String css_file) {
 	String s = file_get_contents(request, css_file);
-	return s.replaceAll("(url\\(['\" ]*)(?!['\" ])(?!https?:|/)", "$1" + bandeau_ENT_url + "/");
+	return s.replaceAll("(url\\(['\" ]*)(?!['\" ])(?!https?:|/)", "$1" + conf.bandeau_ENT_url + "/");
     }
 
     String private_file_get_contents(HttpServletRequest request, String file) {
@@ -359,7 +341,7 @@ public class ProlongationENT extends HttpServlet {
     /* ******************************************************************************** */   
     Map<String,List<String>> getUser(String userId, Map<String, List<String>> attrs) {
 	Map<String,List<String>> user = new HashMap<>();
-	for (String attr: wanted_user_attributes) {
+	for (String attr: conf.wanted_user_attributes) {
 	    List<String> val = attrs.get(attr);
 	    if (val != null)
 		user.put(attr, val);
@@ -387,7 +369,7 @@ public class ProlongationENT extends HttpServlet {
 	for (String fname : handleGroups.computeValidAppsRaw(person, false)) {
 		Map<String,String> def = get_app(fname);
 
-		def.put("url", get_user_url(def, fname, current_idpAuthnRequest_url));
+		def.put("url", get_user_url(def, fname, null));
 
 		rslt.put(fname, def);
 	  }
@@ -402,7 +384,7 @@ public class ProlongationENT extends HttpServlet {
     }
 
     String ent_url(Map<String,String> app, String fname, boolean isGuest, boolean noLogin, String idpAuthnRequest_url) {
-	String url = isGuest ? ent_base_url_guest + "/Guest" : ent_base_url + (noLogin ? "/render.userLayoutRootNode.uP" : "/MayLogin");
+	String url = isGuest ? conf.ent_base_url_guest + "/Guest" : conf.ent_base_url + (noLogin ? "/render.userLayoutRootNode.uP" : "/MayLogin");
 	return url + "?uP_fname=" + fname;
     }
 
@@ -427,10 +409,10 @@ public class ProlongationENT extends HttpServlet {
 
     String enhance_url(String url, String appId, Set<String> options) {
 	if (options.contains("useExternalURLStats"))
-	    url = ent_base_url + "/ExternalURLStats?fname=" + appId + "&service=" + urlencode(url);
+	    url = conf.ent_base_url + "/ExternalURLStats?fname=" + appId + "&service=" + urlencode(url);
 
 	if (options.contains("force_CAS"))
-	    url = via_CAS(cas_login_url, url);
+	    url = via_CAS(conf.cas_login_url, url);
 	
 	return url;
     }
@@ -438,7 +420,7 @@ public class ProlongationENT extends HttpServlet {
     String get_url(Map<String,String> app, String appId, boolean isGuest, boolean noLogin, String idpAuthnRequest_url) {
 	String url = app.get("url");
 	//log.warn(json_encode(app));
-	if (url != null && (!apps_no_bandeau.contains(appId) || idpAuthnRequest_url != null && url_bandeau_compatible.contains(appId))) {
+	if (url != null && (!conf.apps_no_bandeau.contains(appId) || idpAuthnRequest_url != null && conf.url_bandeau_compatible.contains(appId))) {
 	    url = url_maybe_adapt_idp(idpAuthnRequest_url, app.get("url"), app.get("shibbolethSPPrefix"));
 	    return enhance_url(url, appId, app.keySet());
 	} else {
@@ -465,14 +447,6 @@ public class ProlongationENT extends HttpServlet {
         s = s.replaceAll(",(\\s*[\\]}])", "$1");
     	return new JsonParser().parse(s).getAsJsonObject();
     }
-    
-    List<String> getConfList(String key) {
-	return new Gson().fromJson(conf.get(key), new TypeToken< List<String> >() {}.getType());
-    }   
-
-    Set<String> getConfSet(String key) {
-	return new Gson().fromJson(conf.get(key), new TypeToken< Set<String> >() {}.getType());
-    }   
 
     void debug_msg(String msg) {
 	//log.warn("DEBUG " + msg);

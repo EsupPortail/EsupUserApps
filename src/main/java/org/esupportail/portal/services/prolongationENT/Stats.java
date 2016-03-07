@@ -7,12 +7,11 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.google.gson.JsonObject;
 import org.apache.commons.logging.LogFactory;
 
 
 public class Stats {	   
-    JsonObject conf = null;
+    MainConf conf = null;
 
     static String request_last_time_attr_prefix = "request_last_time_";
     static String visit_id_attr = "visit_id";    
@@ -21,7 +20,7 @@ public class Stats {
 
     org.apache.commons.logging.Log log = LogFactory.getLog(Stats.class);
     
-    public Stats(JsonObject conf) {
+    public Stats(MainConf conf) {
     	this.conf = conf;
     }
     
@@ -54,7 +53,7 @@ public class Stats {
 
         session.setAttribute(attr, current);
 
-        long max_inactive = conf.get("visit_max_inactive").getAsInt() * 1000;
+        long max_inactive = conf.visit_max_inactive * 1000;
         return last == null || current - last > max_inactive;
     }
 

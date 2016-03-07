@@ -18,23 +18,23 @@ import com.google.gson.reflect.TypeToken;
 import org.esupportail.portal.services.prolongationENT.ACLs;
 import org.esupportail.portal.services.prolongationENT.Groups;
 import org.esupportail.portal.services.prolongationENT.Ldap;
+import org.esupportail.portal.services.prolongationENT.MainConf;
 import org.esupportail.portal.services.prolongationENT.Utils;
 
 class ProlongationENTGroups {
 
     String current_idpAuthnRequest_url;
-    List<String> minimal_attrs;
+    Set<String> minimal_attrs;
     Groups groups;
     Map<String, ProlongationENTApp> APPS;
     Map<String, List<String>> LAYOUT;
     Ldap ldap;
     Log log = LogFactory.getLog(ProlongationENTGroups.class);
     
-    public ProlongationENTGroups(JsonObject conf, JsonObject apps_conf, JsonObject auth_conf) {
+    public ProlongationENTGroups(MainConf conf, JsonObject apps_conf, JsonObject auth_conf) {
     	Gson gson = new Gson();
-        current_idpAuthnRequest_url = conf.get("current_idpAuthnRequest_url").getAsString();
-    	minimal_attrs = gson.fromJson(conf.get("wanted_user_attributes"), 
-    			new TypeToken< List<String> >() {}.getType());
+        current_idpAuthnRequest_url = conf.current_idpAuthnRequest_url;
+    	minimal_attrs = conf.wanted_user_attributes;
         ldap = new Ldap(gson.fromJson(auth_conf.get("ldap"), Ldap.LdapConf.class));
         groups = new Groups(gson.<Map<String, Map<String, Object>>>fromJson(apps_conf.get("GROUPS"), 
 											   new TypeToken< Map<String, Map<String, Object>> >() {}.getType()));
