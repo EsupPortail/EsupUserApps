@@ -1,4 +1,4 @@
-package org.esupportail.portal.services;
+package org.esupportail.portal.services.prolongationENT;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,23 +19,16 @@ import javax.servlet.http.HttpSession;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 import org.apache.commons.logging.LogFactory;
-import org.esupportail.portal.services.prolongationENT.Stats;
 import org.jasig.cas.client.util.AbstractCasFilter;
 import org.jasig.cas.client.validation.Assertion;
 
-import org.esupportail.portal.services.prolongationENT.Cookies;
-import org.esupportail.portal.services.prolongationENT.Ldap;
-import org.esupportail.portal.services.prolongationENT.MainConf;
-import org.esupportail.portal.services.prolongationENT.Utils;
-
-public class ProlongationENT extends HttpServlet {	   
+public class Main extends HttpServlet {	   
     MainConf conf = null;
-    ProlongationENTGroups handleGroups;
+    ComputeLayout handleGroups;
     Stats stats;
 
-    org.apache.commons.logging.Log log = LogFactory.getLog(ProlongationENT.class);
+    org.apache.commons.logging.Log log = LogFactory.getLog(Main.class);
 
     static String prev_host_attr = "prev_host";
     static String prev_time_attr = "prev_time";
@@ -189,7 +182,7 @@ public class ProlongationENT extends HttpServlet {
             // cleanup url
 	    service = service.replace(":443/", "/");
             for (String appId : new HashSet<>(appIds)) {
-                ProlongationENTApp app = handleGroups.APPS.get(appId);
+                App app = handleGroups.APPS.get(appId);
                 boolean keep = app.serviceRegex != null && service.matches(app.serviceRegex);
                 if (!keep) appIds.remove(appId);
             }
@@ -216,7 +209,7 @@ public class ProlongationENT extends HttpServlet {
 	    if (appId == null) throw new RuntimeException("missing 'id=xxx' parameter");
 	}
 	if (appId != null) { 
-            ProlongationENTApp app_raw = handleGroups.APPS.get(appId);
+            App app_raw = handleGroups.APPS.get(appId);
 	    Map<String,String> app = app_raw.export();
 	    if (app == null) throw new RuntimeException("invalid appId " + appId);
             boolean isGuest = !hasParameter(request, "login") && !hasParameter(request, "relog");
@@ -257,7 +250,7 @@ public class ProlongationENT extends HttpServlet {
     	conf = gson.fromJson(getConf(request, "config.json"), MainConf.class);
         conf.init();
         stats = new Stats(conf);
-	handleGroups = new ProlongationENTGroups(conf, getConf(request, "config-apps.json"), getConf(request, "config-auth.json"));
+	handleGroups = new ComputeLayout(conf, getConf(request, "config-apps.json"), getConf(request, "config-auth.json"));
     }   
 
     String computeBandeauHeaderLinkMyAccount(HttpServletRequest request, Map<String,Map<String,String>> validApps) {

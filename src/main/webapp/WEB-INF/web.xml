@@ -48,7 +48,7 @@
 
 	<servlet>
 	  <servlet-name>ProlongationENT</servlet-name> 
-	  <servlet-class>org.esupportail.portal.services.ProlongationENT</servlet-class>
+	  <servlet-class>org.esupportail.portal.services.prolongationENT.Main</servlet-class>
 	</servlet>
 
 	<servlet-mapping>

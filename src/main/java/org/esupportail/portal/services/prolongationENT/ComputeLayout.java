@@ -1,4 +1,4 @@
-package org.esupportail.portal.services;
+package org.esupportail.portal.services.prolongationENT;
 
 import java.net.URL;
 import java.util.List;
@@ -15,23 +15,17 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
-import org.esupportail.portal.services.prolongationENT.ACLs;
-import org.esupportail.portal.services.prolongationENT.Groups;
-import org.esupportail.portal.services.prolongationENT.Ldap;
-import org.esupportail.portal.services.prolongationENT.MainConf;
-import org.esupportail.portal.services.prolongationENT.Utils;
-
-class ProlongationENTGroups {
+class ComputeLayout {
 
     String current_idpAuthnRequest_url;
     Set<String> minimal_attrs;
     Groups groups;
-    Map<String, ProlongationENTApp> APPS;
+    Map<String, App> APPS;
     Map<String, List<String>> LAYOUT;
     Ldap ldap;
-    Log log = LogFactory.getLog(ProlongationENTGroups.class);
+    Log log = LogFactory.getLog(ComputeLayout.class);
     
-    public ProlongationENTGroups(MainConf conf, JsonObject apps_conf, JsonObject auth_conf) {
+    public ComputeLayout(MainConf conf, JsonObject apps_conf, JsonObject auth_conf) {
     	Gson gson = new Gson();
         current_idpAuthnRequest_url = conf.current_idpAuthnRequest_url;
     	minimal_attrs = conf.wanted_user_attributes;
@@ -41,11 +35,11 @@ class ProlongationENTGroups {
 		LAYOUT = gson.fromJson(apps_conf.get("LAYOUT"), 
 				new TypeToken< Map<String, List<String>> >() {}.getType());
 		APPS = gson.fromJson(apps_conf.get("APPS"), 
-				new TypeToken< Map<String, ProlongationENTApp> >() {}.getType());
+				new TypeToken< Map<String, App> >() {}.getType());
 
-		Map<String, ProlongationENTApp> APPS_ATTRS = gson.fromJson(apps_conf.get("APPS_ATTRS"), 
-				new TypeToken< Map<String, ProlongationENTApp> >() {}.getType());
-                for (ProlongationENTApp app : APPS.values()) {
+		Map<String, App> APPS_ATTRS = gson.fromJson(apps_conf.get("APPS_ATTRS"), 
+				new TypeToken< Map<String, App> >() {}.getType());
+                for (App app : APPS.values()) {
                     if (app.inherit != null) {
                         app.merge(APPS_ATTRS.get(app.inherit));
                     }
@@ -72,7 +66,7 @@ class ProlongationENTGroups {
 
         Set<String> r = new HashSet<>();
         for (String appId : APPS.keySet()) {
-            ProlongationENTApp app_ = APPS.get(appId);
+            App app_ = APPS.get(appId);
             ACLs app = wantImpersonate ? app_.admins : app_;
             if (app == null) continue;
             Boolean found = false;
@@ -101,14 +95,14 @@ class ProlongationENTGroups {
   }
 
     private void compute_default_cookies_path_and_serviceRegex() {
-        for (ProlongationENTApp app : APPS.values()) {
+        for (App app : APPS.values()) {
             if (app.url != null && app.admins != null) {
                 compute_default_cookies_path_and_serviceRegex(app);
             }
         }
     }
     
-    private void compute_default_cookies_path_and_serviceRegex(ProlongationENTApp app) {
+    private void compute_default_cookies_path_and_serviceRegex(App app) {
         URL url = Utils.toURL(app.url);
 
         // default path is:

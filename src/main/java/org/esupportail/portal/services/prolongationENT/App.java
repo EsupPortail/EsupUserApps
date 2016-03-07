@@ -1,12 +1,8 @@
-package org.esupportail.portal.services;
-
-import org.esupportail.portal.services.prolongationENT.ACLs;
-import org.esupportail.portal.services.prolongationENT.Cookies;
-import org.esupportail.portal.services.prolongationENT.Utils;
+package org.esupportail.portal.services.prolongationENT;
 
 import java.util.Map;
 
-class ProlongationENTApp extends ACLs {
+class App extends ACLs {
     String text;
     String title;
     String description;
@@ -29,7 +25,7 @@ class ProlongationENTApp extends ACLs {
         return description != null ? description : "";
     }
 
-    public void merge(ProlongationENTApp app) {
+    public void merge(App app) {
         if (app.serviceRegex != null) serviceRegex = app.serviceRegex;
         if (app.admins != null) admins = app.admins;
         if (app.cookies != null) cookies = app.cookies;
