@@ -86,7 +86,7 @@ public class Groups {
         return false;
     }
 
-    public boolean hasGroup(Map<String, List<String>> person, String name, Map<String, Boolean> cache) {
+    public boolean hasGroup(Ldap.Attrs person, String name, Map<String, Boolean> cache) {
         Boolean r = cache.get(name);
         if (r == null) {
             r = hasGroup(person, name);

@@ -19,6 +19,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class Ldap {
+    public class Attrs extends HashMap<String, List<String>> {}
 
     public class LdapConf {
         String url, bindDN, bindPasswd, peopleDN;
@@ -55,10 +56,10 @@ public class Ldap {
     }
 
     @SuppressWarnings("unchecked")
-	Map<String, List<String>> getLdapInfo(String dn, Collection<String> wanted_attributes) {
+	Attrs getLdapInfo(String dn, Collection<String> wanted_attributes) {
     	try {
 	        Attributes attrs = getAttributes(dn, wanted_attributes.toArray(new String[0]));
-	        Map<String, List<String>> r = new HashMap<>();
+	        Attrs r = new Attrs();
 	        for (String attr : wanted_attributes) {
                     Attribute vals = attrs.get(attr.toLowerCase());
 					if (vals != null)
@@ -80,7 +81,7 @@ public class Ldap {
         }
     }
     
-    public Map<String, List<String>> getLdapPeopleInfo(String uid, Collection<String> wanted_attributes) {
+    public Attrs getLdapPeopleInfo(String uid, Collection<String> wanted_attributes) {
         return getLdapInfo("uid=" + uid + "," + ldapConf.peopleDN, wanted_attributes);
     }
 

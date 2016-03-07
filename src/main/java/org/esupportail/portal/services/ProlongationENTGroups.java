@@ -75,11 +75,11 @@ class ProlongationENTGroups {
         return computeValidAppsRaw(getLdapPeopleInfo(uid), wantImpersonate);
     }
 
-    public Map<String, List<String>> getLdapPeopleInfo(String uid) {
+    public Ldap.Attrs getLdapPeopleInfo(String uid) {
 	return ldap.getLdapPeopleInfo(uid, compute_wanted_attributes());
     }
     
-    public Set<String> computeValidAppsRaw(Map<String, List<String>> person, boolean wantImpersonate) {
+    public Set<String> computeValidAppsRaw(Ldap.Attrs person, boolean wantImpersonate) {
         String user = person.get("uid").get(0);
         Map<String, Boolean> groupsCache = new HashMap<>();
 

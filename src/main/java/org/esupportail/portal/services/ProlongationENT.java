@@ -26,6 +26,7 @@ import org.jasig.cas.client.util.AbstractCasFilter;
 import org.jasig.cas.client.validation.Assertion;
 
 import org.esupportail.portal.services.prolongationENT.Cookies;
+import org.esupportail.portal.services.prolongationENT.Ldap;
 import org.esupportail.portal.services.prolongationENT.Utils;
 
 public class ProlongationENT extends HttpServlet {	   
@@ -104,7 +105,7 @@ public class ProlongationENT extends HttpServlet {
     void js(HttpServletRequest request, HttpServletResponse response, String userId, String realUserId) throws ServletException, IOException {
 	//prev = 0;
 
-	Map<String,List<String>> attrs = handleGroups.getLdapPeopleInfo(userId);
+	Ldap.Attrs attrs = handleGroups.getLdapPeopleInfo(userId);
 	Map<String,List<String>> user = getUser(userId, attrs);
 
 	Map<String,Map<String,String>> userChannels = userChannels(userId, attrs);
@@ -380,7 +381,7 @@ public class ProlongationENT extends HttpServlet {
  	return rslt;  
     }
     
-    Map<String,Map<String,String>> userChannels(final String userId, Map<String, List<String>> person) {
+    Map<String,Map<String,String>> userChannels(final String userId, Ldap.Attrs person) {
         Map<String,Map<String,String>> rslt = new HashMap<>();
 	
 	for (String fname : handleGroups.computeValidAppsRaw(person, false)) {
