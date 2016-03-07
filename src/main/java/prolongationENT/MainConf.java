@@ -35,9 +35,9 @@ class MainConf {
     String bandeau_ENT_url;
 
     void init() {
-        cas_login_url = cas_base_url + "/login";
-        cas_logout_url = cas_base_url + "/logout";
-        bandeau_ENT_url = ent_base_url_guest + "/ProlongationENT";
+        if (cas_login_url == null) cas_login_url = cas_base_url + "/login";
+        if (cas_logout_url == null) cas_logout_url = cas_base_url + "/logout";
+        if (bandeau_ENT_url == null) bandeau_ENT_url = ent_base_url_guest + "/ProlongationENT";
     }
 
 }
