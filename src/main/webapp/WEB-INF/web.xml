@@ -50,34 +50,13 @@
 	  <servlet-name>ProlongationENT</servlet-name> 
 	  <servlet-class>prolongationENT.Main</servlet-class>
 	</servlet>
-
 	<servlet-mapping>
 	    <servlet-name>ProlongationENT</servlet-name> 
 	    <url-pattern>/js</url-pattern> 
-	</servlet-mapping>
-
-	<servlet-mapping>
-	    <servlet-name>ProlongationENT</servlet-name> 
 	    <url-pattern>/detectReload</url-pattern> 
-	</servlet-mapping>
-
-	<servlet-mapping>
-	    <servlet-name>ProlongationENT</servlet-name> 
 	    <url-pattern>/redirect</url-pattern> 
-	</servlet-mapping>
-
-	<servlet-mapping>
-	    <servlet-name>ProlongationENT</servlet-name> 
 	    <url-pattern>/purgeCache</url-pattern> 
-	</servlet-mapping>
-
-	<servlet-mapping>
-	    <servlet-name>ProlongationENT</servlet-name> 
 	    <url-pattern>/logout</url-pattern> 
-	</servlet-mapping>
-
-	<servlet-mapping>
-	    <servlet-name>ProlongationENT</servlet-name> 
 	    <url-pattern>/canImpersonate</url-pattern> 
 	</servlet-mapping>
 
