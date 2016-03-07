@@ -21,8 +21,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import prolongationENT.Main.LayoutDTO;
-
 import org.apache.commons.logging.LogFactory;
 import org.jasig.cas.client.util.AbstractCasFilter;
 import org.jasig.cas.client.validation.Assertion;
@@ -111,7 +109,7 @@ public class Main extends HttpServlet {
 	Ldap.Attrs attrs = handleGroups.getLdapPeopleInfo(userId);
 
 	AppsDTO userChannels = userChannels(userId, attrs);
-	List<LayoutDTO> userLayout = userLayout(handleGroups.LAYOUT, userChannels.keySet());
+	List<LayoutDTO> userLayout = userLayout(conf.LAYOUT, userChannels.keySet());
 
 	stats.log(request, realUserId, userChannels.keySet());
 	
@@ -195,7 +193,7 @@ public class Main extends HttpServlet {
             // cleanup url
 	    service = service.replace(":443/", "/");
             for (String appId : new HashSet<>(appIds)) {
-                App app = handleGroups.APPS.get(appId);
+                App app = conf.APPS.get(appId);
                 boolean keep = app.serviceRegex != null && service.matches(app.serviceRegex);
                 if (!keep) appIds.remove(appId);
             }
@@ -222,7 +220,7 @@ public class Main extends HttpServlet {
 	    if (appId == null) throw new RuntimeException("missing 'id=xxx' parameter");
 	}
 	if (appId != null) { 
-            App app = handleGroups.APPS.get(appId);
+            App app = conf.APPS.get(appId);
     	    if (app == null) throw new RuntimeException("invalid appId " + appId);
             boolean isGuest = !hasParameter(request, "login") && !hasParameter(request, "relog");
 	    location = get_url(app, appId, hasParameter(request, "guest"), isGuest, null);
@@ -260,9 +258,11 @@ public class Main extends HttpServlet {
     synchronized void initConf(HttpServletRequest request) {
     	Gson gson = new Gson();
     	conf = gson.fromJson(getConf(request, "config.json"), MainConf.class);
+    	conf.merge(gson.fromJson(getConf(request, "config-auth.json"), AuthConf.class));
+    	conf.merge(gson.fromJson(getConf(request, "config-apps.json"), AppsConf.class).init());
         conf.init();
-        stats = new Stats(conf);
-	handleGroups = new ComputeLayout(conf, getConf(request, "config-apps.json"), getConf(request, "config-auth.json"));
+        stats = new Stats(conf);       
+	handleGroups = new ComputeLayout(conf);
     }   
 
     String computeBandeauHeaderLinkMyAccount(HttpServletRequest request, Map<String,AppDTO> validApps) {
@@ -372,7 +372,7 @@ public class Main extends HttpServlet {
         AppsDTO rslt = new AppsDTO();
 	
 	for (String fname : handleGroups.computeValidAppsRaw(person, false)) {
-		App app = handleGroups.APPS.get(fname);
+		App app = conf.APPS.get(fname);
 		rslt.put(fname, new AppDTO(app, get_user_url(app, fname, null)));
 	  }
 	return rslt;

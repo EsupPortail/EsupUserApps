@@ -1,7 +1,6 @@
 package prolongationENT;
 
 import java.net.URL;
-import java.util.List;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -11,40 +10,16 @@ import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
-
 class ComputeLayout {
-
-    String current_idpAuthnRequest_url;
-    Set<String> minimal_attrs;
+    MainConf conf;
     Groups groups;
-    Map<String, App> APPS;
-    Map<String, List<String>> LAYOUT;
     Ldap ldap;
     Log log = LogFactory.getLog(ComputeLayout.class);
     
-    ComputeLayout(MainConf conf, JsonObject apps_conf, JsonObject auth_conf) {
-    	Gson gson = new Gson();
-        current_idpAuthnRequest_url = conf.current_idpAuthnRequest_url;
-    	minimal_attrs = conf.wanted_user_attributes;
-        ldap = new Ldap(gson.fromJson(auth_conf.get("ldap"), Ldap.LdapConf.class));
-        groups = new Groups(gson.<Map<String, Map<String, Object>>>fromJson(apps_conf.get("GROUPS"), 
-											   new TypeToken< Map<String, Map<String, Object>> >() {}.getType()));
-		LAYOUT = gson.fromJson(apps_conf.get("LAYOUT"), 
-				new TypeToken< Map<String, List<String>> >() {}.getType());
-		APPS = gson.fromJson(apps_conf.get("APPS"), 
-				new TypeToken< Map<String, App> >() {}.getType());
-
-		Map<String, App> APPS_ATTRS = gson.fromJson(apps_conf.get("APPS_ATTRS"), 
-				new TypeToken< Map<String, App> >() {}.getType());
-                for (App app : APPS.values()) {
-                    if (app.inherit != null) {
-                        app.merge(APPS_ATTRS.get(app.inherit));
-                    }
-                }
-
+    ComputeLayout(MainConf conf) {
+        this.conf = conf;
+        ldap = new Ldap(conf.ldap);
+        groups = new Groups(conf.GROUPS);
                 compute_default_cookies_path_and_serviceRegex();
     }
 
@@ -61,8 +36,8 @@ class ComputeLayout {
         Map<String, Boolean> groupsCache = new HashMap<>();
 
         Set<String> r = new HashSet<>();
-        for (String appId : APPS.keySet()) {
-            App app_ = APPS.get(appId);
+        for (String appId : conf.APPS.keySet()) {
+            App app_ = conf.APPS.get(appId);
             ACLs app = wantImpersonate ? app_.admins : app_;
             if (app == null) continue;
             Boolean found = false;
@@ -86,12 +61,12 @@ class ComputeLayout {
     private Set<String> compute_wanted_attributes() {
         Set<String> r = groups.needed_ldap_attributes();
         r.add("memberOf"); // hard code memberOf
-	r.addAll(minimal_attrs);
+	r.addAll(conf.wanted_user_attributes);
         return r;
   }
 
     private void compute_default_cookies_path_and_serviceRegex() {
-        for (App app : APPS.values()) {
+        for (App app : conf.APPS.values()) {
             if (app.url != null && app.admins != null) {
                 compute_default_cookies_path_and_serviceRegex(app);
             }
