@@ -48,6 +48,7 @@
             "CReservaLang", "reservasport-gest",
             "CRendez-vous", "pstage-pers",
             "CHarpege", "sifac", "agasse",
+            "siham", "siham-reprise",
             "memoire-gest", "hyperplanning-gest", "rdvia-gest", "rdvmed-gest",
         ],
         "Administrateurs": [
@@ -538,6 +539,18 @@
             "url": "https://harpege.univ-paris1.fr/",
             "hideFromMobile": true,
             "groups": [ "applications.harpege.users" ],
+        },
+        "siham": {
+            "title": "Siham",
+            "url": "https://siham.univ-paris1.fr/",
+            "hideFromMobile": true,
+            "groups": [ "applications.siham.users" ],
+        },
+        "siham-reprise": {
+            "title": "Siham (bac à sable)",
+            "url": "https://siham-reprise.univ-paris1.fr/",
+            "hideFromMobile": true,
+            "groups": [ "applications.siham.users" ],
         },
         "sifac": {
             "title": "Sifac",
