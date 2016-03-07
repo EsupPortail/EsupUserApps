@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.LogFactory;
 
 
-public class Stats {	   
+class Stats {	   
     MainConf conf = null;
 
     static String request_last_time_attr_prefix = "request_last_time_";
@@ -20,11 +20,11 @@ public class Stats {
 
     org.apache.commons.logging.Log log = LogFactory.getLog(Stats.class);
     
-    public Stats(MainConf conf) {
+    Stats(MainConf conf) {
     	this.conf = conf;
     }
     
-    public void log(HttpServletRequest request, String userId, Set<String> userChannels) {
+    void log(HttpServletRequest request, String userId, Set<String> userChannels) {
         HttpSession session = request.getSession(false);
 	String app = request.getParameter("app");
 	if (app == null) return;

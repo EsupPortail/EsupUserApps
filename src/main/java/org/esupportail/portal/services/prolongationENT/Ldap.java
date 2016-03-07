@@ -18,17 +18,17 @@ import javax.naming.directory.InitialDirContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class Ldap {
-    public class Attrs extends HashMap<String, List<String>> {}
+class Ldap {
+    class Attrs extends HashMap<String, List<String>> {}
 
-    public class LdapConf {
+    class LdapConf {
         String url, bindDN, bindPasswd, peopleDN;
     }
     LdapConf ldapConf;
     DirContext dirContext;
     Log log = LogFactory.getLog(Ldap.class);
 
-    public Ldap(LdapConf ldapConf) {
+    Ldap(LdapConf ldapConf) {
 	this.ldapConf = ldapConf;
     }
     
@@ -81,7 +81,7 @@ public class Ldap {
         }
     }
     
-    public Attrs getLdapPeopleInfo(String uid, Collection<String> wanted_attributes) {
+    Attrs getLdapPeopleInfo(String uid, Collection<String> wanted_attributes) {
         return getLdapInfo("uid=" + uid + "," + ldapConf.peopleDN, wanted_attributes);
     }
 

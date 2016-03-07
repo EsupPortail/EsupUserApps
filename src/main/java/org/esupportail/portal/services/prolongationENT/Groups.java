@@ -14,11 +14,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 
-public class Groups {	   
+class Groups {	   
     Map<String, Map<String, List<Pattern>>> GROUPS;
     Log log = LogFactory.getLog(Ldap.class);
 
-    public Groups(Map<String, Map<String, Object>> GROUPS) {
+    Groups(Map<String, Map<String, Object>> GROUPS) {
 	this.GROUPS = prepareRegexes(GROUPS);
     }
     
@@ -41,7 +41,7 @@ public class Groups {
         return (Map) m;
     }
 
-    public Set<String> needed_ldap_attributes() {
+    Set<String> needed_ldap_attributes() {
         Set<String> r = new HashSet<>();
         for (Map<String, List<Pattern>> attr2regexes : GROUPS.values()) {
             r.addAll(attr2regexes.keySet());
@@ -49,7 +49,7 @@ public class Groups {
 	return r;
     }
     
-    public boolean hasGroup(Map<String, List<String>> person, String name) {
+    boolean hasGroup(Map<String, List<String>> person, String name) {
         if (!GROUPS.containsKey(name)) {
             return hasPlainLdapGroup(person, name);
         }
@@ -76,7 +76,7 @@ public class Groups {
         return true;
     }
 
-    public boolean hasPlainLdapGroup(Map<String, List<String>> person, String name) {
+    boolean hasPlainLdapGroup(Map<String, List<String>> person, String name) {
         // check memberOf
         List<String> vals = person.get("memberOf");
         if (vals != null) {
@@ -86,7 +86,7 @@ public class Groups {
         return false;
     }
 
-    public boolean hasGroup(Ldap.Attrs person, String name, Map<String, Boolean> cache) {
+    boolean hasGroup(Ldap.Attrs person, String name, Map<String, Boolean> cache) {
         Boolean r = cache.get(name);
         if (r == null) {
             r = hasGroup(person, name);

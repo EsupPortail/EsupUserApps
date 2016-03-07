@@ -17,21 +17,21 @@ class App extends ACLs {
     Cookies cookies = new Cookies();
     
 
-    public String getTexte() {
+    String getTexte() {
         return text != null ? text : title;
     }
 
-    public String getDescription() {
+    String getDescription() {
         return description != null ? description : "";
     }
 
-    public void merge(App app) {
+    void merge(App app) {
         if (app.serviceRegex != null) serviceRegex = app.serviceRegex;
         if (app.admins != null) admins = app.admins;
         if (app.cookies != null) cookies = app.cookies;
     }
     
-    public Map<String, String> export() {
+    Map<String, String> export() {
     	Map<String,String> r =
 	    Utils.asMap("text", getTexte())
 	    .add("title", title)

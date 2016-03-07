@@ -382,13 +382,13 @@ public class Main extends HttpServlet {
     }
 
     // quick'n'dirty version: it expects a simple mapping from url to SP entityId and SP SAML v1 url
-    public static String via_idpAuthnRequest_url(String idpAuthnRequest_url, String url, String shibbolethSPPrefix) {
+    static String via_idpAuthnRequest_url(String idpAuthnRequest_url, String url, String shibbolethSPPrefix) {
 	String spId = url.replaceFirst("(://[^/]*)(.*)", "$1");
 	String shire = spId + shibbolethSPPrefix + "Shibboleth.sso/SAML/POST";
 	return String.format("%s?shire=%s&target=%s&providerId=%s", idpAuthnRequest_url, shire, urlencode(url), spId);
     }
 
-    public static String url_maybe_adapt_idp(String idpAuthnRequest_url, String url, String shibbolethSPPrefix) {
+    static String url_maybe_adapt_idp(String idpAuthnRequest_url, String url, String shibbolethSPPrefix) {
         if (idpAuthnRequest_url != null && shibbolethSPPrefix != null) {
             String realUrl = url;
             url = via_idpAuthnRequest_url(idpAuthnRequest_url, url, shibbolethSPPrefix);

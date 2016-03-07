@@ -25,7 +25,7 @@ class ComputeLayout {
     Ldap ldap;
     Log log = LogFactory.getLog(ComputeLayout.class);
     
-    public ComputeLayout(MainConf conf, JsonObject apps_conf, JsonObject auth_conf) {
+    ComputeLayout(MainConf conf, JsonObject apps_conf, JsonObject auth_conf) {
     	Gson gson = new Gson();
         current_idpAuthnRequest_url = conf.current_idpAuthnRequest_url;
     	minimal_attrs = conf.wanted_user_attributes;
@@ -48,19 +48,19 @@ class ComputeLayout {
                 compute_default_cookies_path_and_serviceRegex();
     }
 
-    public Map<String, String> getApp(String appId) {
+    Map<String, String> getApp(String appId) {
     	return APPS.get(appId).export();
     }
 
-    public Set<String> computeValidApps(String uid, boolean wantImpersonate) {
+    Set<String> computeValidApps(String uid, boolean wantImpersonate) {
         return computeValidAppsRaw(getLdapPeopleInfo(uid), wantImpersonate);
     }
 
-    public Ldap.Attrs getLdapPeopleInfo(String uid) {
+    Ldap.Attrs getLdapPeopleInfo(String uid) {
 	return ldap.getLdapPeopleInfo(uid, compute_wanted_attributes());
     }
     
-    public Set<String> computeValidAppsRaw(Ldap.Attrs person, boolean wantImpersonate) {
+    Set<String> computeValidAppsRaw(Ldap.Attrs person, boolean wantImpersonate) {
         String user = person.get("uid").get(0);
         Map<String, Boolean> groupsCache = new HashMap<>();
 
