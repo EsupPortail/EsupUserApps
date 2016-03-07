@@ -22,6 +22,7 @@ class AppsConf extends AuthConf {
             if (app.inherit != null) {
                 app.merge(APPS_ATTRS.get(app.inherit));
             }
+            app.init();
         }
         return this;
     }
