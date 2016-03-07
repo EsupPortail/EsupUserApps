@@ -48,10 +48,6 @@ class ComputeLayout {
                 compute_default_cookies_path_and_serviceRegex();
     }
 
-    Map<String, String> getApp(String appId) {
-    	return APPS.get(appId).export();
-    }
-
     Set<String> computeValidApps(String uid, boolean wantImpersonate) {
         return computeValidAppsRaw(getLdapPeopleInfo(uid), wantImpersonate);
     }

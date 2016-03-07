@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,6 +20,9 @@ import javax.servlet.http.HttpSession;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import prolongationENT.Main.LayoutDTO;
+
 import org.apache.commons.logging.LogFactory;
 import org.jasig.cas.client.util.AbstractCasFilter;
 import org.jasig.cas.client.validation.Assertion;
@@ -28,6 +32,16 @@ public class Main extends HttpServlet {
     ComputeLayout handleGroups;
     Stats stats;
 
+    class AppsDTO extends HashMap<String, AppDTO> {}
+    class LayoutDTO {
+    	public LayoutDTO(String title, Collection<String> fnames) {
+			this.title = title;
+			this.apps = fnames;
+		}
+		String title;
+    	Collection<String> apps;
+    }
+    
     org.apache.commons.logging.Log log = LogFactory.getLog(Main.class);
 
     static String prev_host_attr = "prev_host";
@@ -95,17 +109,16 @@ public class Main extends HttpServlet {
 	//prev = 0;
 
 	Ldap.Attrs attrs = handleGroups.getLdapPeopleInfo(userId);
-	Map<String,List<String>> user = getUser(userId, attrs);
 
-	Map<String,Map<String,String>> userChannels = userChannels(userId, attrs);
-	List<Map<String, Object>> userLayout = userLayout(handleGroups.LAYOUT, userChannels.keySet());
+	AppsDTO userChannels = userChannels(userId, attrs);
+	List<LayoutDTO> userLayout = userLayout(handleGroups.LAYOUT, userChannels.keySet());
 
 	stats.log(request, realUserId, userChannels.keySet());
 	
 	boolean is_old =
 	    !conf.isCasSingleSignOutWorking &&
 	    is_old(request) && request.getParameter("auth_checked") == null; // checking auth_checked should not be necessary since having "auth_checked" implies having gone through cleanupSession & CAS and so prev_time should not be set. But it seems firefox can bypass the initial redirect and go straight to CAS without us having cleaned the session... and then a dead-loop always asking for not-old version
-	String bandeauHeader = computeBandeauHeader(request, user, userChannels);
+	String bandeauHeader = computeBandeauHeader(request, attrs, userChannels);
 	String static_js = file_get_contents(request, "static.js");
 
 	Map<String, Object> js_conf =
@@ -116,7 +129,7 @@ public class Main extends HttpServlet {
 
 
 	Map<String, Object> js_data =
-	    asMap("person", user)
+	    asMap("person", exportAttrs(userId, attrs))
 	     .add("bandeauHeader", bandeauHeader)
 	     .add("apps", userChannels)
 	     .add("layout", userLayout);
@@ -209,9 +222,8 @@ public class Main extends HttpServlet {
 	    if (appId == null) throw new RuntimeException("missing 'id=xxx' parameter");
 	}
 	if (appId != null) { 
-            App app_raw = handleGroups.APPS.get(appId);
-	    Map<String,String> app = app_raw.export();
-	    if (app == null) throw new RuntimeException("invalid appId " + appId);
+            App app = handleGroups.APPS.get(appId);
+    	    if (app == null) throw new RuntimeException("invalid appId " + appId);
             boolean isGuest = !hasParameter(request, "login") && !hasParameter(request, "relog");
 	    location = get_url(app, appId, hasParameter(request, "guest"), isGuest, null);
 
@@ -219,11 +231,11 @@ public class Main extends HttpServlet {
             // Example for Apache:
             //   ProxyPass /ProlongationENT https://ent.univ.fr/ProlongationENT
             if (hasParameter(request, "relog")) {
-                removeCookies(request, response, app_raw.cookies);
+                removeCookies(request, response, app.cookies);
             }
             if (hasParameter(request, "impersonate")) {
                 String wantedUid = Utils.getCookie(request, conf.cas_impersonate.cookie_name);
-                response.addCookie(Utils.newCookie("CAS_IMPERSONATED", wantedUid, app_raw.cookies.path));
+                response.addCookie(Utils.newCookie("CAS_IMPERSONATED", wantedUid, app.cookies.path));
             }
 	}
 	response.sendRedirect(location);
@@ -253,26 +265,26 @@ public class Main extends HttpServlet {
 	handleGroups = new ComputeLayout(conf, getConf(request, "config-apps.json"), getConf(request, "config-auth.json"));
     }   
 
-    String computeBandeauHeaderLinkMyAccount(HttpServletRequest request, Map<String,Map<String,String>> validApps) {
+    String computeBandeauHeaderLinkMyAccount(HttpServletRequest request, Map<String,AppDTO> validApps) {
 	return file_get_contents(request, "templates/headerLinkMyAccount.html");
     }
 
-    String computeBandeauHeaderLinks(HttpServletRequest request, Map<String,List<String>> user, Map<String,Map<String,String>> validApps) {
+    String computeBandeauHeaderLinks(HttpServletRequest request, Ldap.Attrs user, Map<String,AppDTO> validApps) {
 	String template = file_get_contents(request, "templates/headerLinks.html");
 
 	String myAccount = computeBandeauHeaderLinkMyAccount(request, validApps);
 
-	String login = user.containsKey("supannAliasLogin") ? user.get("supannAliasLogin").get(0) : user.get("id").get(0);
+	String login = user.containsKey("supannAliasLogin") ? user.get("supannAliasLogin").get(0) : user.get("uid").get(0);
 	return String.format(template,
 			     user.containsKey("displayName") ? user.get("displayName").get(0) : user.get("mail").get(0), 
 			     user.containsKey("displayName") ? user.get("mail").get(0) + " (" + login + ")" : login, 
 			     myAccount);
     }
 
-    String computeBandeauHeader(HttpServletRequest request, Map<String,List<String>> user, Map<String,Map<String,String>> validApps) {
+    String computeBandeauHeader(HttpServletRequest request, Ldap.Attrs user, AppsDTO userChannels) {
 	String template = file_get_contents(request, "templates/header.html");
 
-	String portalPageBarLinks = user != null ? computeBandeauHeaderLinks(request, user, validApps) : "";
+	String portalPageBarLinks = user != null ? computeBandeauHeaderLinks(request, user, userChannels) : "";
 
 	return String.format(template, portalPageBarLinks);
     }
@@ -330,9 +342,9 @@ public class Main extends HttpServlet {
     }
     
     /* ******************************************************************************** */
-    /* compute user's layout & channels using uportal API */
+    /* compute user's layout & channels */
     /* ******************************************************************************** */   
-    Ldap.Attrs getUser(String userId, Ldap.Attrs attrs) {
+    Ldap.Attrs exportAttrs(String userId, Ldap.Attrs attrs) {
 	Ldap.Attrs user = new Ldap.Attrs();
 	for (String attr: conf.wanted_user_attributes) {
 	    List<String> val = attrs.get(attr);
@@ -343,28 +355,25 @@ public class Main extends HttpServlet {
 	return user;
     }
     
-    List<Map<String, Object>> userLayout(Map<String, List<String>> layout, Set<String> userChannels) {
-	List<Map<String, Object>> rslt = new ArrayList<>();
+    List<LayoutDTO> userLayout(Map<String, List<String>> layout, Set<String> userChannels) {
+	List<LayoutDTO> rslt = new ArrayList<>();
 	for (Map.Entry<String, List<String>> e : layout.entrySet()) {
 	    List<String> fnames = new ArrayList<>();
 	    for (String fname : e.getValue())
 		if (userChannels.contains(fname))
 		    fnames.add(fname);
 	    if (!fnames.isEmpty())
-		rslt.add(asMap("title", e.getKey()).add("apps", fnames));
+		rslt.add(new LayoutDTO(e.getKey(), fnames));
 	}
  	return rslt;  
     }
     
-    Map<String,Map<String,String>> userChannels(final String userId, Ldap.Attrs person) {
-        Map<String,Map<String,String>> rslt = new HashMap<>();
+    AppsDTO userChannels(final String userId, Ldap.Attrs person) {
+        AppsDTO rslt = new AppsDTO();
 	
 	for (String fname : handleGroups.computeValidAppsRaw(person, false)) {
-		Map<String,String> def = get_app(fname);
-
-		def.put("url", get_user_url(def, fname, null));
-
-		rslt.put(fname, def);
+		App app = handleGroups.APPS.get(fname);
+		rslt.put(fname, new AppDTO(app, get_user_url(app, fname, null)));
 	  }
 	return rslt;
     }
@@ -376,7 +385,7 @@ public class Main extends HttpServlet {
 	return cas_login_url + "?service="  + urlencode(href);
     }
 
-    String ent_url(Map<String,String> app, String fname, boolean isGuest, boolean noLogin, String idpAuthnRequest_url) {
+    String ent_url(App app, String fname, boolean isGuest, boolean noLogin, String idpAuthnRequest_url) {
 	String url = isGuest ? conf.ent_base_url_guest + "/Guest" : conf.ent_base_url + (noLogin ? "/render.userLayoutRootNode.uP" : "/MayLogin");
 	return url + "?uP_fname=" + fname;
     }
@@ -400,34 +409,19 @@ public class Main extends HttpServlet {
 	return url;
     }
 
-    String enhance_url(String url, String appId, Set<String> options) {
-	if (options.contains("useExternalURLStats"))
-	    url = conf.ent_base_url + "/ExternalURLStats?fname=" + appId + "&service=" + urlencode(url);
-
-	if (options.contains("force_CAS"))
-	    url = via_CAS(conf.cas_login_url, url);
-	
-	return url;
-    }
-
-    String get_url(Map<String,String> app, String appId, boolean isGuest, boolean noLogin, String idpAuthnRequest_url) {
-	String url = app.get("url");
+    String get_url(App app, String appId, boolean isGuest, boolean noLogin, String idpAuthnRequest_url) {
+	String url = app.url;
 	//log.warn(json_encode(app));
 	if (url != null && (!conf.apps_no_bandeau.contains(appId) || idpAuthnRequest_url != null && conf.url_bandeau_compatible.contains(appId))) {
-	    url = url_maybe_adapt_idp(idpAuthnRequest_url, app.get("url"), app.get("shibbolethSPPrefix"));
-	    return enhance_url(url, appId, app.keySet());
+	    url = url_maybe_adapt_idp(idpAuthnRequest_url, app.url, app.shibbolethSPPrefix);
+	    return url;
 	} else {
 	    return ent_url(app, appId, isGuest, noLogin, null);
 	}
     }
 
-    String get_user_url(Map<String,String> app, String appId, String idpAuthnRequest_url) {
+    String get_user_url(App app, String appId, String idpAuthnRequest_url) {
 	return get_url(app, appId, false, false, idpAuthnRequest_url);
-    }
-
-    
-    Map<String,String> get_app(String appId) {
-    	return handleGroups.getApp(appId);
     }
 
     /* ******************************************************************************** */
