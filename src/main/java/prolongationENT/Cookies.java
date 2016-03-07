@@ -1,4 +1,4 @@
-package org.esupportail.portal.services.prolongationENT;
+package prolongationENT;
 
 import java.util.List;
 import java.util.LinkedList;

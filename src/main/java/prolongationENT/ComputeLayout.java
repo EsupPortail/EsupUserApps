@@ -1,4 +1,4 @@
-package org.esupportail.portal.services.prolongationENT;
+package prolongationENT;
 
 import java.net.URL;
 import java.util.List;
