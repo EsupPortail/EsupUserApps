@@ -332,8 +332,8 @@ public class Main extends HttpServlet {
     /* ******************************************************************************** */
     /* compute user's layout & channels using uportal API */
     /* ******************************************************************************** */   
-    Map<String,List<String>> getUser(String userId, Map<String, List<String>> attrs) {
-	Map<String,List<String>> user = new HashMap<>();
+    Ldap.Attrs getUser(String userId, Ldap.Attrs attrs) {
+	Ldap.Attrs user = new Ldap.Attrs();
 	for (String attr: conf.wanted_user_attributes) {
 	    List<String> val = attrs.get(attr);
 	    if (val != null)

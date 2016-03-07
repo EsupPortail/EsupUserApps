@@ -19,7 +19,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 class Ldap {
-    class Attrs extends HashMap<String, List<String>> {}
+    static class Attrs extends HashMap<String, List<String>> {}
 
     class LdapConf {
         String url, bindDN, bindPasswd, peopleDN;
