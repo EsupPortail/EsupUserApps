@@ -4,8 +4,6 @@ import org.esupportail.portal.services.prolongationENT.ACLs;
 import org.esupportail.portal.services.prolongationENT.Cookies;
 import org.esupportail.portal.services.prolongationENT.Utils;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 class ProlongationENTApp extends ACLs {

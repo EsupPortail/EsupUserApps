@@ -1,25 +1,12 @@
 package org.esupportail.portal.services;
 
 import java.net.URL;
-import java.util.Collections;
 import java.util.List;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 import java.util.regex.Pattern;
-
-import javax.naming.CommunicationException;
-import javax.naming.Context;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
