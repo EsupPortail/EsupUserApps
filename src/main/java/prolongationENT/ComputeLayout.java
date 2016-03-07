@@ -21,14 +21,14 @@ class ComputeLayout {
     }
 
     Set<String> computeValidApps(String uid, boolean wantImpersonate) {
-        return computeValidAppsRaw(getLdapPeopleInfo(uid), wantImpersonate);
+        return computeValidApps(getLdapPeopleInfo(uid), wantImpersonate);
     }
 
     Ldap.Attrs getLdapPeopleInfo(String uid) {
 	return ldap.getLdapPeopleInfo(uid, compute_wanted_attributes());
     }
     
-    Set<String> computeValidAppsRaw(Ldap.Attrs person, boolean wantImpersonate) {
+    Set<String> computeValidApps(Ldap.Attrs person, boolean wantImpersonate) {
         String user = person.get("uid").get(0);
         Map<String, Boolean> groupsCache = new HashMap<>();
 

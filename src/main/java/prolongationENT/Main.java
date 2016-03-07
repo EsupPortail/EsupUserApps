@@ -371,7 +371,7 @@ public class Main extends HttpServlet {
     AppsDTO userChannels(final String userId, Ldap.Attrs person) {
         AppsDTO rslt = new AppsDTO();
 	
-	for (String fname : handleGroups.computeValidAppsRaw(person, false)) {
+	for (String fname : handleGroups.computeValidApps(person, false)) {
 		App app = conf.APPS.get(fname);
 		rslt.put(fname, new AppDTO(app, get_user_url(app, fname, null)));
 	  }
