@@ -4,7 +4,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterRegistration;
+import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletRegistration;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -121,13 +128,9 @@ class Utils {
         return c;
     }
 
-    static InputStream file_get_stream(HttpServletRequest request, String file) {
-	return request.getSession().getServletContext().getResourceAsStream(file);
-    }
-
-    static String file_get_contents(HttpServletRequest request, String file) {
+    static String file_get_contents(ServletContext sc, String file) {
 	try {
-            InputStream in = file_get_stream(request, "/" + file);
+            InputStream in = sc.getResourceAsStream("/" + file);
             if (in == null) {
                 log().error("error reading file " + file);
                 return null;
@@ -137,6 +140,9 @@ class Utils {
 	    log().error("error reading file " + file, e);
 	    return null;
 	}
+    }
+    static String file_get_contents(HttpServletRequest request, String file) {
+	return file_get_contents(request.getSession().getServletContext(), file);
     }
     
     // inspired from java-cas-client code
@@ -163,5 +169,17 @@ class Utils {
     static long now() {
 	return System.currentTimeMillis() / 1000L;
     }   
+	
+	static void addFilter(ServletContext sc, String name, Class<? extends Filter> clazz, Map<String,String> params, String... urls) {
+        FilterRegistration.Dynamic o = sc.addFilter(name, clazz);
+        if (params != null) o.setInitParameters(params);
+        o.addMappingForUrlPatterns(null, true, urls);
+	}
+	
+	static void addServlet(ServletContext sc, String name, Class<? extends Servlet> clazz, Map<String,String> params, String... urls) {
+        ServletRegistration.Dynamic o = sc.addServlet(name, clazz);
+        if (params != null) o.setInitParameters(params);
+        o.addMapping(urls);
+	}
     
 }

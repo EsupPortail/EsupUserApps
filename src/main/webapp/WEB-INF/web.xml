@@ -14,50 +14,10 @@
         <param-value>false</param-value>
     </context-param>
 
-    <filter>
-	<filter-name>CAS Single Sign Out Filter</filter-name>
-	<filter-class>org.jasig.cas.client.session.SingleSignOutFilter</filter-class>
-    </filter>
-
-    <filter>
-        <filter-name>CAS Validate Filter Simple</filter-name>
-        <filter-class>org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter</filter-class>
-        <init-param>
-          <param-name>casServerUrlPrefix</param-name>
-            <param-value>https://cas-test.univ-paris1.fr/cas</param-value>
-			<!--<param-value>http://cas-test.univ-paris1.fr/cas</param-value>-->
-        </init-param>
-        <init-param>
-          <param-name>serverName</param-name>
-          <param-value>ent-test.univ-paris1.fr</param-value>
-        </init-param>
-        <init-param>
-          <param-name>redirectAfterValidation</param-name>
-          <param-value>false</param-value>
-        </init-param>	
-    </filter>
-	
-    <filter-mapping>
-        <filter-name>CAS Single Sign Out Filter</filter-name>
-        <url-pattern>/js</url-pattern>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>CAS Validate Filter Simple</filter-name>
-        <url-pattern>/js</url-pattern>
-    </filter-mapping>
-
-	<servlet>
-	  <servlet-name>ProlongationENT</servlet-name> 
-	  <servlet-class>prolongationENT.Main</servlet-class>
-	</servlet>
-	<servlet-mapping>
-	    <servlet-name>ProlongationENT</servlet-name> 
-	    <url-pattern>/js</url-pattern> 
-	    <url-pattern>/detectReload</url-pattern> 
-	    <url-pattern>/redirect</url-pattern> 
-	    <url-pattern>/purgeCache</url-pattern> 
-	    <url-pattern>/logout</url-pattern> 
-	    <url-pattern>/canImpersonate</url-pattern> 
-	</servlet-mapping>
+    <listener>
+      <listener-class>
+        prolongationENT.WebXml
+      </listener-class>
+    </listener>
 
 </web-app>

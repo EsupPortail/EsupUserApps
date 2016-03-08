@@ -25,6 +25,8 @@ public class Main extends HttpServlet {
     
     org.apache.commons.logging.Log log = LogFactory.getLog(Main.class);
 
+    static String[] mappings = new String[] { "/js", "/logout", "/detectReload", "/redirect", "/canImpersonate", "/purgeCache" };
+    
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (conf == null) initConf(request);
         switch (request.getServletPath()) {
@@ -163,25 +165,26 @@ public class Main extends HttpServlet {
     }
     
     synchronized void initConf(HttpServletRequest request) {
-    	Gson gson = new Gson();
-    	conf = gson.fromJson(getConf(request, "config.json"), MainConf.class);
-    	conf.merge(gson.fromJson(getConf(request, "config-auth.json"), AuthConf.class));
-    	conf.merge(gson.fromJson(getConf(request, "config-apps.json"), AppsConf.class).init());
-        conf.init();
+    	conf = getMainConf(request.getSession().getServletContext());
         handleGroups = new ComputeLayout(conf);
         computeBandeau = new ComputeBandeau(conf, handleGroups);
     }   
 
-    String private_file_get_contents(HttpServletRequest request, String file) {
-        return Utils.file_get_contents(request, "WEB-INF/" + file);
+    static MainConf getMainConf(ServletContext sc) {
+    	Gson gson = new Gson();
+    	MainConf conf = gson.fromJson(getConf(sc, "config.json"), MainConf.class);
+    	conf.merge(gson.fromJson(getConf(sc, "config-auth.json"), AuthConf.class));
+    	conf.merge(gson.fromJson(getConf(sc, "config-apps.json"), AppsConf.class).init());
+        conf.init();
+        return conf;
     }
-    
+
     /* ******************************************************************************** */
     /* simple helper functions */
     /* ******************************************************************************** */   
 
-    JsonObject getConf(HttpServletRequest request, String jsonFile) {
-        String s = private_file_get_contents(request, jsonFile);
+    static JsonObject getConf(ServletContext sc, String jsonFile) {
+        String s = Utils.file_get_contents(sc, "WEB-INF/" + jsonFile);
         // allow trailing commas
         s = s.replaceAll(",(\\s*[\\]}])", "$1");
     	return new JsonParser().parse(s).getAsJsonObject();
