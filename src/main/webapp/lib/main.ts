@@ -336,13 +336,6 @@ function detectImpersonationPbs() {
     }
 }
 
-function mayInstallBandeau() {
-    if (b_E.prevHash !== PARAMS.hash) {
-	b_E.prevHash = PARAMS.hash;
-	installBandeau();
-    }
-}
-
 function localStorageGet(field) {
     try {
 	return localStorage.getItem(b_E.localStorage_prefix + field);
@@ -396,6 +389,7 @@ function loadBandeauJs(params) {
     res += ',' + (window.devicePixelRatio || 1).toFixed(2) + ',' + angle;
     
     params.push("res=" + res);
+    params.push('if_none_match=' + PARAMS.hash);
     if (b_E.loadTime) params.push("time=" + b_E.loadTime);
     h.loadScript(b_E.url + "/js" + (params.length ? "?" + params.join('&') : ''));
 }
@@ -404,7 +398,7 @@ function detectReload($time) {
     var $prev = sessionStorageGet('detectReload');
     if ($prev && $prev != $time) {
 	h.mylog("reload detected, updating bandeau softly");
-	loadBandeauJs(['if_none_match=' + PARAMS.hash]);
+	loadBandeauJs([]);
     }
     sessionStorageSet('detectReload', $time);
 }
@@ -424,7 +418,7 @@ function mayUpdate() {
 	if (age > CONF.time_before_checking_browser_cache_is_up_to_date) {
 	    h.mylog("cached bandeau is old (" + age + "s), updating it softly");
             sessionStorageSet(currentAppId + ":time", h.now()); // the new bandeau will update "time", but only if bandeau has changed!
-	    loadBandeauJs(['if_none_match=' + PARAMS.hash]);
+	    loadBandeauJs([]);
 	} else {
 	    // if user used "reload", the cached version of detectReload will change
 	    window.bandeau_ENT_detectReload = detectReload;
@@ -460,11 +454,11 @@ if (!notFromLocalStorage && b_E.url !== sessionStorageGet('url')) {
     return "invalid";
 } else if ((b_E.is_logged || b_E.login) && !isLogged()) {
     h.onReady(function () {
-	    if (isLogged()) mayInstallBandeau();
+	    if (isLogged()) installBandeau();
 	    mayUpdate();
     });
 } else {
-    mayInstallBandeau();
+    installBandeau();
     mayUpdate();
 }
 
