@@ -458,19 +458,6 @@ if (currentAppId === "HyperPlanning-ens") {
 if (!notFromLocalStorage && b_E.url !== sessionStorageGet('url')) {
     h.mylog("not using bandeau from sessionStorage which was computed for " + sessionStorageGet('url') + " whereas " + b_E.url + " is wanted");
     return "invalid";
-} else if (!DATA.person.id) {
-    // disabled for now
-
-    if (notFromLocalStorage) {
-	unloadSpecificCss();
-	h.onIdOrBody(bandeau_div_id(), function () {
-	    h.set_div_innerHTML(bandeau_div_id(), '');
-	});
-	removeSessionStorageCache();
-    } else {
-	// checking wether we are logged in now
-	loadBandeauJs([]);
-    }
 } else if ((b_E.is_logged || b_E.login) && !isLogged()) {
     h.onReady(function () {
 	    if (isLogged()) mayInstallBandeau();
