@@ -427,7 +427,6 @@ function mayUpdate() {
     }
 }
 
-/*var loadTime = now();*/
 var b_E = window.bandeau_ENT;
 var currentAppId = computeBestCurrentAppId();
 var notFromLocalStorage = b_E.notFromLocalStorage;
