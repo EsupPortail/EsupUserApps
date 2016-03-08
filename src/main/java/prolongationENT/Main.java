@@ -47,19 +47,13 @@ public class Main extends HttpServlet {
     void js(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	boolean noCache = request.getParameter("noCache") != null;
 	String userId = noCache ? null : Utils.get_CAS_userId(request);
-	String app = request.getParameter("app");
-	String res = request.getParameter("res");
-	String time = request.getParameter("time");
 	String forcedId = request.getParameter("uid");
 
 	if (noCache || userId == null) {
 	    if (request.getParameter("auth_checked") == null) {
 		computeBandeau.cleanupSession(request);
 		String final_url = conf.bandeau_ENT_url + "/js?auth_checked"
-		    + (app != null ? "&app=" + urlencode(app) : "")
-		    + (res != null ? "&res=" + urlencode(res) : "")
-		    + (time != null ? "&time=" + urlencode(time) : "")
-		    + (forcedId != null ? "&uid=" + urlencode(forcedId) : "");
+		    + (request.getQueryString() != null ? "&" + request.getQueryString() : "");
 		response.sendRedirect(Utils.via_CAS(conf.cas_login_url, final_url) + "&gateway=true");
 	    } else {
 		// user is not authenticated.
@@ -192,9 +186,6 @@ public class Main extends HttpServlet {
 
     private static String json_encode(Object o) {
 	return Utils.json_encode(o);
-    }
-    private static String urlencode(String s) {
-	return Utils.urlencode(s);
     }
     private static boolean hasParameter(HttpServletRequest request, String attrName) {
 	return Utils.hasParameter(request, attrName);
