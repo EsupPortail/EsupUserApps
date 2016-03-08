@@ -18,6 +18,8 @@ import javax.naming.directory.InitialDirContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import static prolongationENT.Utils.asMap;
+    
 class Ldap {
     static class Attrs extends HashMap<String, List<String>> {}
 
@@ -34,11 +36,11 @@ class Ldap {
     
     private DirContext ldap_connect() {
 	Map<String,String> env =
-	    Utils.asMap(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory")
-	           .add(Context.PROVIDER_URL, ldapConf.url)
-	           .add(Context.SECURITY_AUTHENTICATION, "simple")
-	           .add(Context.SECURITY_PRINCIPAL, ldapConf.bindDN)
-	           .add(Context.SECURITY_CREDENTIALS, ldapConf.bindPasswd);
+	    asMap(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory")
+             .add(Context.PROVIDER_URL, ldapConf.url)
+             .add(Context.SECURITY_AUTHENTICATION, "simple")
+             .add(Context.SECURITY_PRINCIPAL, ldapConf.bindDN)
+             .add(Context.SECURITY_CREDENTIALS, ldapConf.bindPasswd);
 
 	try {
 	    return new InitialDirContext(new Hashtable<>(env));

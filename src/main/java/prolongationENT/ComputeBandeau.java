@@ -15,6 +15,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.LogFactory;
 
+import static prolongationENT.Utils.*;
+
 public class ComputeBandeau {	   
     MainConf conf = null;
     ComputeLayout handleGroups;
@@ -59,7 +61,7 @@ public class ComputeBandeau {
 
 	Map<String, Object> js_conf =
 	   asMapO("bandeau_ENT_url", conf.bandeau_ENT_url)
-	     .add("ent_logout_url", Utils.via_CAS(conf.cas_logout_url, conf.ent_base_url + "/Logout")) // nb: esup logout may not logout of CAS if user was not logged in esup portail, so forcing CAS logout in case
+	     .add("ent_logout_url", via_CAS(conf.cas_logout_url, conf.ent_base_url + "/Logout")) // nb: esup logout may not logout of CAS if user was not logged in esup portail, so forcing CAS logout in case
              .add("cas_impersonate", conf.cas_impersonate)
 	     .add("time_before_checking_browser_cache_is_up_to_date", conf.time_before_checking_browser_cache_is_up_to_date);
 
@@ -70,12 +72,12 @@ public class ComputeBandeau {
 	     .add("apps", userChannels)
 	     .add("layout", userLayout);
 	if (!realUserId.equals(userId)) js_data.put("realUserId", realUserId);
-        if (Utils.getCookie(request, conf.cas_impersonate.cookie_name) != null) {
+        if (getCookie(request, conf.cas_impersonate.cookie_name) != null) {
             js_data.put("canImpersonate", handleGroups.computeValidApps(realUserId, true));
         }
 
 	Map<String, String> js_css =
-	   Utils.asMap("base",    get_css_with_absolute_url(request, "main.css"))
+	    asMap("base",    get_css_with_absolute_url(request, "main.css"))
 	     .add("desktop", get_css_with_absolute_url(request, "desktop.css"));
 	    
 	String js_text_middle = static_js;
@@ -83,7 +85,7 @@ public class ComputeBandeau {
 	js_text_middle = js_text_middle.replace("var DATA = undefined", "var DATA = " + json_encode(js_data));
 	js_text_middle = js_text_middle.replace("var CSS = undefined", "var CSS = " + json_encode(js_css));
 
-	String hash = Utils.computeMD5(js_text_middle);
+	String hash = computeMD5(js_text_middle);
 	Map<String, Object> js_params =
 	    asMapO("is_old", is_old)
 	     .add("hash", hash);
@@ -143,7 +145,7 @@ public class ComputeBandeau {
 	String referer = (String) request.getHeader("Referer");
 	if (referer == null) return false;
 
-	String current_host = Utils.url2host(referer);
+	String current_host = url2host(referer);
 	debug_msg("current_host " + current_host);
 	boolean changed = false;
 	String prev_host = (String) session.getAttribute(prev_host_attr);
@@ -159,7 +161,7 @@ public class ComputeBandeau {
     boolean is_old(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
 	long max_age = time_before_forcing_CAS_authentication_again(referer_hostname_changed(request, session));
-	long now = Utils.now();
+	long now = now();
 	boolean is_old = false;
 	if (session.getAttribute(prev_time_attr) != null) {
 	    long age = now - (Long) session.getAttribute(prev_time_attr);
@@ -220,7 +222,7 @@ public class ComputeBandeau {
     static String via_idpAuthnRequest_url(String idpAuthnRequest_url, String url, String shibbolethSPPrefix) {
 	String spId = url.replaceFirst("(://[^/]*)(.*)", "$1");
 	String shire = spId + shibbolethSPPrefix + "Shibboleth.sso/SAML/POST";
-	return String.format("%s?shire=%s&target=%s&providerId=%s", idpAuthnRequest_url, shire, Utils.urlencode(url), spId);
+	return String.format("%s?shire=%s&target=%s&providerId=%s", idpAuthnRequest_url, shire, urlencode(url), spId);
     }
 
     static String url_maybe_adapt_idp(String idpAuthnRequest_url, String url, String shibbolethSPPrefix) {
@@ -265,14 +267,8 @@ public class ComputeBandeau {
 	//log.warn("DEBUG " + msg);
     }
         
-    private static String json_encode(Object o) {
-	return Utils.json_encode(o);
-    }
     private static Utils.MapBuilder<Object> asMapO(String k, Object v) {
-	return Utils.asMap(k, v);
-    }
-    private static String file_get_contents(HttpServletRequest request, String file) {
-	return Utils.file_get_contents(request, file);
+	return asMap(k, v);
     }
 
     /*

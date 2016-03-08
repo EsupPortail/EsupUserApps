@@ -18,6 +18,8 @@ import com.google.gson.JsonParser;
 
 import org.apache.commons.logging.LogFactory;
 
+import static prolongationENT.Utils.*;
+
 public class Main extends HttpServlet {	   
     MainConf conf = null;
     ComputeLayout handleGroups;
@@ -46,7 +48,7 @@ public class Main extends HttpServlet {
     
     void js(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	boolean noCache = request.getParameter("noCache") != null;
-	String userId = noCache ? null : Utils.get_CAS_userId(request);
+	String userId = noCache ? null : get_CAS_userId(request);
 	String forcedId = request.getParameter("uid");
 
 	if (noCache || userId == null) {
@@ -54,10 +56,10 @@ public class Main extends HttpServlet {
 		computeBandeau.cleanupSession(request);
 		String final_url = conf.bandeau_ENT_url + "/js?auth_checked"
 		    + (request.getQueryString() != null ? "&" + request.getQueryString() : "");
-		response.sendRedirect(Utils.via_CAS(conf.cas_login_url, final_url) + "&gateway=true");
+		response.sendRedirect(via_CAS(conf.cas_login_url, final_url) + "&gateway=true");
 	    } else {
 		// user is not authenticated.
-                String template = Utils.file_get_contents(request, "templates/notLogged.html");
+                String template = file_get_contents(request, "templates/notLogged.html");
                 response.setContentType("application/javascript; charset=utf8");
                 response.getWriter().println(String.format(template, json_encode(asMap("cas_login_url", conf.cas_login_url))));
 	    }
@@ -67,7 +69,7 @@ public class Main extends HttpServlet {
 	if (forcedId != null) {
 	    List<String> memberOf = handleGroups.getLdapPeopleInfo(userId).get("memberOf");
 	    if (conf.admins.contains(userId) ||
-		memberOf != null && Utils.firstCommonElt(memberOf, conf.admins) != null) {
+		memberOf != null && firstCommonElt(memberOf, conf.admins) != null) {
 		// ok
 	    } else {
 		forcedId = null;
@@ -85,7 +87,7 @@ public class Main extends HttpServlet {
     }
     
     void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	Utils.session_invalidate(request);
+	session_invalidate(request);
 
 	String callback = request.getParameter("callback");
 	response.setContentType("application/javascript; charset=utf8");
@@ -139,8 +141,8 @@ public class Main extends HttpServlet {
                 removeCookies(request, response, app.cookies);
             }
             if (hasParameter(request, "impersonate")) {
-                String wantedUid = Utils.getCookie(request, conf.cas_impersonate.cookie_name);
-                response.addCookie(Utils.newCookie("CAS_IMPERSONATED", wantedUid, app.cookies.path));
+                String wantedUid = getCookie(request, conf.cas_impersonate.cookie_name);
+                response.addCookie(newCookie("CAS_IMPERSONATED", wantedUid, app.cookies.path));
             }
 	}
 	response.sendRedirect(location);
@@ -150,11 +152,11 @@ public class Main extends HttpServlet {
         for (String prefix : toRemove.name_prefixes()) {
             for(Cookie c : request.getCookies()) { 
                 if (!c.getName().startsWith(prefix)) continue;
-                response.addCookie(Utils.newCookie(c.getName(), null, toRemove.path()));
+                response.addCookie(newCookie(c.getName(), null, toRemove.path()));
             }
         }
         for (String name : toRemove.names()) {
-            response.addCookie(Utils.newCookie(name, null, toRemove.path()));
+            response.addCookie(newCookie(name, null, toRemove.path()));
         }
     }
     
@@ -178,22 +180,11 @@ public class Main extends HttpServlet {
     /* ******************************************************************************** */   
 
     static JsonObject getConf(ServletContext sc, String jsonFile) {
-        String s = Utils.file_get_contents(sc, "WEB-INF/" + jsonFile);
+        String s = file_get_contents(sc, "WEB-INF/" + jsonFile);
         // allow trailing commas
         s = s.replaceAll(",(\\s*[\\]}])", "$1");
     	return new JsonParser().parse(s).getAsJsonObject();
     }
-
-    private static String json_encode(Object o) {
-	return Utils.json_encode(o);
-    }
-    private static boolean hasParameter(HttpServletRequest request, String attrName) {
-	return Utils.hasParameter(request, attrName);
-    }
-    private static Utils.MapBuilder<Object> asMap(String k, Object v) {
-	return Utils.asMap(k, v);
-    }
-    private long now() { return Utils.now(); }
 
     /*
     long prev = 0;

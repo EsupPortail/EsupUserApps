@@ -5,6 +5,8 @@ import javax.servlet.*;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter;
 
+import static prolongationENT.Utils.*;
+
 public class WebXml implements ServletContextListener{
 	
 	public void contextDestroyed(ServletContextEvent event) {}
@@ -16,14 +18,14 @@ public class WebXml implements ServletContextListener{
 	private void configure(ServletContext sc) {
 		MainConf conf = Main.getMainConf(sc);
 		
-		Utils.addFilter(sc, "CAS Single Sign Out", SingleSignOutFilter.class, null, "/js");
+		addFilter(sc, "CAS Single Sign Out", SingleSignOutFilter.class, null, "/js");
 
-		Utils.addFilter(sc, "CAS Validate", Cas20ProxyReceivingTicketValidationFilter.class,
-				Utils.asMap("casServerUrlPrefix", conf.cas_base_url)
-				 	   .add("serverName", Utils.url2host(conf.bandeau_ENT_url))
+		addFilter(sc, "CAS Validate", Cas20ProxyReceivingTicketValidationFilter.class,
+				asMap("casServerUrlPrefix", conf.cas_base_url)
+				 	   .add("serverName", url2host(conf.bandeau_ENT_url))
 				       .add("redirectAfterValidation", "false"), 
 				"/js");
     
-		Utils.addServlet(sc, "ProlongationENT", Main.class, null, Main.mappings);
+		addServlet(sc, "ProlongationENT", Main.class, null, Main.mappings);
 	}
 }
