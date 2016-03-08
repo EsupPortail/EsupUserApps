@@ -442,14 +442,14 @@
             "title": "Groupes de TD en langue avec ReservaLang",
             "url": "https://rlang.univ-paris1.fr/",
             "hideFromMobile": true,
-            "groups": [ "ufr_SX5_teacher" ],
+            "groups": [ "employees.pedagogy.SX5-teacher" ],
         },
         "reservasport-ens": {
             "text": "Mes groupes en sport",
             "title": "Groupes de TD en sport avec ReservaSport",
             "url": "https://rsport.univ-paris1.fr",
             "hideFromMobile": true,
-            "groups": [ "ufr_SC3_teacher" ],
+            "groups": [ "employees.pedagogy.SC3-teacher" ],
         },
         "moodle-epi-ens": {
             "title": "Mes EPI (enseignant)",
@@ -719,15 +719,6 @@
         },
         "TousEtudMembre": {
             "eduPersonAffiliation": [ "^student$", "^member$" ],
-        },
-        
-        "ufr_SX5_teacher": {
-            "memberOf": "^cn=employees\\.pedagogy\\.SX5,ou=groups,dc=univ-paris1,dc=fr$",
-            "eduPersonAffiliation": "^teacher$",
-        },
-        "ufr_SC3_teacher": {
-            "memberOf": "^cn=employees\\.pedagogy\\.SC3,ou=groups,dc=univ-paris1,dc=fr$",
-            "eduPersonAffiliation": "^teacher$",
         },
     },
 }
