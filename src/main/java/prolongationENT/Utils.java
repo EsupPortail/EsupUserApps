@@ -73,7 +73,7 @@ class Utils {
     }
 
     static String url2host(String url) {
-	URL url_ = Utils.toURL(url);
+	URL url_ = toURL(url);
 	return url_ != null ? url_.getHost() : null;
     }
 
