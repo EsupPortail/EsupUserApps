@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -24,22 +26,20 @@ public class Main extends HttpServlet {
     org.apache.commons.logging.Log log = LogFactory.getLog(Main.class);
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	if (request.getServletPath().endsWith("detectReload")) {
-	    detectReload(request, response);
-	} else if (request.getServletPath().endsWith("logout")) {
-	    logout(request, response);
-	} else if (request.getServletPath().endsWith("canImpersonate")) {
-	    canImpersonate(request, response);
-	} else if (request.getServletPath().endsWith("redirect")) {
-	    if (conf == null) initConf(request);
-	    redirect(request, response);
-	} else if (request.getServletPath().endsWith("purgeCache")) {
+        if (conf == null) initConf(request);
+        switch (request.getServletPath()) {
+           case "/js":             js            (request, response); break;       
+           case "/logout":         logout        (request, response); break;
+           case "/detectReload":   detectReload  (request, response); break;
+           case "/redirect":       redirect      (request, response); break;
+           case "/canImpersonate": canImpersonate(request, response); break;
+           case "/purgeCache":     purgeCache    (request, response); break;
+        }
+    }
+    
+    void purgeCache(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    log.warn("purging cache");
 	    initConf(request);
-	} else {
-	    if (conf == null) initConf(request);
-	    js(request, response);	   
-	}
     }
     
     void js(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
