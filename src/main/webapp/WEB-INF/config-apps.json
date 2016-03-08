@@ -75,6 +75,8 @@
                 "paris1",
                 "not_paris1",
             ],
+
+            "admins": { "groups": [ "applications.userinfo.l1-users" ] },
         },
         "intranet": {
             "title": "Intranet",
@@ -182,6 +184,8 @@
             "url": "https://ent.univ-paris1.fr/epi/",
             "users": [ "broques", "flagneau", "prigaux" ],
             "groups": [ "TousEtud" ],
+
+            "admins": { "groups": [ "applications.userinfo.l1-users" ] },
         },
         "eee": {
             "title": "Mes questionnaires EEE",
@@ -455,6 +459,8 @@
                 "TousEns",
                 "applications.moodle.Mcours-managers",
             ],
+
+            "admins": { "groups": [ "applications.userinfo.l1-users" ] },
         },
         "eee-ens": {
             "title": "Questionnaires EEE",
