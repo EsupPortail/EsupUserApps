@@ -58,14 +58,14 @@ public class ComputeBandeau {
 	String static_js = file_get_contents(request, "static.js");
 
 	Map<String, Object> js_conf =
-	    asMap("bandeau_ENT_url", conf.bandeau_ENT_url)
+	   asMapO("bandeau_ENT_url", conf.bandeau_ENT_url)
 	     .add("ent_logout_url", Utils.via_CAS(conf.cas_logout_url, conf.ent_base_url + "/Logout")) // nb: esup logout may not logout of CAS if user was not logged in esup portail, so forcing CAS logout in case
              .add("cas_impersonate", conf.cas_impersonate)
 	     .add("time_before_checking_browser_cache_is_up_to_date", conf.time_before_checking_browser_cache_is_up_to_date);
 
 
 	Map<String, Object> js_data =
-	    asMap("person", exportAttrs(userId, attrs))
+	   asMapO("person", exportAttrs(userId, attrs))
 	     .add("bandeauHeader", bandeauHeader)
 	     .add("apps", userChannels)
 	     .add("layout", userLayout);
@@ -74,8 +74,8 @@ public class ComputeBandeau {
             js_data.put("canImpersonate", handleGroups.computeValidApps(realUserId, true));
         }
 
-	Map<String, Object> js_css =
-	    asMap("base",    get_css_with_absolute_url(request, "main.css"))
+	Map<String, String> js_css =
+	   Utils.asMap("base",    get_css_with_absolute_url(request, "main.css"))
 	     .add("desktop", get_css_with_absolute_url(request, "desktop.css"));
 	    
 	String js_text_middle = static_js;
@@ -85,7 +85,7 @@ public class ComputeBandeau {
 
 	String hash = Utils.computeMD5(js_text_middle);
 	Map<String, Object> js_params =
-	    asMap("is_old", is_old)
+	    asMapO("is_old", is_old)
 	     .add("hash", hash);
 
 	String js_text = js_text_middle.replace("var PARAMS = undefined", "var PARAMS = " + json_encode(js_params));
@@ -268,7 +268,7 @@ public class ComputeBandeau {
     private static String json_encode(Object o) {
 	return Utils.json_encode(o);
     }
-    private static Utils.MapBuilder<Object> asMap(String k, Object v) {
+    private static Utils.MapBuilder<Object> asMapO(String k, Object v) {
 	return Utils.asMap(k, v);
     }
     private static String file_get_contents(HttpServletRequest request, String file) {
