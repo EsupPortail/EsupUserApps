@@ -61,7 +61,7 @@ public class ComputeBandeau {
 
 	Map<String, Object> js_conf =
 	   asMapO("bandeau_ENT_url", conf.bandeau_ENT_url)
-	     .add("ent_logout_url", via_CAS(conf.cas_logout_url, conf.ent_base_url + "/Logout")) // nb: esup logout may not logout of CAS if user was not logged in esup portail, so forcing CAS logout in case
+	     .add("ent_logout_url", conf.ent_logout_url)
              .add("cas_impersonate", conf.cas_impersonate)
 	     .add("time_before_checking_browser_cache_is_up_to_date", conf.time_before_checking_browser_cache_is_up_to_date);
 

@@ -56,11 +56,13 @@ class MainConf extends AppsConf {
     String cas_login_url;
     String cas_logout_url;
     String bandeau_ENT_url;
+    String ent_logout_url;
 
     MainConf init() {
         if (cas_login_url == null) cas_login_url = cas_base_url + "/login";
         if (cas_logout_url == null) cas_logout_url = cas_base_url + "/logout";
         if (bandeau_ENT_url == null) bandeau_ENT_url = ent_base_url_guest + "/ProlongationENT";
+	if (ent_logout_url == null) ent_logout_url = Utils.via_CAS(cas_logout_url, ent_base_url + "/Logout"); // nb: esup logout may not logout of CAS if user was not logged in esup portail, so forcing CAS logout in case
         return this;
     }
 
