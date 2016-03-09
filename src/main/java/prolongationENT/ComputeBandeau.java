@@ -57,7 +57,8 @@ public class ComputeBandeau {
 	    !conf.isCasSingleSignOutWorking &&
 	    is_old(request) && request.getParameter("auth_checked") == null; // checking auth_checked should not be necessary since having "auth_checked" implies having gone through cleanupSession & CAS and so prev_time should not be set. But it seems firefox can bypass the initial redirect and go straight to CAS without us having cleaned the session... and then a dead-loop always asking for not-old version
 	String bandeauHeader = computeBandeauHeader(request, attrs, userChannels);
-	String static_js = file_get_contents(request, "static.js");
+	String helpers_js = file_get_contents(request, "lib/helpers.ts");
+	String main_js = file_get_contents(request, "lib/main.ts");
 
 	Map<String, Object> js_conf =
 	    objectFieldsToMap(conf, "bandeau_ENT_url", "cas_impersonate", "time_before_checking_browser_cache_is_up_to_date", "ent_logout_url");
@@ -76,7 +77,7 @@ public class ComputeBandeau {
 	    asMap("base",    get_css_with_absolute_url(request, "main.css"))
 	     .add("desktop", get_css_with_absolute_url(request, "desktop.css"));
 	    
-	String js_text_middle = static_js;
+	String js_text_middle = helpers_js + main_js;
 	js_text_middle = js_text_middle.replace("var CONF = undefined", "var CONF = " + json_encode(js_conf));
 	js_text_middle = js_text_middle.replace("var DATA = undefined", "var DATA = " + json_encode(js_data));
 	js_text_middle = js_text_middle.replace("var CSS = undefined", "var CSS = " + json_encode(js_css));
