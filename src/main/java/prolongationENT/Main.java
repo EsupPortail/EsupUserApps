@@ -150,7 +150,7 @@ public class Main extends HttpServlet {
 
     void removeCookies(HttpServletRequest request, HttpServletResponse response, Cookies toRemove) {
         for (String prefix : toRemove.name_prefixes()) {
-            for(Cookie c : request.getCookies()) { 
+            for(Cookie c : getCookies(request)) { 
                 if (!c.getName().startsWith(prefix)) continue;
                 response.addCookie(newCookie(c.getName(), null, toRemove.path()));
             }

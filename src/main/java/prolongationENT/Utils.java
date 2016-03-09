@@ -114,9 +114,15 @@ class Utils {
     static boolean hasParameter(HttpServletRequest request, String attrName) {
 	return request.getParameter(attrName) != null;
     }
+
+    // wrapper around request.getCookies() which never returns null
+    static Cookie[] getCookies(HttpServletRequest request) {
+	Cookie[] l = request.getCookies();
+	return l != null ? l : new Cookie[] {};
+    }
     
     static String getCookie(HttpServletRequest request, String name) {
-	for(Cookie c : request.getCookies()) { 
+	for(Cookie c : getCookies(request)) { 
             if (c.getName().equals(name)) return c.getValue();
         }  
 	return null;
