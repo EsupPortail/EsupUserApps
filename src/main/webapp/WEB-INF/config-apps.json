@@ -604,6 +604,10 @@
                 "TousInvites",
             ],
         },
+	"caccueil-guest": {
+	    "title": "Accueil anonyme",
+	    "groups": [ "Anonymes" ],
+	},
         "gun-etu": {
             "title": "Guide des usages du numérique étudiant",
             "description": "Guide des usages du numérique de l'étudiant",
