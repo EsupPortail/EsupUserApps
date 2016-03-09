@@ -181,5 +181,16 @@ class Utils {
         if (params != null) o.setInitParameters(params);
         o.addMapping(urls);
 	}
-    
+
+    static MapBuilder<Object> objectFieldsToMap(Object o, String... fieldNames) {
+	MapBuilder<Object> map = new MapBuilder<>();
+	for (String name : fieldNames) {
+	    try {
+		map.put(name, o.getClass().getDeclaredField(name).get(o));
+	    } catch (NoSuchFieldException | IllegalAccessException e) {
+		log().error(e);
+	    }
+	}
+	return map;
+    }
 }

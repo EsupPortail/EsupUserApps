@@ -60,11 +60,7 @@ public class ComputeBandeau {
 	String static_js = file_get_contents(request, "static.js");
 
 	Map<String, Object> js_conf =
-	   asMapO("bandeau_ENT_url", conf.bandeau_ENT_url)
-	     .add("ent_logout_url", conf.ent_logout_url)
-             .add("cas_impersonate", conf.cas_impersonate)
-	     .add("time_before_checking_browser_cache_is_up_to_date", conf.time_before_checking_browser_cache_is_up_to_date);
-
+	    objectFieldsToMap(conf, "bandeau_ENT_url", "cas_impersonate", "time_before_checking_browser_cache_is_up_to_date", "ent_logout_url");
 
 	Map<String, Object> js_data =
 	   asMapO("person", exportAttrs(userId, attrs))
