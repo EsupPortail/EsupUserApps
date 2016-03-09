@@ -1,3 +1,7 @@
+'use strict';
+(function () {
+
+var h = window.bandeau_ENT.helpers;
 
 'use strict';
 var CONF = undefined;
@@ -8,15 +12,14 @@ var CSS = undefined;
 
 var PARAMS = undefined;
 
-
 function bandeau_ENT_Account_toggleOpen() {
-    toggleClass(document.getElementById('portalPageBarAccount'), 'open');
-    var isOpen = toggleClass(document.getElementById('portalPageBarAccountInner'), 'open');
+    h.toggleClass(document.getElementById('portalPageBarAccount'), 'open');
+    var isOpen = h.toggleClass(document.getElementById('portalPageBarAccountInner'), 'open');
 
     if (isOpen) {
 	var close = function() {
-	    removeClass(document.getElementById('portalPageBarAccount'), 'open');
-	    removeClass(document.getElementById('portalPageBarAccountInner'), 'open');
+	    h.removeClass(document.getElementById('portalPageBarAccount'), 'open');
+	    h.removeClass(document.getElementById('portalPageBarAccountInner'), 'open');
 	    document.removeEventListener("click", close, false);
 	};
 	setTimeout(function () { document.addEventListener("click", close, false); }, 0);
@@ -25,9 +28,9 @@ function bandeau_ENT_Account_toggleOpen() {
 }
 
 function bandeau_ENT_Menu_toggle() {
-    if (b_E.quirks && simpleContains(b_E.quirks, 'global-menuClosed-class'))
-	toggleClass(document.body, 'bandeau_ENT_menuClosed');
-    return toggleClass(document.getElementById('bandeau_ENT_Inner'), 'menuClosed');
+    if (b_E.quirks && h.simpleContains(b_E.quirks, 'global-menuClosed-class'))
+	h.toggleClass(document.body, 'bandeau_ENT_menuClosed');
+    return h.toggleClass(document.getElementById('bandeau_ENT_Inner'), 'menuClosed');
 }
 
 function bandeau_ENT_Menu_toggleAndStore() {
@@ -51,33 +54,33 @@ function installToggleMenu(hide) {
 function computeHeader() {
     var app_logout_url = CONF.ent_logout_url;
     var logout_url = app_logout_url; //CONF.bandeau_ENT_url + '/logout?service=' + encodeURIComponent(app_logout_url);
-    return replaceAll(DATA.bandeauHeader, "<%logout_url%>", logout_url);
+    return h.replaceAll(DATA.bandeauHeader, "<%logout_url%>", logout_url);
 }
 
 function relogUrl(appId, app) {
     return app.url.replace(/^(https?:\/\/[^\/]*).*/, "$1") + "/ProlongationENT/redirect?relog&impersonate&id=" + appId;
 }
 function computeLink(appId, app) {
-    var url = app.url
+    var url = app.url;
     var classes = '';
     if (DATA.canImpersonate) {
 	url = relogUrl(appId, app);
-    	if (!simpleContains(DATA.canImpersonate, appId)) {
+    	if (!h.simpleContains(DATA.canImpersonate, appId)) {
 	    classes = "class='bandeau_ENT_Menu_Entry__Forbidden'";
 	}
     }
-    var a = "<a title='" + escapeQuotes(app.description) + "' href='" + url + "'>" + escapeQuotes(app.text) + "</a>";
+    var a = "<a title='" + h.escapeQuotes(app.description) + "' href='" + url + "'>" + h.escapeQuotes(app.text) + "</a>";
     return "<li " + classes + ">" + a + "</li>";
 }
 
 function computeMenu(currentAppId) {
-    var li_list = simpleMap(DATA.layout, function (tab) {
-	var sub_li_list = simpleMap(tab.apps, function(appId) {
+    var li_list = h.simpleMap(DATA.layout, function (tab) {
+	var sub_li_list = h.simpleMap(tab.apps, function(appId) {
 	    return computeLink(appId, DATA.apps[appId]);
 	});
     
-	var className = simpleContains(tab.apps, currentAppId) ? "activeTab" : "inactiveTab";
-	return "<li class='" + className + "' onclick=''><span>" + escapeQuotes(tab.title) + "</span><ul>" + sub_li_list.join("\n") + "</ul></li>";
+	var className = h.simpleContains(tab.apps, currentAppId) ? "activeTab" : "inactiveTab";
+	return "<li class='" + className + "' onclick=''><span>" + h.escapeQuotes(tab.title) + "</span><ul>" + sub_li_list.join("\n") + "</ul></li>";
     });
 
     var toggleMenuSpacer = "<div class='toggleMenuSpacer'></div>\n";
@@ -87,7 +90,7 @@ function computeMenu(currentAppId) {
 
 function getValidAppIds() {
     var l = [];
-    simpleEach(DATA.layout, function (tab) {
+    h.simpleEach(DATA.layout, function (tab) {
 	l.push.apply(l, tab.apps);
     });
     return l;
@@ -101,9 +104,9 @@ function computeBestCurrentAppId() {
 	// multi ids for this app, hopefully only one id is allowed for this user...
 	// this is useful for apps appearing with different titles based on user affiliation
 	var validApps = getValidAppIds();
-	var currentAppIds = intersect(b_E.currentAppIds, validApps);
+	var currentAppIds = h.intersect(b_E.currentAppIds, validApps);
 	if (currentAppIds.length > 1) {
-	    mylog("multiple appIds (" + currentAppIds + ") for this user, choosing first");
+	    h.mylog("multiple appIds (" + currentAppIds + ") for this user, choosing first");
 	}
 	return currentAppIds[0];
     } else {
@@ -126,7 +129,7 @@ function computeHelp(currentAppId) {
 function computeTitlebar(currentAppId) {
     var app = DATA.apps[currentAppId];
     if (app && app.title && !b_E.no_titlebar)
-	return "<div class='bandeau_ENT_Titlebar'><a href='" + app.url + "'>" + escapeQuotes(app.title) + "</a></div>";
+	return "<div class='bandeau_ENT_Titlebar'><a href='" + app.url + "'>" + h.escapeQuotes(app.title) + "</a></div>";
     else
 	return '';
 }
@@ -135,32 +138,32 @@ function bandeau_div_id() {
 }
 
 function loadSpecificCss() {
-    if (window['cssToLoadIfInsideIframe']) {
-	var v = window['cssToLoadIfInsideIframe'];
+    if (window.cssToLoadIfInsideIframe) {
+	var v = window.cssToLoadIfInsideIframe;
 	if (typeof v === "string")
-	    loadCSS(v);
+	    h.loadCSS(v, null);
     }
 }
 
 function unloadSpecificCss() {
-    if (window['cssToLoadIfInsideIframe']) {
-	var v = window['cssToLoadIfInsideIframe'];
+    if (window.cssToLoadIfInsideIframe) {
+	var v = window.cssToLoadIfInsideIframe;
 	if (typeof v === "string")
-	    unloadCSS(v);
+	    h.unloadCSS(v);
     }
 }
 
 function find_DOM_elt(elt_spec) {
     if (typeof elt_spec === "string") {
-	return simpleQuerySelector(elt_spec);
+	return h.simpleQuerySelector(elt_spec);
     } else if (typeof elt_spec === "boolean") {
 	return elt_spec;
     } else if (elt_spec.selector) {
-	return simpleQuerySelector(elt_spec.selector);
+	return h.simpleQuerySelector(elt_spec.selector);
     } else if (elt_spec.fn) {
-	return elt_spec.fn(simpleQuerySelector);
+	return elt_spec.fn(h.simpleQuerySelector);
     } else {
-	mylog("ignoring invalid DOM elt spec " + elt_spec);
+	h.mylog("ignoring invalid DOM elt spec " + elt_spec);
 	return undefined;
     }
 }
@@ -187,8 +190,8 @@ function simulateClickElt(elt) {
 
 function asyncLogout() {
     removeSessionStorageCache();
-    if (CONF.cas_impersonate) removeCookie(CONF.cas_impersonate.cookie_name, CONF.cas_impersonate.cookie_domain, '/');
-    loadScript(CONF.bandeau_ENT_url + '/logout?callback=window.bandeau_ENT_onAsyncLogout');
+    if (CONF.cas_impersonate) h.removeCookie(CONF.cas_impersonate.cookie_name, CONF.cas_impersonate.cookie_domain, '/');
+    h.loadScript(CONF.bandeau_ENT_url + '/logout?callback=window.bandeau_ENT_onAsyncLogout');
     return false;
 }
 window.bandeau_ENT_onAsyncLogout = function() {
@@ -198,10 +201,10 @@ window.bandeau_ENT_onAsyncLogout = function() {
     } else {
 	document.location = CONF.ent_logout_url;
     }
-}
+};
 function installLogout() {
     var logout_buttons = "#bandeau_ENT_Inner .portalPageBarLogout, #bandeau_ENT_Inner .portalPageBarAccountLogout";
-    simpleEach(simpleQuerySelectorAll(logout_buttons),
+    h.simpleEach(h.simpleQuerySelectorAll(logout_buttons),
 	       function (elt) { 
 		   elt.onclick = asyncLogout;
 	       });
@@ -209,7 +212,7 @@ function installLogout() {
 
 function _accountLink(text, link_spec) {
     var a = document.createElement("a");
-    a.innerHTML = escapeQuotes(text);
+    a.innerHTML = h.escapeQuotes(text);
     if (link_spec.href) {
 	a.setAttribute('href', link_spec.href);
     } else {
@@ -221,15 +224,15 @@ function _accountLink(text, link_spec) {
 
 function installAccountLinks(currentAppId) {
     var app = DATA.apps[currentAppId];
-    var appLinks_li = simpleQuerySelector('.portalPageBarAccountAppLinks');
+    var appLinks_li = h.simpleQuerySelector('.portalPageBarAccountAppLinks');
     if (app && app.title) {
-	appLinks_li.innerHTML = escapeQuotes(app.title);
-	toggleClass(appLinks_li, 'portalPageBarAccountSeparator');
+	appLinks_li.innerHTML = h.escapeQuotes(app.title);
+	h.toggleClass(appLinks_li, 'portalPageBarAccountSeparator');
     }
-    simpleEachObject(b_E.account_links, function (text, link_spec) {
+    h.simpleEachObject(b_E.account_links, function (text, link_spec) {
 	var sub_li = document.createElement("li");
 	sub_li.appendChild(_accountLink(text, link_spec));
-	insertAfter(appLinks_li, sub_li);
+	h.insertAfter(appLinks_li, sub_li);
     });
 }
 
@@ -247,14 +250,14 @@ function installFooter() {
 }
 
 function installBandeau() {
-    mylog("installBandeau");
+    h.mylog("installBandeau");
 
     loadSpecificCss();
 
     if (typeof CSS != 'undefined') 
-	addCSS(CSS.base);
+	h.addCSS(CSS.base);
     else
-	loadCSS(CONF.bandeau_ENT_url + "/main.css");
+	h.loadCSS(CONF.bandeau_ENT_url + "/main.css", null);
 
     var widthForNiceMenu = 800;
     // testing min-width is not enough: in case of a non-mobile comptabile page, the width will be big.
@@ -268,9 +271,9 @@ function installBandeau() {
 	var condition = handleMediaQuery ? conditionForNiceMenu : 'screen';
 
 	if (typeof CSS != 'undefined') 
-	    addCSS("@media " + condition + " { \n" + CSS.desktop + "}\n");
+	    h.addCSS("@media " + condition + " { \n" + CSS.desktop + "}\n");
 	else
-	    loadCSS(CONF.bandeau_ENT_url + "/desktop.css", condition);
+	    h.loadCSS(CONF.bandeau_ENT_url + "/desktop.css", condition);
     }
 
     var header = computeHeader();
@@ -280,8 +283,8 @@ function installBandeau() {
     var clear = "<p style='clear: both; height: 13px; margin: 0'></p>";
     var menu_ = "<div class='bandeau_ENT_Menu_'>" + menu + clear + "</div>";
     var bandeau_html = "\n\n<div id='bandeau_ENT_Inner' class='menuOpen'>" + header + menu_ + titlebar + help + "</div>" + "\n\n";
-    onIdOrBody(bandeau_div_id(), function () { 
-	set_div_innerHTML(bandeau_div_id(), bandeau_html);
+    h.onIdOrBody(bandeau_div_id(), function () {
+	h.set_div_innerHTML(bandeau_div_id(), bandeau_html);
 
 	if (!b_E.showSearch) {
 	    var searchElt = document.getElementById("portalPageBarSearch");
@@ -293,7 +296,7 @@ function installBandeau() {
 
         if (CONF.cas_impersonate && !b_E.forced_uid) detectImpersonationPbs();
 
-	onReady(function () {
+	h.onReady(function () {
 	    if (b_E.account_links) installAccountLinks(currentAppId);
 	    installLogout();
 	    if (!b_E.no_footer) installFooter();
@@ -304,11 +307,11 @@ function installBandeau() {
 	    var bandeau = document.getElementById(bandeau_div_id());
 
 	    setTimeout(function() { 
-		mylog("scrolling to " + bandeau.clientHeight);
+		h.mylog("scrolling to " + bandeau.clientHeight);
 		window.scrollTo(0, bandeau.clientHeight); 
 	    }, 0);
 	}
-	if (b_E.quirks && simpleContains(b_E.quirks, 'window-resize'))
+	if (b_E.quirks && h.simpleContains(b_E.quirks, 'window-resize'))
 	     setTimeout(triggerWindowResize, 0);
 
 	if (b_E.onload) b_E.onload(DATA, PARAMS, CONF);
@@ -323,12 +326,12 @@ function triggerWindowResize() {
 }
 
 function detectImpersonationPbs() {
-    var want = getCookie(CONF.cas_impersonate.cookie_name);
+    var want = h.getCookie(CONF.cas_impersonate.cookie_name);
     // NB: explicit check with "!=" since we do not want null !== undefined
-    if (want != b_E.uid && (b_E.uid || simpleContains(DATA.canImpersonate, currentAppId))) {
+    if (want != b_E.uid && (b_E.uid || h.simpleContains(DATA.canImpersonate, currentAppId))) {
         var msg = "Vous êtes encore identifié sous l'utilisateur " + DATA.person.id + ". Acceptez vous de perdre la session actuelle ?";
 	if (window.confirm(msg)) {
-	    document.location = relogUrl(currentAppId, DATA.apps[currentAppId]);
+	    document.location.href = relogUrl(currentAppId, DATA.apps[currentAppId]);
 	}
     }
 }
@@ -367,18 +370,18 @@ function sessionStorageSet(field, value) {
 function setSessionStorageCache() {
     sessionStorageSet(b_E.localStorage_js_text_field, b_E.js_text);
     sessionStorageSet("url", b_E.url);
-    sessionStorageSet(currentAppId + ":time", now());
+    sessionStorageSet(currentAppId + ":time", h.now());
 
     // for old Prolongation, cleanup our mess
     if (window.localStorage) {
-	simpleEachObject(localStorage, function (field) {
+	h.simpleEachObject(localStorage, function (field) {
 	    if (field.match(b_E.localStorage_prefix)) localStorage.removeItem(field);
 	});
     }
 }
 function removeSessionStorageCache() {
     if (window.sessionStorage) {
-	mylog("removing cached bandeau from sessionStorage");
+	h.mylog("removing cached bandeau from sessionStorage");
 	sessionStorageSet(b_E.localStorage_js_text_field, '');
     }
 }
@@ -394,13 +397,13 @@ function loadBandeauJs(params) {
     
     params.push("res=" + res);
     if (b_E.loadTime) params.push("time=" + b_E.loadTime);
-    loadScript(b_E.url + "/js" + (params.length ? "?" + params.join('&') : ''));
+    h.loadScript(b_E.url + "/js" + (params.length ? "?" + params.join('&') : ''));
 }
 
 function detectReload($time) {
     var $prev = sessionStorageGet('detectReload');
     if ($prev && $prev != $time) {
-	mylog("reload detected, updating bandeau softly");
+	h.mylog("reload detected, updating bandeau softly");
 	loadBandeauJs(['if_none_match=' + PARAMS.hash]);
     }
     sessionStorageSet('detectReload', $time);
@@ -409,23 +412,23 @@ function detectReload($time) {
 function mayUpdate() {
     if (notFromLocalStorage) {
 	if (window.sessionStorage) {
-	    mylog("caching bandeau in sessionStorage (" + b_E.localStorage_prefix + " " + b_E.localStorage_js_text_field + ")");
+	    h.mylog("caching bandeau in sessionStorage (" + b_E.localStorage_prefix + " " + b_E.localStorage_js_text_field + ")");
 	    setSessionStorageCache();
 	}
 	if (PARAMS.is_old) {
-	    mylog("server said bandeau is old, forcing full bandeau update");
+	    h.mylog("server said bandeau is old, forcing full bandeau update");
 	    loadBandeauJs(['noCache=1']);
 	}
     } else {
-	var age = now() - sessionStorageGet(currentAppId + ":time");
+	var age = h.now() - sessionStorageGet(currentAppId + ":time");
 	if (age > CONF.time_before_checking_browser_cache_is_up_to_date) {
-	    mylog("cached bandeau is old (" + age + "s), updating it softly");
-            sessionStorageSet(currentAppId + ":time", now()); // the new bandeau will update "time", but only if bandeau has changed!
+	    h.mylog("cached bandeau is old (" + age + "s), updating it softly");
+            sessionStorageSet(currentAppId + ":time", h.now()); // the new bandeau will update "time", but only if bandeau has changed!
 	    loadBandeauJs(['if_none_match=' + PARAMS.hash]);
 	} else {
 	    // if user used "reload", the cached version of detectReload will change
 	    window.bandeau_ENT_detectReload = detectReload;
-	    loadScript(CONF.bandeau_ENT_url + "/detectReload");
+	    h.loadScript(CONF.bandeau_ENT_url + "/detectReload");
 	}
     }
 }
@@ -453,15 +456,15 @@ if (currentAppId === "HyperPlanning-ens") {
 }
 
 if (!notFromLocalStorage && b_E.url !== sessionStorageGet('url')) {
-    mylog("not using bandeau from sessionStorage which was computed for " + sessionStorageGet('url') + " whereas " + b_E.url + " is wanted");
+    h.mylog("not using bandeau from sessionStorage which was computed for " + sessionStorageGet('url') + " whereas " + b_E.url + " is wanted");
     return "invalid";
 } else if (!DATA.person.id) {
     // disabled for now
 
     if (notFromLocalStorage) {
 	unloadSpecificCss();
-	onIdOrBody(bandeau_div_id(), function () { 
-	    set_div_innerHTML(bandeau_div_id(), '');
+	h.onIdOrBody(bandeau_div_id(), function () {
+	    h.set_div_innerHTML(bandeau_div_id(), '');
 	});
 	removeSessionStorageCache();
     } else {
@@ -469,7 +472,7 @@ if (!notFromLocalStorage && b_E.url !== sessionStorageGet('url')) {
 	loadBandeauJs([]);
     }
 } else if ((b_E.is_logged || b_E.login) && !isLogged()) {
-    onReady(function () {
+    h.onReady(function () {
 	    if (isLogged()) mayInstallBandeau();
 	    mayUpdate();
     });
