@@ -1,17 +1,13 @@
-(function () {
+window.bandeau_ENT.main = function () {
 'use strict';
 
 var h = window.bandeau_ENT.helpers;
 var b_E = window.bandeau_ENT;
 var notFromLocalStorage = b_E.notFromLocalStorage;
 
-var CONF = undefined;
+var CONF = b_E.CONF;
 
-var DATA = undefined;
-
-var CSS = undefined;
-
-var PARAMS = undefined;
+var DATA = b_E.DATA;
 
 function bandeau_ENT_Account_toggleOpen() {
     h.toggleClass(document.getElementById('portalPageBarAccount'), 'open');
@@ -257,8 +253,8 @@ function installBandeau() {
 
     loadSpecificCss();
 
-    if (typeof CSS != 'undefined') 
-	h.addCSS(CSS.base);
+    if (b_E.CSS) 
+	h.addCSS(b_E.CSS.base);
     else
 	h.loadCSS(CONF.bandeau_ENT_url + "/main.css", null);
 
@@ -273,8 +269,8 @@ function installBandeau() {
 	var handleMediaQuery = "getElementsByClassName" in document; // not having getElementsByClassName is a good sign of not having media queries... (IE7 and IE8)
 	var condition = handleMediaQuery ? conditionForNiceMenu : 'screen';
 
-	if (typeof CSS != 'undefined') 
-	    h.addCSS("@media " + condition + " { \n" + CSS.desktop + "}\n");
+	if (b_E.CSS) 
+	    h.addCSS("@media " + condition + " { \n" + b_E.CSS.desktop + "}\n");
 	else
 	    h.loadCSS(CONF.bandeau_ENT_url + "/desktop.css", condition);
     }
@@ -317,7 +313,7 @@ function installBandeau() {
 	if (b_E.quirks && h.simpleContains(b_E.quirks, 'window-resize'))
 	     setTimeout(triggerWindowResize, 0);
 
-	if (b_E.onload) b_E.onload(DATA, PARAMS, CONF);
+	if (b_E.onload) b_E.onload(DATA, b_E.PARAMS, CONF);
     });
 
 }
@@ -392,7 +388,7 @@ function loadBandeauJs(params) {
     res += ',' + (window.devicePixelRatio || 1).toFixed(2) + ',' + angle;
     
     params.push("res=" + res);
-    params.push('if_none_match=' + PARAMS.hash);
+    params.push('if_none_match=' + b_E.PARAMS.hash);
     if (b_E.loadTime) params.push("time=" + b_E.loadTime);
     h.loadScript(b_E.url + "/js" + (params.length ? "?" + params.join('&') : ''));
 }
@@ -412,7 +408,7 @@ function mayUpdate() {
 	    h.mylog("caching bandeau in sessionStorage (" + b_E.localStorage_prefix + " " + b_E.localStorage_js_text_field + ")");
 	    setSessionStorageCache();
 	}
-	if (PARAMS.is_old) {
+	if (b_E.PARAMS.is_old) {
 	    h.mylog("server said bandeau is old, forcing full bandeau update");
 	    loadBandeauJs(['noCache=1']);
 	}
@@ -465,4 +461,4 @@ if (!notFromLocalStorage && b_E.url !== sessionStorageGet('url')) {
 // things seem ok, cached js_text can be kept
 return "OK";
 
-})();
+};

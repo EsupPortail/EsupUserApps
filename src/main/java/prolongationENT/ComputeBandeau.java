@@ -43,6 +43,24 @@ public class ComputeBandeau {
     	stats = new Stats(conf);      
 	}
 
+    
+    String computeMainJs(HttpServletRequest request) {
+    	String helpers_js = file_get_contents(request, "lib/helpers.ts");
+    	String main_js = file_get_contents(request, "lib/main.ts");
+
+    	String js_css = json_encode(
+    	    asMap("base",    get_css_with_absolute_url(request, "main.css"))
+    	     .add("desktop", get_css_with_absolute_url(request, "desktop.css"))
+    	);
+
+    	Map<String, Object> js_conf =
+    	    objectFieldsToMap(conf, "bandeau_ENT_url", "cas_impersonate", "time_before_checking_browser_cache_is_up_to_date", "ent_logout_url");
+
+    	return helpers_js + main_js + "\n\n" +
+    		"window.bandeau_ENT.CSS = " + js_css + "\n\n" +
+			"window.bandeau_ENT.CONF = " + json_encode(js_conf) + "\n\n";
+}
+    
 	void js(HttpServletRequest request, HttpServletResponse response, String userId, String realUserId) throws ServletException, IOException {
 	//prev = 0;
 
@@ -57,11 +75,6 @@ public class ComputeBandeau {
 	    !conf.isCasSingleSignOutWorking &&
 	    is_old(request) && request.getParameter("auth_checked") == null; // checking auth_checked should not be necessary since having "auth_checked" implies having gone through cleanupSession & CAS and so prev_time should not be set. But it seems firefox can bypass the initial redirect and go straight to CAS without us having cleaned the session... and then a dead-loop always asking for not-old version
 	String bandeauHeader = computeBandeauHeader(request, attrs, userChannels);
-	String helpers_js = file_get_contents(request, "lib/helpers.ts");
-	String main_js = file_get_contents(request, "lib/main.ts");
-
-	Map<String, Object> js_conf =
-	    objectFieldsToMap(conf, "bandeau_ENT_url", "cas_impersonate", "time_before_checking_browser_cache_is_up_to_date", "ent_logout_url");
 
 	Map<String, Object> js_data =
 	   asMapO("person", exportAttrs(userId, attrs))
@@ -73,21 +86,17 @@ public class ComputeBandeau {
             js_data.put("canImpersonate", handleGroups.computeValidApps(realUserId, true));
         }
 
-	Map<String, String> js_css =
-	    asMap("base",    get_css_with_absolute_url(request, "main.css"))
-	     .add("desktop", get_css_with_absolute_url(request, "desktop.css"));
-	    
-	String js_text_middle = helpers_js + main_js;
-	js_text_middle = js_text_middle.replace("var CONF = undefined", "var CONF = " + json_encode(js_conf));
-	js_text_middle = js_text_middle.replace("var DATA = undefined", "var DATA = " + json_encode(js_data));
-	js_text_middle = js_text_middle.replace("var CSS = undefined", "var CSS = " + json_encode(js_css));
+	String js_text_middle = computeMainJs(request) +
+			"window.bandeau_ENT.DATA = " + json_encode(js_data) + "\n\n";
 
 	String hash = computeMD5(js_text_middle);
 	Map<String, Object> js_params =
 	    asMapO("is_old", is_old)
 	     .add("hash", hash);
 
-	String js_text = js_text_middle.replace("var PARAMS = undefined", "var PARAMS = " + json_encode(js_params));
+	String js_text = js_text_middle + 
+			"window.bandeau_ENT.PARAMS = " + json_encode(js_params) + "\n\n" +
+			"window.bandeau_ENT.main();\n";
 
 	response.setContentType("application/javascript; charset=utf8");
 	PrintWriter out = response.getWriter();
