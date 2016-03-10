@@ -1,9 +1,10 @@
-'use strict';
 (function () {
+'use strict';
 
 var h = window.bandeau_ENT.helpers;
+var b_E = window.bandeau_ENT;
+var notFromLocalStorage = b_E.notFromLocalStorage;
 
-'use strict';
 var CONF = undefined;
 
 var DATA = undefined;
@@ -249,6 +250,8 @@ function installFooter() {
 	'<a href="https://esup.univ-paris1.fr/mentions">Mentions légales</a>';
 }
 
+var currentAppId;
+
 function installBandeau() {
     h.mylog("installBandeau");
 
@@ -427,9 +430,7 @@ function mayUpdate() {
     }
 }
 
-var b_E = window.bandeau_ENT;
-var currentAppId = computeBestCurrentAppId();
-var notFromLocalStorage = b_E.notFromLocalStorage;
+currentAppId = computeBestCurrentAppId();
 b_E.notFromLocalStorage = false;
 
 if (!b_E.is_logged)
