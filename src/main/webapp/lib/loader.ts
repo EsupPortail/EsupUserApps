@@ -22,7 +22,7 @@ if (window.bandeau_ENT && !window.bandeau_ENT.maybe_loaded)
 	
 	var storageName = b_E.localStorage_prefix + b_E.localStorage_js_text_field;
 	try {
-	    if (window.sessionStorage && sessionStorage.getItem(storageName)) {
+	    if (window.sessionStorage && !pE.CONF.disableLocalStorage && sessionStorage.getItem(storageName)) {
 		h.mylog("loading bandeau from sessionStorage (" + storageName + ")");
 		var val = eval(sessionStorage.getItem(storageName));
 		if (val === "OK") return;

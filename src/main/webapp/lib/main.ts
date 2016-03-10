@@ -359,8 +359,8 @@ function sessionStorageSet(field, value) {
 	sessionStorage.setItem(b_E.localStorage_prefix + field, value);
     } catch (err) {}
 }
-function setSessionStorageCache() {
-    sessionStorageSet(b_E.localStorage_js_text_field, b_E.js_text);
+function setSessionStorageCache(js_text) {
+    sessionStorageSet(b_E.localStorage_js_text_field, js_text);
     sessionStorageSet("url", b_E.url);
     sessionStorageSet(currentAppId + ":time", h.now());
 
@@ -391,7 +391,9 @@ function mayUpdate() {
     if (notFromLocalStorage) {
 	if (window.sessionStorage) {
 	    h.mylog("caching bandeau in sessionStorage (" + b_E.localStorage_prefix + " " + b_E.localStorage_js_text_field + ")");
-	    setSessionStorageCache();
+            var js_text =
+                "window.bandeau_ENT.main(\n" + JSON.stringify(DATA) + ",\n\n" + JSON.stringify(b_E.PARAMS) + "\n\n);\n";
+	    setSessionStorageCache(js_text);
 	}
 	if (b_E.PARAMS.is_old) {
 	    h.mylog("server said bandeau is old, forcing full bandeau update");

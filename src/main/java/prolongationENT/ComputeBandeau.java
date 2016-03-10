@@ -55,7 +55,8 @@ public class ComputeBandeau {
     	);
 
     	Map<String, Object> js_conf =
-    	    objectFieldsToMap(conf, "bandeau_ENT_url", "cas_impersonate", "time_before_checking_browser_cache_is_up_to_date", "ent_logout_url");
+    	    objectFieldsToMap(conf, "bandeau_ENT_url", "cas_impersonate", "disableLocalStorage", 
+    	    		"time_before_checking_browser_cache_is_up_to_date", "ent_logout_url");
 
     	return helpers_js + main_js + "\n\n" +
             "if (window.bandeau_ENT) window.bandeau_ENT.CSS = " + js_css + "\n\n" +
@@ -113,13 +114,7 @@ public class ComputeBandeau {
 	}
 
 	out.println("window.bandeau_ENT.notFromLocalStorage = true;");
-
-	if (conf.disableLocalStorage) {
-	    out.println(js_text);
-	    js_text = "";
-	}
-	out.println("window.bandeau_ENT.js_text = " + json_encode(js_text) + ";");
-	out.println("eval(window.bandeau_ENT.js_text);");
+        out.println(js_text);
     }
         
     static long time_before_forcing_CAS_authentication_again(boolean different_referrer) {
