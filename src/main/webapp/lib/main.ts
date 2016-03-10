@@ -378,26 +378,11 @@ function removeSessionStorageCache() {
     }
 }
 
-function loadBandeauJs(params) {
-    if (b_E.uid)
-	params.push("uid=" + encodeURIComponent(b_E.uid));
-    params.push("app=" + (b_E.currentAppIds ? b_E.currentAppIds : [b_E.current]).join(","));
-
-    var angle = window.orientation || '';
-    var res = (angle == 90 || angle == -90) && navigator.userAgent.match(/Android.*Chrome/) ? screen.height + 'x' + screen.width : screen.width + 'x' + screen.height;
-    res += ',' + (window.devicePixelRatio || 1).toFixed(2) + ',' + angle;
-    
-    params.push("res=" + res);
-    params.push('if_none_match=' + b_E.PARAMS.hash);
-    if (b_E.loadTime) params.push("time=" + b_E.loadTime);
-    h.loadScript(b_E.url + "/js" + (params.length ? "?" + params.join('&') : ''));
-}
-
 function detectReload($time) {
     var $prev = sessionStorageGet('detectReload');
     if ($prev && $prev != $time) {
 	h.mylog("reload detected, updating bandeau softly");
-	loadBandeauJs([]);
+	h.loadBandeauJs(b_E, []);
     }
     sessionStorageSet('detectReload', $time);
 }
@@ -410,14 +395,14 @@ function mayUpdate() {
 	}
 	if (b_E.PARAMS.is_old) {
 	    h.mylog("server said bandeau is old, forcing full bandeau update");
-	    loadBandeauJs(['noCache=1']);
+	    h.loadBandeauJs(b_E, ['noCache=1']);
 	}
     } else {
 	var age = h.now() - sessionStorageGet(currentAppId + ":time");
 	if (age > CONF.time_before_checking_browser_cache_is_up_to_date) {
 	    h.mylog("cached bandeau is old (" + age + "s), updating it softly");
             sessionStorageSet(currentAppId + ":time", h.now()); // the new bandeau will update "time", but only if bandeau has changed!
-	    loadBandeauJs([]);
+	    h.loadBandeauJs(b_E, []);
 	} else {
 	    // if user used "reload", the cached version of detectReload will change
 	    window.bandeau_ENT_detectReload = detectReload;

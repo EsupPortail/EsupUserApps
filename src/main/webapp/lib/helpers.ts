@@ -206,7 +206,22 @@ loadScript: function(url) {
     elt.setAttribute("async", "async");
     elt.setAttribute("charset", "utf-8"); // workaround IE ignoring Content-Type
     h.head().appendChild(elt);
-}
+},
+
+loadBandeauJs: function(b_E, params) {
+    if (b_E.uid)
+	params.push("uid=" + encodeURIComponent(b_E.uid));
+    params.push("app=" + (b_E.currentAppIds ? b_E.currentAppIds : [b_E.current]).join(","));
+
+    var angle = window.orientation || '';
+    var res = (angle == 90 || angle == -90) && navigator.userAgent.match(/Android.*Chrome/) ? screen.height + 'x' + screen.width : screen.width + 'x' + screen.height;
+    res += ',' + (window.devicePixelRatio || 1).toFixed(2) + ',' + angle;
+    
+    params.push("res=" + res);
+    params.push('if_none_match=' + b_E.PARAMS.hash);
+    if (b_E.loadTime) params.push("time=" + b_E.loadTime);
+    h.loadScript(b_E.url + "/js" + (params.length ? "?" + params.join('&') : ''));
+},
 
 };
 
