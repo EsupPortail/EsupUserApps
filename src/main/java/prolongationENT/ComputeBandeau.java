@@ -88,17 +88,15 @@ public class ComputeBandeau {
             js_data.put("canImpersonate", handleGroups.computeValidApps(realUserId, true));
         }
 
-	String js_text_middle =
-			"window.bandeau_ENT.DATA = " + json_encode(js_data) + "\n\n";
+	String js_data_ = json_encode(js_data);
 
-	String hash = computeMD5(js_text_middle);
+	String hash = computeMD5(js_data_);
 	Map<String, Object> js_params =
 	    asMapO("is_old", is_old)
 	     .add("hash", hash);
 
-	String js_text = js_text_middle + 
-			"window.bandeau_ENT.PARAMS = " + json_encode(js_params) + "\n\n" +
-			"window.bandeau_ENT.main();\n";
+	String js_text =
+            "window.bandeau_ENT.main(\n\n" + js_data_ + ",\n\n" + json_encode(js_params) + "\n\n)";
 
 	response.setContentType("application/javascript; charset=utf8");
 	PrintWriter out = response.getWriter();

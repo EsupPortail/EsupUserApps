@@ -1,4 +1,4 @@
-if (window.bandeau_ENT) window.bandeau_ENT.main = function () {
+if (window.bandeau_ENT) window.bandeau_ENT.main = function (DATA, PARAMS) {
 'use strict';
 
 var h = window.bandeau_ENT.helpers;
@@ -6,8 +6,8 @@ var b_E = window.bandeau_ENT;
 var notFromLocalStorage = b_E.notFromLocalStorage;
 
 var CONF = b_E.CONF;
-
-var DATA = b_E.DATA;
+b_E.PARAMS = PARAMS;
+    
 
 function bandeau_ENT_Account_toggleOpen() {
     h.toggleClass(document.getElementById('portalPageBarAccount'), 'open');
