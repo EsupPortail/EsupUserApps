@@ -181,7 +181,7 @@ function isLogged() {
 
 function simulateClickElt(elt) {
     if (elt.href && elt.getAttribute('href') !== '#')  // for JSF (esup-annuaire2)
-	document.location = elt.href;
+	document.location.href = elt.href;
     else if (elt.tagName === "FORM")
 	elt.submit();
     else
@@ -199,7 +199,7 @@ window.bandeau_ENT_onAsyncLogout = function() {
     if (elt) {
 	simulateClickElt(elt);
     } else {
-	document.location = CONF.ent_logout_url;
+	document.location.href = CONF.ent_logout_url;
     }
 };
 function installLogout() {
