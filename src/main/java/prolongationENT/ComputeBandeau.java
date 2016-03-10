@@ -89,6 +89,12 @@ public class ComputeBandeau {
         }
 
 	String js_data_ = json_encode(js_data);
+        if (!hasParameter(request, "app")) {
+            // mostly for debugging purpose
+            response.setContentType("application/json; charset=utf8");
+            response.getWriter().write(js_data_);
+            return;
+        }
 
 	String hash = computeMD5(js_data_);
 	Map<String, Object> js_params =
