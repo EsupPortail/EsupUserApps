@@ -58,9 +58,10 @@ public class ComputeBandeau {
     	    objectFieldsToMap(conf, "bandeau_ENT_url", "cas_impersonate", "disableLocalStorage", 
     	    		"time_before_checking_browser_cache_is_up_to_date", "ent_logout_url");
 
-    	return helpers_js + main_js + "\n\n" +
-            "if (window.bandeau_ENT) window.bandeau_ENT.CSS = " + js_css + "\n\n" +
+    	return 
             "if (window.bandeau_ENT) window.bandeau_ENT.CONF = " + json_encode(js_conf) + "\n\n" +
+            "if (window.bandeau_ENT) window.bandeau_ENT.CSS = " + js_css + "\n\n" +
+            helpers_js + main_js + "\n\n" +
             loader_js;
     }
     
