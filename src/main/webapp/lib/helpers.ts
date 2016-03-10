@@ -218,11 +218,11 @@ loadBandeauJs: function(b_E, params) {
     res += ',' + (window.devicePixelRatio || 1).toFixed(2) + ',' + angle;
     
     params.push("res=" + res);
-    params.push('if_none_match=' + b_E.PARAMS.hash);
+    if (b_E.PARAMS) params.push('if_none_match=' + b_E.PARAMS.hash); // b_E.PARAMS is null when called from loader.ts
     if (b_E.loadTime) params.push("time=" + b_E.loadTime);
     h.loadScript(b_E.url + "/js" + (params.length ? "?" + params.join('&') : ''));
 },
 
 };
 
-window.bandeau_ENT.helpers = h;
+if (window.bandeau_ENT) window.bandeau_ENT.helpers = h;

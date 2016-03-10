@@ -22,17 +22,20 @@ import static prolongationENT.Utils.*;
 
 public class Main extends HttpServlet {	   
     MainConf conf = null;
+    String mainJs;
+    String mainJsHash;
     ComputeLayout handleGroups;
 	ComputeBandeau computeBandeau;
     
     org.apache.commons.logging.Log log = LogFactory.getLog(Main.class);
 
-    static String[] mappings = new String[] { "/js", "/logout", "/detectReload", "/redirect", "/canImpersonate", "/purgeCache" };
+    static String[] mappings = new String[] { "/js", "/loader.js", "/logout", "/detectReload", "/redirect", "/canImpersonate", "/purgeCache" };
     
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (conf == null) initConf(request);
         switch (request.getServletPath()) {
            case "/js":             js            (request, response); break;       
+           case "/loader.js":      loader_js     (request, response); break;
            case "/logout":         logout        (request, response); break;
            case "/detectReload":   detectReload  (request, response); break;
            case "/redirect":       redirect      (request, response); break;
@@ -77,6 +80,20 @@ public class Main extends HttpServlet {
 	}
 	if (forcedId == null) forcedId = userId;
 	computeBandeau.js(request, response, forcedId, userId);
+    }
+    
+    void loader_js(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (!mainJsHash.equals(request.getParameter("v"))) {
+            // redirect to versioned loader.js which has long cache time
+            int one_hour = 60 * 60;
+            response.setHeader("Cache-Control", "max-age=" + one_hour);
+            response.sendRedirect(conf.bandeau_ENT_url + "/loader.js?v=" + mainJsHash);
+        } else if (handleETag_returnIsModified(request, response, mainJsHash)) {
+            int one_year = 60 * 60 * 24 * 365;
+            response.setHeader("Cache-Control", "max-age=" + one_year);
+            response.setContentType("application/javascript; charset=utf8");
+            response.getWriter().write(mainJs);
+    	}
     }
     
     void detectReload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -164,6 +181,8 @@ public class Main extends HttpServlet {
     	conf = getMainConf(request.getSession().getServletContext());
         handleGroups = new ComputeLayout(conf);
         computeBandeau = new ComputeBandeau(conf, handleGroups);
+        mainJs = computeBandeau.computeMainJs(request);
+        mainJsHash = computeMD5(mainJs);
     }   
 
     static MainConf getMainConf(ServletContext sc) {

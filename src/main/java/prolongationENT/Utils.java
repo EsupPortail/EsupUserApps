@@ -14,6 +14,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletRegistration;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import java.security.MessageDigest;
@@ -176,6 +177,16 @@ class Utils {
 	return System.currentTimeMillis() / 1000L;
     }   
 	
+    static boolean handleETag_returnIsModified(HttpServletRequest request, HttpServletResponse response, String etag) {
+    	if (etag.equals(request.getHeader("If-None-Match"))) {
+    		response.setStatus(304);
+    		return false;
+    	} else {
+    		response.setHeader("ETag", etag);
+    		return true;
+    	}
+    }
+
 	static void addFilter(ServletContext sc, String name, Class<? extends Filter> clazz, Map<String,String> params, String... urls) {
         FilterRegistration.Dynamic o = sc.addFilter(name, clazz);
         if (params != null) o.setInitParameters(params);

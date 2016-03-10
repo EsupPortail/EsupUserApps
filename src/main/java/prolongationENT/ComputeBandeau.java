@@ -47,6 +47,7 @@ public class ComputeBandeau {
     String computeMainJs(HttpServletRequest request) {
     	String helpers_js = file_get_contents(request, "lib/helpers.ts");
     	String main_js = file_get_contents(request, "lib/main.ts");
+        String loader_js = file_get_contents(request, "lib/loader.ts");
 
     	String js_css = json_encode(
     	    asMap("base",    get_css_with_absolute_url(request, "main.css"))
@@ -57,9 +58,10 @@ public class ComputeBandeau {
     	    objectFieldsToMap(conf, "bandeau_ENT_url", "cas_impersonate", "time_before_checking_browser_cache_is_up_to_date", "ent_logout_url");
 
     	return helpers_js + main_js + "\n\n" +
-    		"window.bandeau_ENT.CSS = " + js_css + "\n\n" +
-			"window.bandeau_ENT.CONF = " + json_encode(js_conf) + "\n\n";
-}
+            "if (window.bandeau_ENT) window.bandeau_ENT.CSS = " + js_css + "\n\n" +
+            "if (window.bandeau_ENT) window.bandeau_ENT.CONF = " + json_encode(js_conf) + "\n\n" +
+            loader_js;
+    }
     
 	void js(HttpServletRequest request, HttpServletResponse response, String userId, String realUserId) throws ServletException, IOException {
 	//prev = 0;
@@ -86,7 +88,7 @@ public class ComputeBandeau {
             js_data.put("canImpersonate", handleGroups.computeValidApps(realUserId, true));
         }
 
-	String js_text_middle = computeMainJs(request) +
+	String js_text_middle =
 			"window.bandeau_ENT.DATA = " + json_encode(js_data) + "\n\n";
 
 	String hash = computeMD5(js_text_middle);

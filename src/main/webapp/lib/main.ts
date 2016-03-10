@@ -1,4 +1,4 @@
-window.bandeau_ENT.main = function () {
+if (window.bandeau_ENT) window.bandeau_ENT.main = function () {
 'use strict';
 
 var h = window.bandeau_ENT.helpers;
