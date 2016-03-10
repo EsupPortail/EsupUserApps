@@ -29,12 +29,12 @@ public class Main extends HttpServlet {
     
     org.apache.commons.logging.Log log = LogFactory.getLog(Main.class);
 
-    static String[] mappings = new String[] { "/js", "/loader.js", "/logout", "/detectReload", "/redirect", "/canImpersonate", "/purgeCache" };
+    static String[] mappings = new String[] { "/layout", "/loader.js", "/logout", "/detectReload", "/redirect", "/canImpersonate", "/purgeCache" };
     
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (conf == null) initConf(request);
         switch (request.getServletPath()) {
-           case "/js":             js            (request, response); break;       
+           case "/layout":         layout        (request, response); break;       
            case "/loader.js":      loader_js     (request, response); break;
            case "/logout":         logout        (request, response); break;
            case "/detectReload":   detectReload  (request, response); break;
@@ -49,7 +49,7 @@ public class Main extends HttpServlet {
 	    initConf(request);
     }
     
-    void js(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    void layout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	boolean noCache = request.getParameter("noCache") != null;
 	String userId = noCache ? null : get_CAS_userId(request);
 	String forcedId = request.getParameter("uid");
@@ -57,7 +57,7 @@ public class Main extends HttpServlet {
 	if (noCache || userId == null) {
 	    if (request.getParameter("auth_checked") == null) {
 		computeBandeau.cleanupSession(request);
-		String final_url = conf.bandeau_ENT_url + "/js?auth_checked"
+		String final_url = conf.bandeau_ENT_url + "/layout?auth_checked"
 		    + (request.getQueryString() != null ? "&" + request.getQueryString() : "");
 		response.sendRedirect(via_CAS(conf.cas_login_url, final_url) + "&gateway=true");
 	    } else {
@@ -79,7 +79,7 @@ public class Main extends HttpServlet {
 	    }
 	}
 	if (forcedId == null) forcedId = userId;
-	computeBandeau.js(request, response, forcedId, userId);
+	computeBandeau.layout(request, response, forcedId, userId);
     }
     
     void loader_js(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -64,7 +64,7 @@ public class ComputeBandeau {
             loader_js;
     }
     
-	void js(HttpServletRequest request, HttpServletResponse response, String userId, String realUserId) throws ServletException, IOException {
+	void layout(HttpServletRequest request, HttpServletResponse response, String userId, String realUserId) throws ServletException, IOException {
 	//prev = 0;
 
 	Ldap.Attrs attrs = handleGroups.getLdapPeopleInfo(userId);

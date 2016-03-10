@@ -220,7 +220,7 @@ loadBandeauJs: function(b_E, params) {
     params.push("res=" + res);
     if (b_E.PARAMS) params.push('if_none_match=' + b_E.PARAMS.hash); // b_E.PARAMS is null when called from loader.ts
     if (b_E.loadTime) params.push("time=" + b_E.loadTime);
-    h.loadScript(b_E.url + "/js" + (params.length ? "?" + params.join('&') : ''));
+    h.loadScript(b_E.url + "/layout" + (params.length ? "?" + params.join('&') : ''));
 },
 
 };
