@@ -127,8 +127,9 @@ escapeQuotes: function(s) {
     return str;
 },
 
-replaceAll: function(s, target, replacement) {
-    return s.split(target).join(replacement);
+template: function(s, map) {
+    // ES6-like template
+    return s.replace(/\${\s*([^}]*?)\s*}/g, function (_m, e) { return map[e] });
 },
 
 onIdOrBody_rec: function(id, f) {
