@@ -98,7 +98,6 @@ public class ComputeBandeau {
 
 	String js_data_ = json_encode(js_data);
         String callback = request.getParameter("callback");
-        if (callback == null && hasParameter(request, "app")) callback = "window.prolongation_ENT.main";
         if (callback == null) {
             // mostly for debugging purpose
             response.setContentType("application/json; charset=utf8");

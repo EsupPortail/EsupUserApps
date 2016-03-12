@@ -217,5 +217,6 @@ var loadBandeauJs = function(params) {
     params.push("res=" + res);
     if (pE.PARAMS) params.push('if_none_match=' + pE.PARAMS.hash); // b_E.PARAMS is null when called from loader.ts
     if (pE.loadTime) params.push("time=" + pE.loadTime);
+    params.push("callback=window.prolongation_ENT.main");
     h.loadScript(b_E.url + "/layout" + (params.length ? "?" + params.join('&') : ''));
 };
