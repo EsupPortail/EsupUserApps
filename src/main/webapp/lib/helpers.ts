@@ -112,12 +112,6 @@ simpleMap: function(a, fn) {
     return r;
 },
 
-intersect: function(a1, a2) {
-    return h.simpleFilter(a1, function (e1) {
-	return h.simpleContains(a2, e1);
-    });
-},
-
 escapeQuotes: function(s) {
     var str = s;
     if (str) {

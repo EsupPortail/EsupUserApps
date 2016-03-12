@@ -1,7 +1,18 @@
+interface app {
+  fname: string;
+  text: string;
+  title: string;
+  description: string;
+  url: string;
+  hashelp: boolean;
+}
+interface menuEntry {
+  title: string;
+  portlets: app[];
+}
 interface DATA {
   person: { id: string };
-  apps: {};
-  layout: {};
+  layout: { folders: menuEntry[] };
   realUserId: string;
   canImpersonate: string[];
 }

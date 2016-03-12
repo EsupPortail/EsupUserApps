@@ -57,15 +57,15 @@ function computeHeader() {
     });
 }
 
-function relogUrl(appId, app) {
-    return app.url.replace(/^(https?:\/\/[^\/]*).*/, "$1") + "/ProlongationENT/redirect?relog&impersonate&id=" + appId;
+function relogUrl(app) {
+    return app.url.replace(/^(https?:\/\/[^\/]*).*/, "$1") + "/ProlongationENT/redirect?relog&impersonate&id=" + app.fname;
 }
-function computeLink(appId, app) {
+function computeLink(app) {
     var url = app.url;
     var classes = '';
     if (DATA.canImpersonate) {
-	url = relogUrl(appId, app);
-    	if (!h.simpleContains(DATA.canImpersonate, appId)) {
+	url = relogUrl(app);
+    	if (!h.simpleContains(DATA.canImpersonate, app.fname)) {
 	    classes = "class='bandeau_ENT_Menu_Entry__Forbidden'";
 	}
     }
@@ -73,13 +73,13 @@ function computeLink(appId, app) {
     return "<li " + classes + ">" + a + "</li>";
 }
 
-function computeMenu(currentAppId) {
-    var li_list = h.simpleMap(DATA.layout, function (tab) {
-	var sub_li_list = h.simpleMap(tab.apps, function(appId) {
-	    return computeLink(appId, DATA.apps[appId]);
+function computeMenu(currentApp) {
+    var li_list = h.simpleMap(DATA.layout.folders, function (tab) {
+	var sub_li_list = h.simpleMap(tab.portlets, function(app) {
+	    return computeLink(app);
 	});
     
-	var className = h.simpleContains(tab.apps, currentAppId) ? "activeTab" : "inactiveTab";
+	var className = h.simpleContains(tab.portlets, currentApp) ? "activeTab" : "inactiveTab";
 	return "<li class='" + className + "' onclick=''><span>" + h.escapeQuotes(tab.title) + "</span><ul>" + sub_li_list.join("\n") + "</ul></li>";
     });
 
@@ -88,36 +88,32 @@ function computeMenu(currentAppId) {
     return "<ul class='bandeau_ENT_Menu'>\n" + toggleMenuSpacer + li_list.join("\n") + "\n</ul>";
 }
 
-function getValidAppIds() {
+function getValidApps() {
     var l = [];
-    h.simpleEach(DATA.layout, function (tab) {
-	l.push.apply(l, tab.apps);
+    h.simpleEach(DATA.layout.folders, function (tab) {
+	l.push.apply(l, tab.portlets);
     });
     return l;
 }
 
 function computeBestCurrentAppId() {
-    if (b_E.current) {
-	// easy case
-	return b_E.current;
-    } else if (b_E.currentAppIds) {
+  var ids = b_E.current ? [b_E.current] : b_E.currentAppIds;
+  if (!ids) return;
 	// multi ids for this app, hopefully only one id is allowed for this user...
 	// this is useful for apps appearing with different titles based on user affiliation
-	var validApps = getValidAppIds();
-	var currentAppIds = h.intersect(b_E.currentAppIds, validApps);
-	if (currentAppIds.length > 1) {
-	    h.mylog("multiple appIds (" + currentAppIds + ") for this user, choosing first");
+	var validApps = getValidApps();
+	var currentApps = h.simpleFilter(validApps, function (app) { 
+    return h.simpleContains(ids, app.fname);
+  });
+	if (currentApps.length > 1) {
+	    h.mylog("multiple appIds (" + currentApps + ") for this user, choosing first");
 	}
-	return currentAppIds[0];
-    } else {
-	return undefined;
-    }
+	return currentApps[0];
 }
 
-function computeHelp(currentAppId) {
-    var app = DATA.apps[currentAppId];
+function computeHelp(app) {
     if (app && app.hashelp) {
-	var href = "http://esup-data.univ-paris1.fr/esup/aide/canal/" + currentAppId + ".html";
+	var href = "http://esup-data.univ-paris1.fr/esup/aide/canal/" + app.fname + ".html";
 	var onclick = "window.open('','form_help','toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,scrollbars=yes,copyhistory=no,alwaysRaised,width=600,height=400')";
 	var a = "<a href='"+  href + "' onclick=\"" + onclick + "\" target='form_help' title=\"Voir l'aide du canal\"><span>Aide</span></a>";
 	return "<div class='bandeau_ENT_Help'>" + a + "</div>";
@@ -126,8 +122,7 @@ function computeHelp(currentAppId) {
     }
 }
 
-function computeTitlebar(currentAppId) {
-    var app = DATA.apps[currentAppId];
+function computeTitlebar(app) {
     if (app && app.title && !b_E.no_titlebar)
 	return "<div class='bandeau_ENT_Titlebar'><a href='" + app.url + "'>" + h.escapeQuotes(app.title) + "</a></div>";
     else
@@ -222,8 +217,7 @@ function _accountLink(text, link_spec) {
     return a;
 }
 
-function installAccountLinks(currentAppId) {
-    var app = DATA.apps[currentAppId];
+function installAccountLinks(app) {
     var appLinks_li = h.simpleQuerySelector('.portalPageBarAccountAppLinks');
     if (app && app.title) {
 	appLinks_li.innerHTML = h.escapeQuotes(app.title);
@@ -249,7 +243,7 @@ function installFooter() {
 	'<a href="https://esup.univ-paris1.fr/mentions">Mentions légales</a>';
 }
 
-var currentAppId;
+var currentApp;
 
 function installBandeau() {
     h.mylog("installBandeau");
@@ -279,9 +273,9 @@ function installBandeau() {
     }
 
     var header = computeHeader();
-    var menu = computeMenu(currentAppId);
-    var help = computeHelp(currentAppId);
-    var titlebar = computeTitlebar(currentAppId);
+    var menu = computeMenu(currentApp);
+    var help = computeHelp(currentApp);
+    var titlebar = computeTitlebar(currentApp);
     var clear = "<p style='clear: both; height: 13px; margin: 0'></p>";
     var menu_ = "<div class='bandeau_ENT_Menu_'>" + menu + clear + "</div>";
     var bandeau_html = "\n\n<div id='bandeau_ENT_Inner' class='menuOpen'>" + header + menu_ + titlebar + help + "</div>" + "\n\n";
@@ -299,7 +293,7 @@ function installBandeau() {
         if (CONF.cas_impersonate && !b_E.uid) detectImpersonationPbs();
 
 	h.onReady(function () {
-	    if (b_E.account_links) installAccountLinks(currentAppId);
+	    if (b_E.account_links) installAccountLinks(currentApp);
 	    installLogout();
 	    if (!b_E.no_footer) installFooter();
 	});
@@ -330,10 +324,10 @@ function triggerWindowResize() {
 function detectImpersonationPbs() {
     var want = h.getCookie(CONF.cas_impersonate.cookie_name);
     // NB: explicit check with "!=" since we do not want null !== undefined
-    if (want != pE.wanted_uid && (pE.wanted_uid || h.simpleContains(DATA.canImpersonate, currentAppId))) {
+    if (want != pE.wanted_uid && (pE.wanted_uid || h.simpleContains(DATA.canImpersonate, currentApp.fname))) {
         var msg = "Vous êtes encore identifié sous l'utilisateur " + DATA.person.id + ". Acceptez vous de perdre la session actuelle ?";
 	if (window.confirm(msg)) {
-	    document.location.href = relogUrl(currentAppId, DATA.apps[currentAppId]);
+	    document.location.href = relogUrl(currentApp);
 	}
     }
 }
@@ -365,7 +359,7 @@ function sessionStorageSet(field, value) {
 function setSessionStorageCache(js_text) {
     sessionStorageSet(pE.localStorage_js_text_field, js_text);
     sessionStorageSet("url", b_E.url);
-    sessionStorageSet(currentAppId + ":time", h.now());
+    sessionStorageSet(currentApp.fname + ":time", h.now());
 
     // for old Prolongation, cleanup our mess
     if (window.localStorage) {
@@ -403,10 +397,10 @@ function mayUpdate() {
 	    loadBandeauJs(['noCache=1']);
 	}
     } else {
-	var age = h.now() - sessionStorageGet(currentAppId + ":time");
+	var age = h.now() - sessionStorageGet(currentApp.fname + ":time");
 	if (age > CONF.time_before_checking_browser_cache_is_up_to_date) {
 	    h.mylog("cached bandeau is old (" + age + "s), updating it softly");
-            sessionStorageSet(currentAppId + ":time", h.now()); // the new bandeau will update "time", but only if bandeau has changed!
+            sessionStorageSet(currentApp.fname + ":time", h.now()); // the new bandeau will update "time", but only if bandeau has changed!
 	    loadBandeauJs([]);
 	} else {
 	    // if user used "reload", the cached version of detectReload will change
@@ -416,22 +410,22 @@ function mayUpdate() {
     }
 }
 
-currentAppId = computeBestCurrentAppId();
+currentApp = computeBestCurrentAppId() || {};
 
 if (!b_E.is_logged)
     b_E.is_logged = b_E.logout;
 
-if (currentAppId === "aleph") {
+if (currentApp.fname === "aleph") {
     delete b_E.logout;
     b_E.is_logged = { fn: function(find) { var e = find("span#meconnecter"); return e && e.innerHTML === "Consulter mon compte"; } };
     b_E.account_links = { "Mon compte lecteur": { fn: function(find) { return find('#compte').parentNode } } };
 }
-if (currentAppId === "domino") {
+if (currentApp.fname === "domino") {
     window.cssToLoadIfInsideIframe = "https://esup-data.univ-paris1.fr/esup/canal/css/domino.css"; 
 }
-if (currentAppId === "HyperPlanning-ens") {
-    if (DATA.apps[currentAppId] && !DATA.apps[currentAppId].title)
-	DATA.apps[currentAppId].title = "Mon emploi du temps";
+if (currentApp.fname === "HyperPlanning-ens") {
+    if (currentApp.title)
+	currentApp.title = "Mon emploi du temps";
 }
 
 if (!notFromLocalStorage && b_E.url !== sessionStorageGet('url')) {

@@ -25,14 +25,13 @@ public class ComputeBandeau {
     static String prev_host_attr = "prev_host";
     static String prev_time_attr = "prev_time";    
 
-    class AppsDTO extends HashMap<String, AppDTO> {}
     class LayoutDTO {
-    	public LayoutDTO(String title, Collection<String> fnames) {
+    	public LayoutDTO(String title, Collection<AppDTO> portlets) {
 			this.title = title;
-			this.apps = fnames;
+			this.portlets = portlets;
 		}
 		String title;
-    	Collection<String> apps;
+    	Collection<AppDTO> portlets;
     }
     
     org.apache.commons.logging.Log log = LogFactory.getLog(ComputeBandeau.class);
@@ -79,8 +78,8 @@ public class ComputeBandeau {
 
 	Ldap.Attrs attrs = handleGroups.getLdapPeopleInfo(userId);
 
-	AppsDTO userChannels = userChannels(userId, attrs);
-	List<LayoutDTO> userLayout = userLayout(conf.LAYOUT, userChannels.keySet());
+	Map<String,AppDTO> userChannels = userChannels(userId, attrs);
+	List<LayoutDTO> userLayout = userLayout(conf.LAYOUT, userChannels);
 
 	stats.log(request, realUserId, userChannels.keySet());
 	
@@ -90,8 +89,7 @@ public class ComputeBandeau {
 
 	Map<String, Object> js_data =
 	   asMapO("person", exportAttrs(userId, attrs))
-	     .add("apps", userChannels)
-	     .add("layout", userLayout);
+            .add("layout", asMap("folders", userLayout));
 	if (!realUserId.equals(userId)) js_data.put("realUserId", realUserId);
         if (getCookie(request, conf.cas_impersonate.cookie_name) != null) {
             js_data.put("canImpersonate", handleGroups.computeValidApps(realUserId, true));
@@ -179,25 +177,27 @@ public class ComputeBandeau {
 	return user;
     }
     
-    List<LayoutDTO> userLayout(Map<String, List<String>> layout, Set<String> userChannels) {
+    List<LayoutDTO> userLayout(Map<String, List<String>> layout, Map<String, AppDTO> userChannels) {        
 	List<LayoutDTO> rslt = new ArrayList<>();
 	for (Map.Entry<String, List<String>> e : layout.entrySet()) {
-	    List<String> fnames = new ArrayList<>();
-	    for (String fname : e.getValue())
-		if (userChannels.contains(fname))
-		    fnames.add(fname);
-	    if (!fnames.isEmpty())
-		rslt.add(new LayoutDTO(e.getKey(), fnames));
+	    List<AppDTO> l = new ArrayList<>();
+	    for (String fname : e.getValue()) {
+                AppDTO app = userChannels.get(fname);
+		if (app != null)
+		    l.add(app);
+            }
+	    if (!l.isEmpty())
+		rslt.add(new LayoutDTO(e.getKey(), l));
 	}
  	return rslt;  
     }
     
-    AppsDTO userChannels(final String userId, Ldap.Attrs person) {
-        AppsDTO rslt = new AppsDTO();
+    Map<String, AppDTO> userChannels(final String userId, Ldap.Attrs person) {
+        Map<String, AppDTO> rslt = new HashMap<>();
 	
 	for (String fname : handleGroups.computeValidApps(person, false)) {
 		App app = conf.APPS.get(fname);
-		rslt.put(fname, new AppDTO(app, get_user_url(app, fname, conf.current_idpAuthnRequest_url)));
+		rslt.put(fname, new AppDTO(fname, app, get_user_url(app, fname, conf.current_idpAuthnRequest_url)));
 	  }
 	return rslt;
     }
