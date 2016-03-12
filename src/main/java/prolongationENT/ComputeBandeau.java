@@ -62,12 +62,16 @@ public class ComputeBandeau {
     	    objectFieldsToMap(conf, "bandeau_ENT_url", "cas_impersonate", "disableLocalStorage", 
     	    		"time_before_checking_browser_cache_is_up_to_date", "ent_logout_url");
 
-    	return 
-            "if (window.bandeau_ENT) window.bandeau_ENT.CONF = " + json_encode(js_conf) + "\n\n" +
-            "if (window.bandeau_ENT) window.bandeau_ENT.CSS = " + js_css + "\n\n" +
-            "if (window.bandeau_ENT) window.bandeau_ENT.TEMPLATES = " + templates + "\n\n" +
+    	return
+            "(function () {\n" +
+            "if (!window.prolongation_ENT) window.prolongation_ENT = {};\n" +
+            file_get_contents(request, "lib/init.ts") +
+            "pE.CONF = " + json_encode(js_conf) + "\n\n" +
+            "pE.CSS = " + js_css + "\n\n" +
+            "pE.TEMPLATES = " + templates + "\n\n" +
             helpers_js + main_js + "\n\n" +
-            loader_js;
+            loader_js +
+            "})()";
     }
     
 	void layout(HttpServletRequest request, HttpServletResponse response, String userId, String realUserId) throws ServletException, IOException {
@@ -106,9 +110,6 @@ public class ComputeBandeau {
 	    asMapO("is_old", is_old)
 	     .add("hash", hash);
 
-	String js_text =
-            "window.bandeau_ENT.main(\n\n" + js_data_ + ",\n\n" + json_encode(js_params) + "\n\n)";
-
 	response.setContentType("application/javascript; charset=utf8");
 	PrintWriter out = response.getWriter();
 	
@@ -117,8 +118,8 @@ public class ComputeBandeau {
 	    return;
 	}
 
-	out.println("window.bandeau_ENT.notFromLocalStorage = true;");
-        out.println(js_text);
+	out.println("window.prolongation_ENT.notFromLocalStorage = true;");
+        out.println("window.prolongation_ENT.main(\n\n" + js_data_ + ",\n\n" + json_encode(js_params) + "\n\n)");
     }
         
     static long time_before_forcing_CAS_authentication_again(boolean different_referrer) {

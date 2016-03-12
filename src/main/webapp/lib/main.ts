@@ -1,12 +1,9 @@
-if (window.bandeau_ENT) window.bandeau_ENT.main = function (DATA, PARAMS) {
-'use strict';
+pE.main = function (DATA, PARAMS) {
 
-var h = window.bandeau_ENT.helpers;
-var b_E = window.bandeau_ENT;
-var notFromLocalStorage = b_E.notFromLocalStorage;
+var notFromLocalStorage = pE.notFromLocalStorage;
 
-var CONF = b_E.CONF;
-b_E.PARAMS = PARAMS;
+var CONF = pE.CONF;
+pE.PARAMS = PARAMS;
     
 
 function bandeau_ENT_Account_toggleOpen() {
@@ -55,7 +52,7 @@ function personAttr(attrName) {
  
 function computeHeader() {
     var login = personAttr('supannAliasLogin') || personAttr('uid');
-    return h.template(b_E.TEMPLATES.header, {
+    return h.template(pE.TEMPLATES.header, {
         logout_url: CONF.ent_logout_url,
         userName: personAttr("displayName") || personAttr("mail"),
         userDetails: personAttr("displayName") ? personAttr("mail") + " (" + login + ")" : login,
@@ -196,10 +193,10 @@ function simulateClickElt(elt) {
 function asyncLogout() {
     removeSessionStorageCache();
     if (CONF.cas_impersonate) h.removeCookie(CONF.cas_impersonate.cookie_name, CONF.cas_impersonate.cookie_domain, '/');
-    h.loadScript(CONF.bandeau_ENT_url + '/logout?callback=window.bandeau_ENT_onAsyncLogout');
+    h.loadScript(CONF.bandeau_ENT_url + '/logout?callback=' + 'window.prolongation_ENT.onAsyncLogout');
     return false;
 }
-window.bandeau_ENT_onAsyncLogout = function() {
+pE.onAsyncLogout = function() {
     var elt = logout_DOM_elt();
     if (elt) {
 	simulateClickElt(elt);
@@ -261,8 +258,8 @@ function installBandeau() {
 
     loadSpecificCss();
 
-    if (b_E.CSS) 
-	h.addCSS(b_E.CSS.base);
+    if (pE.CSS) 
+	h.addCSS(pE.CSS.base);
     else
 	h.loadCSS(CONF.bandeau_ENT_url + "/main.css", null);
 
@@ -277,8 +274,8 @@ function installBandeau() {
 	var handleMediaQuery = "getElementsByClassName" in document; // not having getElementsByClassName is a good sign of not having media queries... (IE7 and IE8)
 	var condition = handleMediaQuery ? conditionForNiceMenu : 'screen';
 
-	if (b_E.CSS) 
-	    h.addCSS("@media " + condition + " { \n" + b_E.CSS.desktop + "}\n");
+	if (pE.CSS) 
+	    h.addCSS("@media " + condition + " { \n" + pE.CSS.desktop + "}\n");
 	else
 	    h.loadCSS(CONF.bandeau_ENT_url + "/desktop.css", condition);
     }
@@ -301,7 +298,7 @@ function installBandeau() {
 	var barAccount = document.getElementById('portalPageBarAccount');
 	if (barAccount) barAccount.onclick = bandeau_ENT_Account_toggleOpen;
 
-        if (CONF.cas_impersonate && !b_E.forced_uid) detectImpersonationPbs();
+        if (CONF.cas_impersonate && !b_E.uid) detectImpersonationPbs();
 
 	h.onReady(function () {
 	    if (b_E.account_links) installAccountLinks(currentAppId);
@@ -321,7 +318,7 @@ function installBandeau() {
 	if (b_E.quirks && h.simpleContains(b_E.quirks, 'window-resize'))
 	     setTimeout(triggerWindowResize, 0);
 
-	if (b_E.onload) b_E.onload(DATA, b_E.PARAMS, CONF);
+	if (b_E.onload) b_E.onload(DATA, pE.PARAMS, CONF);
     });
 
 }
@@ -335,7 +332,7 @@ function triggerWindowResize() {
 function detectImpersonationPbs() {
     var want = h.getCookie(CONF.cas_impersonate.cookie_name);
     // NB: explicit check with "!=" since we do not want null !== undefined
-    if (want != b_E.uid && (b_E.uid || h.simpleContains(DATA.canImpersonate, currentAppId))) {
+    if (want != pE.wanted_uid && (pE.wanted_uid || h.simpleContains(DATA.canImpersonate, currentAppId))) {
         var msg = "Vous êtes encore identifié sous l'utilisateur " + DATA.person.id + ". Acceptez vous de perdre la session actuelle ?";
 	if (window.confirm(msg)) {
 	    document.location.href = relogUrl(currentAppId, DATA.apps[currentAppId]);
@@ -345,44 +342,44 @@ function detectImpersonationPbs() {
 
 function localStorageGet(field) {
     try {
-	return localStorage.getItem(b_E.localStorage_prefix + field);
+	return localStorage.getItem(pE.localStorage_prefix + field);
     } catch (err) {
 	return null;
     }
 }
 function localStorageSet(field, value) {
     try {
-	localStorage.setItem(b_E.localStorage_prefix + field, value);
+	localStorage.setItem(pE.localStorage_prefix + field, value);
     } catch (err) {}
 }
 function sessionStorageGet(field) {
     try {
-	return sessionStorage.getItem(b_E.localStorage_prefix + field);
+	return sessionStorage.getItem(pE.localStorage_prefix + field);
     } catch (err) {
 	return null;
     }
 }
 function sessionStorageSet(field, value) {
     try {
-	sessionStorage.setItem(b_E.localStorage_prefix + field, value);
+	sessionStorage.setItem(pE.localStorage_prefix + field, value);
     } catch (err) {}
 }
 function setSessionStorageCache(js_text) {
-    sessionStorageSet(b_E.localStorage_js_text_field, js_text);
+    sessionStorageSet(pE.localStorage_js_text_field, js_text);
     sessionStorageSet("url", b_E.url);
     sessionStorageSet(currentAppId + ":time", h.now());
 
     // for old Prolongation, cleanup our mess
     if (window.localStorage) {
 	h.simpleEachObject(localStorage, function (field) {
-	    if (field.match(b_E.localStorage_prefix)) localStorage.removeItem(field);
+	    if (field.match(pE.localStorage_prefix)) localStorage.removeItem(field);
 	});
     }
 }
 function removeSessionStorageCache() {
     if (window.sessionStorage) {
 	h.mylog("removing cached bandeau from sessionStorage");
-	sessionStorageSet(b_E.localStorage_js_text_field, '');
+	sessionStorageSet(pE.localStorage_js_text_field, '');
     }
 }
 
@@ -398,12 +395,12 @@ function detectReload($time) {
 function mayUpdate() {
     if (notFromLocalStorage) {
 	if (window.sessionStorage) {
-	    h.mylog("caching bandeau in sessionStorage (" + b_E.localStorage_prefix + " " + b_E.localStorage_js_text_field + ")");
+	    h.mylog("caching bandeau in sessionStorage (" + pE.localStorage_prefix + " " + pE.localStorage_js_text_field + ")");
             var js_text =
-                "window.bandeau_ENT.main(\n" + JSON.stringify(DATA) + ",\n\n" + JSON.stringify(b_E.PARAMS) + "\n\n);\n";
+                "window.prolongation_ENT.main(\n" + JSON.stringify(DATA) + ",\n\n" + JSON.stringify(pE.PARAMS) + "\n\n);\n";
 	    setSessionStorageCache(js_text);
 	}
-	if (b_E.PARAMS.is_old) {
+	if (pE.PARAMS.is_old) {
 	    h.mylog("server said bandeau is old, forcing full bandeau update");
 	    loadBandeauJs(['noCache=1']);
 	}
@@ -415,14 +412,14 @@ function mayUpdate() {
 	    loadBandeauJs([]);
 	} else {
 	    // if user used "reload", the cached version of detectReload will change
-	    window.bandeau_ENT_detectReload = detectReload;
+	    pE.detectReload = detectReload;
 	    h.loadScript(CONF.bandeau_ENT_url + "/detectReload");
 	}
     }
 }
 
 currentAppId = computeBestCurrentAppId();
-b_E.notFromLocalStorage = false;
+pE.notFromLocalStorage = false;
 
 if (!b_E.is_logged)
     b_E.is_logged = b_E.logout;

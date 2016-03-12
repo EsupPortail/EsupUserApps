@@ -212,7 +212,6 @@ loadScript: function(url) {
 };
 
 var loadBandeauJs = function(params) {
-    var b_E = window.bandeau_ENT;
     if (b_E.uid)
 	params.push("uid=" + encodeURIComponent(b_E.uid));
     params.push("app=" + (b_E.currentAppIds ? b_E.currentAppIds : [b_E.current]).join(","));
@@ -222,9 +221,7 @@ var loadBandeauJs = function(params) {
     res += ',' + (window.devicePixelRatio || 1).toFixed(2) + ',' + angle;
     
     params.push("res=" + res);
-    if (b_E.PARAMS) params.push('if_none_match=' + b_E.PARAMS.hash); // b_E.PARAMS is null when called from loader.ts
-    if (b_E.loadTime) params.push("time=" + b_E.loadTime);
+    if (pE.PARAMS) params.push('if_none_match=' + pE.PARAMS.hash); // b_E.PARAMS is null when called from loader.ts
+    if (pE.loadTime) params.push("time=" + pE.loadTime);
     h.loadScript(b_E.url + "/layout" + (params.length ? "?" + params.join('&') : ''));
 };
-
-if (window.bandeau_ENT) window.bandeau_ENT.helpers = h;

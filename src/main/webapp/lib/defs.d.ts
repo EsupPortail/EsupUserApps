@@ -25,10 +25,10 @@ interface CSS {
 }
 
 interface TEMPLATES {
-  header string;
+  header: string;
 }
 
-interface bandeau_ENT {
+interface prolongation_ENT_appParams {
   quirks: {};
   current: string;
   currentAppIds: string[];
@@ -38,7 +38,6 @@ interface bandeau_ENT {
   login: boolean;
   is_logged: boolean | { fn: (find: any) => boolean };
   account_links: {};
-  forced_uid: boolean;
 
   hide_menu: boolean;
   showSearch: boolean;
@@ -48,8 +47,12 @@ interface bandeau_ENT {
   onload(DATA: DATA, PARAMS: PARAMS, CONF: CONF): void;
 
   url: string;
-
   uid: string;
+}
+
+interface prolongation_ENT {
+  appParams: prolongation_ENT_appParams;
+  wanted_uid: string;
   localStorage_prefix: string;
   localStorage_js_text_field: string;
   loadTime: number;
@@ -57,18 +60,19 @@ interface bandeau_ENT {
   
   maybe_loaded: boolean;
   
-  helpers: typeof h;
-  main: (DATA: DATA, PARAMS: PARAMS) => string;
   DATA: DATA;
   CONF: CONF;
   PARAMS: PARAMS;
   CSS: CSS;
   TEMPLATES: TEMPLATES;
+  
+  onAsyncLogout(): void;
+  detectReload(time): void;
+  main(DATA: DATA, PARAMS: PARAMS): string;
 }
 
 interface Window {
   cssToLoadIfInsideIframe: string;
-  bandeau_ENT_onAsyncLogout(): void;
-  bandeau_ENT_detectReload(time): void;
-  bandeau_ENT: bandeau_ENT;
+  bandeau_ENT: prolongation_ENT_appParams;
+  prolongation_ENT: prolongation_ENT;
 }

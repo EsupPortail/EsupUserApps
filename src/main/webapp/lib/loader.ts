@@ -1,26 +1,20 @@
-if (window.bandeau_ENT && !window.bandeau_ENT.maybe_loaded) 
-(function () {
-    var b_E = window.bandeau_ENT;
-    var h = b_E.helpers;
+function loader() {
+  if (pE.maybe_loaded) return; 
+  if (parent != window) return; // never in iframe
+
+    pE.maybe_loaded = true;
     
-    b_E.maybe_loaded = true;
 
-    if (parent == window) load_bandeau_ENT();
-
-    function load_bandeau_ENT() {
-	     b_E.url = b_E.CONF.bandeau_ENT_url;
+	     b_E.url = pE.CONF.bandeau_ENT_url;
 
         var navigationStart = window.performance && window.performance.timing && window.performance.timing.navigationStart;
-        b_E.loadTime = navigationStart && (new Date().getTime() - navigationStart);
+        pE.loadTime = navigationStart && (new Date().getTime() - navigationStart);
 
-        if (b_E.uid)
-            b_E.forced_uid = true;
-        else 
-	    b_E.uid = h.getCookie("CAS_IMPERSONATED");
-	if (!b_E.localStorage_prefix) b_E.localStorage_prefix = "bandeau_ENT:" + (b_E.uid ? b_E.uid + ":" : '');
-	if (!b_E.localStorage_js_text_field) b_E.localStorage_js_text_field = "v6:js_text";
+       pE.wanted_uid = b_E.uid || h.getCookie("CAS_IMPERSONATED");
+  	   pE.localStorage_prefix = "bandeau_ENT:" + (pE.wanted_uid ? pE.wanted_uid + ":" : '');
+	     pE.localStorage_js_text_field = "v6:js_text";
 	
-	var storageName = b_E.localStorage_prefix + b_E.localStorage_js_text_field;
+	var storageName = pE.localStorage_prefix + pE.localStorage_js_text_field;
 	try {
 	    if (window.sessionStorage && !pE.CONF.disableLocalStorage && sessionStorage.getItem(storageName)) {
 		h.mylog("loading bandeau from sessionStorage (" + storageName + ")");
@@ -36,6 +30,5 @@ if (window.bandeau_ENT && !window.bandeau_ENT.maybe_loaded)
 	}
 
   	loadBandeauJs([]);
-    }
-
-})();
+}
+loader();

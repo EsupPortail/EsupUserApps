@@ -100,7 +100,7 @@ public class Main extends HttpServlet {
 	long five_days = 432000;
 	response.setDateHeader("Expires", (now() + five_days) * 1000L);
 	response.setContentType("application/javascript; charset=utf8");
-	response.getWriter().println("window.bandeau_ENT_detectReload(" + now() + ");");
+	response.getWriter().println("window.prolongation_ENT.detectReload(" + now() + ");");
     }
     
     void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
