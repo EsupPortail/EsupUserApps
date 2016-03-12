@@ -27,6 +27,7 @@ interface CONF {
   bandeau_ENT_url: string;
   ent_base_url: string
   ent_logout_url: string;
+  layout_url: string;
   cas_impersonate: { cookie_name: string, cookie_domain: string };
   disableLocalStorage: boolean;
   time_before_checking_browser_cache_is_up_to_date: number;

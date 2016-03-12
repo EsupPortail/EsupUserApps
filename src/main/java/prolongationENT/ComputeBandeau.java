@@ -58,7 +58,8 @@ public class ComputeBandeau {
     	);
 
     	Map<String, Object> js_conf =
-    	    objectFieldsToMap(conf, "bandeau_ENT_url", "ent_base_url", "cas_impersonate", "disableLocalStorage", 
+    	    objectFieldsToMap(conf, "bandeau_ENT_url", "ent_base_url", "layout_url",
+                              "cas_impersonate", "disableLocalStorage", 
     	    		"time_before_checking_browser_cache_is_up_to_date", "ent_logout_url");
 
     	return

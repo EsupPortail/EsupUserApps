@@ -62,7 +62,7 @@ function relogUrl(app) {
 }
 function computeLink(app) {
     // for uportal4 layout compatibility:
-    if (!app.url.match(/^http/)) app.url = CONF.ent_base_url + app.url;
+    if (!app.url.match(/^http/)) app.url = CONF.ent_base_url + app.url.replace(/\/detached\//, "/max/");
     
     var url = app.url;
     var classes = '';
