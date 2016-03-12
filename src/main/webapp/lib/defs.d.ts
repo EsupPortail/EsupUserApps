@@ -50,7 +50,6 @@ interface bandeau_ENT {
   url: string;
 
   uid: string;
-  prevHash: string;
   localStorage_prefix: string;
   localStorage_js_text_field: string;
   loadTime: number;
