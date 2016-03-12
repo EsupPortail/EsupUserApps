@@ -176,16 +176,6 @@ class Utils {
     static long now() {
 	return System.currentTimeMillis() / 1000L;
     }   
-	
-    static boolean handleETag_returnIsModified(HttpServletRequest request, HttpServletResponse response, String etag) {
-    	if (etag.equals(request.getHeader("If-None-Match"))) {
-    		response.setStatus(304);
-    		return false;
-    	} else {
-    		response.setHeader("ETag", etag);
-    		return true;
-    	}
-    }
 
 	static void addFilter(ServletContext sc, String name, Class<? extends Filter> clazz, Map<String,String> params, String... urls) {
         FilterRegistration.Dynamic o = sc.addFilter(name, clazz);

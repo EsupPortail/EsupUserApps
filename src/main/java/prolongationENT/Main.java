@@ -88,9 +88,10 @@ public class Main extends HttpServlet {
             int one_hour = 60 * 60;
             response.setHeader("Cache-Control", "max-age=" + one_hour);
             response.sendRedirect(conf.bandeau_ENT_url + "/loader.js?v=" + mainJsHash);
-        } else if (handleETag_returnIsModified(request, response, mainJsHash)) {
+        } else {
             int one_year = 60 * 60 * 24 * 365;
             response.setHeader("Cache-Control", "max-age=" + one_year);
+	    response.setHeader("Etag", mainJsHash);
             response.setContentType("application/javascript; charset=utf8");
             response.getWriter().write(mainJs);
     	}
