@@ -97,7 +97,9 @@ public class ComputeBandeau {
         }
 
 	String js_data_ = json_encode(js_data);
-        if (!hasParameter(request, "app")) {
+        String callback = request.getParameter("callback");
+        if (callback == null && hasParameter(request, "app")) callback = "window.prolongation_ENT.main";
+        if (callback == null) {
             // mostly for debugging purpose
             response.setContentType("application/json; charset=utf8");
             response.getWriter().write(js_data_);
@@ -117,7 +119,7 @@ public class ComputeBandeau {
 	    return;
 	}
 
-        out.println("window.prolongation_ENT.main(\n\n" + js_data_ + ",\n\n" + json_encode(js_params) + "\n\n, true)");
+        out.println(callback + "(\n\n" + js_data_ + ",\n\n" + json_encode(js_params) + "\n\n, true)");
     }
         
     static long time_before_forcing_CAS_authentication_again(boolean different_referrer) {
