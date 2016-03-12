@@ -35,7 +35,7 @@ if (window.bandeau_ENT && !window.bandeau_ENT.maybe_loaded)
 	    } catch (err) { }
 	}
 
-  	h.loadBandeauJs(b_E, []);
+  	loadBandeauJs([]);
     }
 
 })();

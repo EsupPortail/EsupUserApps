@@ -390,7 +390,7 @@ function detectReload($time) {
     var $prev = sessionStorageGet('detectReload');
     if ($prev && $prev != $time) {
 	h.mylog("reload detected, updating bandeau softly");
-	h.loadBandeauJs(b_E, []);
+	loadBandeauJs([]);
     }
     sessionStorageSet('detectReload', $time);
 }
@@ -405,14 +405,14 @@ function mayUpdate() {
 	}
 	if (b_E.PARAMS.is_old) {
 	    h.mylog("server said bandeau is old, forcing full bandeau update");
-	    h.loadBandeauJs(b_E, ['noCache=1']);
+	    loadBandeauJs(['noCache=1']);
 	}
     } else {
 	var age = h.now() - sessionStorageGet(currentAppId + ":time");
 	if (age > CONF.time_before_checking_browser_cache_is_up_to_date) {
 	    h.mylog("cached bandeau is old (" + age + "s), updating it softly");
             sessionStorageSet(currentAppId + ":time", h.now()); // the new bandeau will update "time", but only if bandeau has changed!
-	    h.loadBandeauJs(b_E, []);
+	    loadBandeauJs([]);
 	} else {
 	    // if user used "reload", the cached version of detectReload will change
 	    window.bandeau_ENT_detectReload = detectReload;

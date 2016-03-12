@@ -209,7 +209,10 @@ loadScript: function(url) {
     h.head().appendChild(elt);
 },
 
-loadBandeauJs: function(b_E, params) {
+};
+
+var loadBandeauJs = function(params) {
+    var b_E = window.bandeau_ENT;
     if (b_E.uid)
 	params.push("uid=" + encodeURIComponent(b_E.uid));
     params.push("app=" + (b_E.currentAppIds ? b_E.currentAppIds : [b_E.current]).join(","));
@@ -222,8 +225,6 @@ loadBandeauJs: function(b_E, params) {
     if (b_E.PARAMS) params.push('if_none_match=' + b_E.PARAMS.hash); // b_E.PARAMS is null when called from loader.ts
     if (b_E.loadTime) params.push("time=" + b_E.loadTime);
     h.loadScript(b_E.url + "/layout" + (params.length ? "?" + params.join('&') : ''));
-},
-
 };
 
 if (window.bandeau_ENT) window.bandeau_ENT.helpers = h;
