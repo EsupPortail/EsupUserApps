@@ -55,7 +55,7 @@ function personAttr(attrName) {
  
 function computeHeader() {
     var login = personAttr('supannAliasLogin') || personAttr('uid');
-    return h.template(DATA.bandeauHeader, {
+    return h.template(b_E.TEMPLATES.header, {
         logout_url: CONF.ent_logout_url,
         userName: personAttr("displayName") || personAttr("mail"),
         userDetails: personAttr("displayName") ? personAttr("mail") + " (" + login + ")" : login,

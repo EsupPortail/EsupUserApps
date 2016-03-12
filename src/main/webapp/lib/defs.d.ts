@@ -1,6 +1,5 @@
 interface DATA {
   person: { id: string };
-  bandeauHeader: string;
   apps: {};
   layout: {};
   realUserId: string;
@@ -23,6 +22,10 @@ interface CONF {
 interface CSS {
   base: string;
   desktop: string;
+}
+
+interface TEMPLATES {
+  header string;
 }
 
 interface bandeau_ENT {
@@ -61,6 +64,7 @@ interface bandeau_ENT {
   CONF: CONF;
   PARAMS: PARAMS;
   CSS: CSS;
+  TEMPLATES: TEMPLATES;
 }
 
 interface Window {
