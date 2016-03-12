@@ -119,7 +119,7 @@ public class ComputeBandeau {
 	    return;
 	}
 
-        out.println(callback + "(\n\n" + js_data_ + ",\n\n" + json_encode(js_params) + "\n\n, true)");
+        out.println(callback + "(\n\n" + js_data_ + ",\n\n" + json_encode(js_params) + "\n\n)");
     }
         
     static long time_before_forcing_CAS_authentication_again(boolean different_referrer) {

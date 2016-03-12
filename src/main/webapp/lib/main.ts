@@ -1,4 +1,4 @@
-pE.main = function (DATA, PARAMS, notFromLocalStorage) {
+pE.main = function (DATA, PARAMS, fromLocalStorage) {
 
 var CONF = pE.CONF;
 pE.PARAMS = PARAMS;
@@ -69,7 +69,7 @@ function computeLink(app) {
 	    classes = "class='bandeau_ENT_Menu_Entry__Forbidden'";
 	}
     }
-    var a = "<a title='" + h.escapeQuotes(app.description) + "' href='" + url + "'>" + h.escapeQuotes(app.text) + "</a>";
+    var a = "<a title='" + h.escapeQuotes(app.description) + "' href='" + url + "'>" + h.escapeQuotes(app.text || app.title) + "</a>";
     return "<li " + classes + ">" + a + "</li>";
 }
 
@@ -385,14 +385,14 @@ function detectReload($time) {
 }
 
 function mayUpdate() {
-    if (notFromLocalStorage) {
+    if (!fromLocalStorage) {
 	if (window.sessionStorage) {
 	    h.mylog("caching bandeau in sessionStorage (" + pE.localStorage_prefix + " " + pE.localStorage_js_text_field + ")");
             var js_text =
-                "window.prolongation_ENT.main(\n" + JSON.stringify(DATA) + ",\n\n" + JSON.stringify(pE.PARAMS) + "\n\n, false);\n";
+                "window.prolongation_ENT.main(\n" + JSON.stringify(DATA) + ",\n\n" + JSON.stringify(pE.PARAMS) + "\n\n, true);\n";
 	    setSessionStorageCache(js_text);
 	}
-	if (pE.PARAMS.is_old) {
+	if (PARAMS && PARAMS.is_old) {
 	    h.mylog("server said bandeau is old, forcing full bandeau update");
 	    loadBandeauJs(['noCache=1']);
 	}
@@ -428,7 +428,7 @@ if (currentApp.fname === "HyperPlanning-ens") {
 	currentApp.title = "Mon emploi du temps";
 }
 
-if (!notFromLocalStorage && b_E.url !== sessionStorageGet('url')) {
+if (fromLocalStorage && b_E.url !== sessionStorageGet('url')) {
     h.mylog("not using bandeau from sessionStorage which was computed for " + sessionStorageGet('url') + " whereas " + b_E.url + " is wanted");
     return "invalid";
 } else if ((b_E.is_logged || b_E.login) && !isLogged()) {

@@ -10,7 +10,7 @@ class AppDTO {
 	
     public AppDTO(String fname, App app, String url) {
         this.fname = fname;
-	    text = app.text != null ? app.text : app.title;
+        text = app.text;
 	    title = app.title;
 	    description = app.description != null ? app.description : "";
     	this.url = url;
