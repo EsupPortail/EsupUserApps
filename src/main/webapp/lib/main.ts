@@ -61,6 +61,9 @@ function relogUrl(app) {
     return app.url.replace(/^(https?:\/\/[^\/]*).*/, "$1") + "/ProlongationENT/redirect?relog&impersonate&id=" + app.fname;
 }
 function computeLink(app) {
+    // for uportal4 layout compatibility:
+    if (!app.url.match(/^http/)) app.url = CONF.ent_base_url + app.url;
+    
     var url = app.url;
     var classes = '';
     if (DATA.canImpersonate) {

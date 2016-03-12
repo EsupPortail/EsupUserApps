@@ -25,6 +25,7 @@ interface PARAMS {
 
 interface CONF {
   bandeau_ENT_url: string;
+  ent_base_url: string
   ent_logout_url: string;
   cas_impersonate: { cookie_name: string, cookie_domain: string };
   disableLocalStorage: boolean;
