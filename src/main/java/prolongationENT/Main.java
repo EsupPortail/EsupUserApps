@@ -62,9 +62,9 @@ public class Main extends HttpServlet {
 		response.sendRedirect(via_CAS(conf.cas_login_url, final_url) + "&gateway=true");
 	    } else {
 		// user is not authenticated.
-                String template = file_get_contents(request, "templates/notLogged.html");
-                response.setContentType("application/javascript; charset=utf8");
-                response.getWriter().println(String.format(template, json_encode(asMap("cas_login_url", conf.cas_login_url))));
+                respond_js(response,
+			   String.format(file_get_contents(request, "templates/notLogged.html"),
+					 json_encode(asMap("cas_login_url", conf.cas_login_url))));
 	    }
 	    return;
 	}
@@ -90,26 +90,21 @@ public class Main extends HttpServlet {
             response.sendRedirect(conf.bandeau_ENT_url + "/loader.js?v=" + mainJsHash);
         } else {
             int one_year = 60 * 60 * 24 * 365;
-            response.setHeader("Cache-Control", "max-age=" + one_year);
 	    response.setHeader("Etag", mainJsHash);
-            response.setContentType("application/javascript; charset=utf8");
-            response.getWriter().write(mainJs);
+	    respond_js(response, one_year, mainJs);
     	}
     }
     
     void detectReload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	long five_days = 432000;
-	response.setDateHeader("Expires", (now() + five_days) * 1000L);
-	response.setContentType("application/javascript; charset=utf8");
-	response.getWriter().println("window.prolongation_ENT.detectReload(" + now() + ");");
+	long five_days = 60 * 60 * 24 * 5;
+	respond_js(response, five_days, "window.prolongation_ENT.detectReload(" + now() + ");");
     }
     
     void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	session_invalidate(request);
 
 	String callback = request.getParameter("callback");
-	response.setContentType("application/javascript; charset=utf8");
-	response.getWriter().println(callback + "();");
+	respond_js(response, callback + "();");
     }
     
     void canImpersonate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -129,8 +124,7 @@ public class Main extends HttpServlet {
         if (appIds.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         } else {
-            response.setContentType("application/json; charset=utf8");
-            response.getWriter().println(json_encode(appIds));
+            respond_json(response, appIds);
         }
     }
     

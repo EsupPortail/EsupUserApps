@@ -97,29 +97,23 @@ public class ComputeBandeau {
             js_data.put("canImpersonate", handleGroups.computeValidApps(realUserId, true));
         }
 
-	String js_data_ = json_encode(js_data);
         String callback = request.getParameter("callback");
         if (callback == null) {
             // mostly for debugging purpose
-            response.setContentType("application/json; charset=utf8");
-            response.getWriter().write(js_data_);
+	    respond_json(response, js_data);
             return;
         }
 
+	String js_data_ = json_encode(js_data);
 	String hash = computeMD5(js_data_);
 	Map<String, Object> js_params =
 	    asMapO("is_old", is_old)
 	     .add("hash", hash);
-
-	response.setContentType("application/javascript; charset=utf8");
-	PrintWriter out = response.getWriter();
 	
-	if (hash.equals(request.getParameter("if_none_match"))) {
-	    out.println("// not update needed");
-	    return;
-	}
-
-        out.println(callback + "(\n\n" + js_data_ + ",\n\n" + json_encode(js_params) + "\n\n)");
+	respond_js(response,
+		   hash.equals(request.getParameter("if_none_match")) ?
+		     "// not update needed" :
+		     callback + "(\n\n" + js_data_ + ",\n\n" + json_encode(js_params) + "\n\n)");
     }
         
     static long time_before_forcing_CAS_authentication_again(boolean different_referrer) {

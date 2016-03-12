@@ -176,6 +176,19 @@ class Utils {
     static long now() {
 	return System.currentTimeMillis() / 1000L;
     }   
+	
+    static void respond_js(HttpServletResponse response, long cacheMaxAge, String js) throws IOException {
+	response.setHeader("Cache-Control", "max-age=" + cacheMaxAge);
+	respond_js(response, js);
+    }
+    static void respond_js(HttpServletResponse response, String js) throws IOException {
+	response.setContentType("application/javascript; charset=utf8");
+	response.getWriter().write(js);
+    }
+    static void respond_json(HttpServletResponse response, Object json) throws IOException {
+	response.setContentType("application/json; charset=utf8");
+	response.getWriter().write(json_encode(json));
+    }
 
 	static void addFilter(ServletContext sc, String name, Class<? extends Filter> clazz, Map<String,String> params, String... urls) {
         FilterRegistration.Dynamic o = sc.addFilter(name, clazz);
