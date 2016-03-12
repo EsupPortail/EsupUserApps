@@ -44,15 +44,15 @@ function installToggleMenu(hide) {
 }
 
 function personAttr(attrName) {
-    var v = DATA.person[attrName];
+    var v = DATA.userAttrs && DATA.userAttrs[attrName];
     return v && v[0];
 }
  
 function computeHeader() {
-    var login = personAttr('supannAliasLogin') || personAttr('uid');
+    var login = personAttr('supannAliasLogin') || DATA.user;
     return h.template(pE.TEMPLATES.header, {
         logout_url: CONF.ent_logout_url,
-        userName: personAttr("displayName") || personAttr("mail"),
+        userName: personAttr("displayName") || personAttr("mail") || DATA.user,
         userDetails: personAttr("displayName") ? personAttr("mail") + " (" + login + ")" : login,
     });
 }
@@ -129,7 +129,7 @@ function computeTitlebar(app) {
 	return '';
 }
 function bandeau_div_id() {
-    return b_E.div_id || (b_E.div_is_uid && DATA.person.id) || 'bandeau_ENT';
+    return b_E.div_id || (b_E.div_is_uid && DATA.user) || 'bandeau_ENT';
 }
 
 function loadSpecificCss() {
@@ -325,7 +325,7 @@ function detectImpersonationPbs() {
     var want = h.getCookie(CONF.cas_impersonate.cookie_name);
     // NB: explicit check with "!=" since we do not want null !== undefined
     if (want != pE.wanted_uid && (pE.wanted_uid || h.simpleContains(DATA.canImpersonate, currentApp.fname))) {
-        var msg = "Vous êtes encore identifié sous l'utilisateur " + DATA.person.id + ". Acceptez vous de perdre la session actuelle ?";
+        var msg = "Vous êtes encore identifié sous l'utilisateur " + DATA.user + ". Acceptez vous de perdre la session actuelle ?";
 	if (window.confirm(msg)) {
 	    document.location.href = relogUrl(currentApp);
 	}

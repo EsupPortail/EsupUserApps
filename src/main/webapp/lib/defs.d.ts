@@ -11,7 +11,8 @@ interface menuEntry {
   portlets: app[];
 }
 interface DATA {
-  person: { id: string };
+  user: string;
+  userAttrs: { id: string };
   layout: { folders: menuEntry[] };
   realUserId: string;
   canImpersonate: string[];

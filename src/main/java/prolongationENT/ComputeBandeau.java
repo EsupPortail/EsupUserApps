@@ -88,7 +88,8 @@ public class ComputeBandeau {
 	    is_old(request) && request.getParameter("auth_checked") == null; // checking auth_checked should not be necessary since having "auth_checked" implies having gone through cleanupSession & CAS and so prev_time should not be set. But it seems firefox can bypass the initial redirect and go straight to CAS without us having cleaned the session... and then a dead-loop always asking for not-old version
 
 	Map<String, Object> js_data =
-	   asMapO("person", exportAttrs(userId, attrs))
+            asMapO("user", userId)
+            .add("userAttrs", exportAttrs(userId, attrs))
             .add("layout", asMap("folders", userLayout));
 	if (!realUserId.equals(userId)) js_data.put("realUserId", realUserId);
         if (getCookie(request, conf.cas_impersonate.cookie_name) != null) {
