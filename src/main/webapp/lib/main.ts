@@ -408,6 +408,7 @@ function mayUpdate() {
 	} else {
 	    // if user used "reload", the cached version of detectReload will change
 	    pE.detectReload = detectReload;
+	    b_E.detectReload = detectReload; // needed for migration
 	    h.loadScript(CONF.bandeau_ENT_url + "/detectReload");
 	}
     }
