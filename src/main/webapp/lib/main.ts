@@ -48,8 +48,18 @@ function installToggleMenu(hide) {
     }
 }
 
+function personAttr(attrName) {
+    var v = DATA.person[attrName];
+    return v && v[0];
+}
+ 
 function computeHeader() {
-    return h.template(DATA.bandeauHeader, { logout_url: CONF.ent_logout_url });
+    var login = personAttr('supannAliasLogin') || personAttr('uid');
+    return h.template(DATA.bandeauHeader, {
+        logout_url: CONF.ent_logout_url,
+        userName: personAttr("displayName") || personAttr("mail"),
+        userDetails: personAttr("displayName") ? personAttr("mail") + " (" + login + ")" : login,
+    });
 }
 
 function relogUrl(appId, app) {

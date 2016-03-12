@@ -78,7 +78,7 @@ public class ComputeBandeau {
 	boolean is_old =
 	    !conf.isCasSingleSignOutWorking &&
 	    is_old(request) && request.getParameter("auth_checked") == null; // checking auth_checked should not be necessary since having "auth_checked" implies having gone through cleanupSession & CAS and so prev_time should not be set. But it seems firefox can bypass the initial redirect and go straight to CAS without us having cleaned the session... and then a dead-loop always asking for not-old version
-	String bandeauHeader = computeBandeauHeader(request, attrs, userChannels);
+	String bandeauHeader = file_get_contents(request, "templates/header.html");
 
 	Map<String, Object> js_data =
 	   asMapO("person", exportAttrs(userId, attrs))
@@ -120,15 +120,6 @@ public class ComputeBandeau {
         
     static long time_before_forcing_CAS_authentication_again(boolean different_referrer) {
   	return different_referrer ? 10 : 120; // seconds
-    }
-
-    String computeBandeauHeader(HttpServletRequest request, Ldap.Attrs user, AppsDTO userChannels) {
-	String template = file_get_contents(request, "templates/header.html");
-
-	String login = user.containsKey("supannAliasLogin") ? user.get("supannAliasLogin").get(0) : user.get("uid").get(0);
-	return String.format(template,
-			     user.containsKey("displayName") ? user.get("displayName").get(0) : user.get("mail").get(0), 
-			     user.containsKey("displayName") ? user.get("mail").get(0) + " (" + login + ")" : login);
     }
     
     String get_css_with_absolute_url(HttpServletRequest request, String css_file) {
