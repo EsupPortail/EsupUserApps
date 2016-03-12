@@ -124,13 +124,11 @@ public class ComputeBandeau {
 
     String computeBandeauHeaderLinks(HttpServletRequest request, Ldap.Attrs user, Map<String,AppDTO> validApps) {
 	String template = file_get_contents(request, "templates/headerLinks.html");
-	String myAccount = file_get_contents(request, "templates/headerLinkMyAccount.html");
 
 	String login = user.containsKey("supannAliasLogin") ? user.get("supannAliasLogin").get(0) : user.get("uid").get(0);
 	return String.format(template,
 			     user.containsKey("displayName") ? user.get("displayName").get(0) : user.get("mail").get(0), 
-			     user.containsKey("displayName") ? user.get("mail").get(0) + " (" + login + ")" : login, 
-			     myAccount);
+			     user.containsKey("displayName") ? user.get("mail").get(0) + " (" + login + ")" : login);
     }
 
     String computeBandeauHeader(HttpServletRequest request, Ldap.Attrs user, AppsDTO userChannels) {
