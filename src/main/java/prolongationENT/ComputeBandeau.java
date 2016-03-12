@@ -118,8 +118,7 @@ public class ComputeBandeau {
 	    return;
 	}
 
-	out.println("window.prolongation_ENT.notFromLocalStorage = true;");
-        out.println("window.prolongation_ENT.main(\n\n" + js_data_ + ",\n\n" + json_encode(js_params) + "\n\n)");
+        out.println("window.prolongation_ENT.main(\n\n" + js_data_ + ",\n\n" + json_encode(js_params) + "\n\n, true)");
     }
         
     static long time_before_forcing_CAS_authentication_again(boolean different_referrer) {

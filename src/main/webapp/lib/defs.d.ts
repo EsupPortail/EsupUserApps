@@ -56,7 +56,6 @@ interface prolongation_ENT {
   localStorage_prefix: string;
   localStorage_js_text_field: string;
   loadTime: number;
-  notFromLocalStorage: boolean;
   
   maybe_loaded: boolean;
   
@@ -68,7 +67,7 @@ interface prolongation_ENT {
   
   onAsyncLogout(): void;
   detectReload(time): void;
-  main(DATA: DATA, PARAMS: PARAMS): string;
+  main(DATA: DATA, PARAMS: PARAMS, notFromLocalStorage: boolean): string;
 }
 
 interface Window {

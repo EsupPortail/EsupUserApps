@@ -1,6 +1,4 @@
-pE.main = function (DATA, PARAMS) {
-
-var notFromLocalStorage = pE.notFromLocalStorage;
+pE.main = function (DATA, PARAMS, notFromLocalStorage) {
 
 var CONF = pE.CONF;
 pE.PARAMS = PARAMS;
@@ -397,7 +395,7 @@ function mayUpdate() {
 	if (window.sessionStorage) {
 	    h.mylog("caching bandeau in sessionStorage (" + pE.localStorage_prefix + " " + pE.localStorage_js_text_field + ")");
             var js_text =
-                "window.prolongation_ENT.main(\n" + JSON.stringify(DATA) + ",\n\n" + JSON.stringify(pE.PARAMS) + "\n\n);\n";
+                "window.prolongation_ENT.main(\n" + JSON.stringify(DATA) + ",\n\n" + JSON.stringify(pE.PARAMS) + "\n\n, false);\n";
 	    setSessionStorageCache(js_text);
 	}
 	if (pE.PARAMS.is_old) {
@@ -419,7 +417,6 @@ function mayUpdate() {
 }
 
 currentAppId = computeBestCurrentAppId();
-pE.notFromLocalStorage = false;
 
 if (!b_E.is_logged)
     b_E.is_logged = b_E.logout;
