@@ -40,6 +40,7 @@ interface CSS {
 
 interface TEMPLATES {
   header: string;
+  footer: string;
 }
 
 interface prolongation_ENT_appParams {

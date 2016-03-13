@@ -241,9 +241,7 @@ function installFooter() {
 	elt.setAttribute("id", id);
 	document.body.appendChild(elt);
     }
-    elt.innerHTML =
-	'<a href="https://esup.univ-paris1.fr/contacts">Nous contacter</a>' + '|' +
-	'<a href="https://esup.univ-paris1.fr/mentions">Mentions légales</a>';
+    elt.innerHTML = pE.TEMPLATES.footer;
 }
 
 var currentApp;

@@ -47,6 +47,7 @@ public class LoaderJs {
 
     	String templates = json_encode(
             asMap("header", file_get_contents(request, "templates/header.html"))
+             .add("footer", file_get_contents(request, "templates/footer.html"))
     	);
 
     	Map<String, Object> js_conf =
