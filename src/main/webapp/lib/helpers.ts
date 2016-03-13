@@ -123,7 +123,7 @@ escapeQuotes: function(s) {
 
 template: function(s, map) {
     // ES6-like template
-    return s.replace(/\${\s*([^}]*?)\s*}/g, function (_m, e) { return map[e] });
+    return s.replace(/\${\s*([^{}]*?)\s*}/g, function (_m, e) { return map[e] });
 },
 
 onIdOrBody_rec: function(id, f) {
