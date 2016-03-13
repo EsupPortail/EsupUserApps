@@ -24,6 +24,7 @@ interface PARAMS {
 }
 
 interface CONF {
+  theme: string;
   bandeau_ENT_url: string;
   ent_base_url: string
   ent_logout_url: string;
@@ -66,6 +67,7 @@ interface prolongation_ENT_appParams {
 }
 
 interface prolongation_ENT {
+  currentApp: app;
   appParams: prolongation_ENT_appParams;
   wanted_uid: string;
   localStorage_prefix: string;
@@ -84,6 +86,7 @@ interface prolongation_ENT {
   helpers: helpers;
   localStorageSet(field: string, value: string);
   localStorageGet(field: string): string;
+  accountLink(text: string, link_spec: any): HTMLAnchorElement;
   callPlugins(event: string);
   plugins: plugin[];
   onAsyncLogout(): void;

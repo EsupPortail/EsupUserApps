@@ -168,7 +168,7 @@ function installLogout() {
 	       });
 }
 
-function _accountLink(text, link_spec) {
+pE.accountLink = function(text, link_spec) {
     var a = document.createElement("a");
     a.innerHTML = h.escapeQuotes(text);
     if (link_spec.href) {
@@ -178,19 +178,6 @@ function _accountLink(text, link_spec) {
 	a.onclick = function () { simulateClickElt(find_DOM_elt(link_spec)); };
     }
     return a;
-}
-
-function installAccountLinks(app) {
-    var appLinks_li = h.simpleQuerySelector('.portalPageBarAccountAppLinks');
-    if (app && app.title) {
-	appLinks_li['innerHTML'] = h.escapeQuotes(app.title);
-	h.toggleClass(appLinks_li, 'portalPageBarAccountSeparator');
-    }
-    h.simpleEachObject(b_E.account_links, function (text, link_spec) {
-	var sub_li = document.createElement("li");
-	sub_li.appendChild(_accountLink(text, link_spec));
-	h.insertAfter(appLinks_li, sub_li);
-    });
 }
 
 function installFooter() {
@@ -253,7 +240,6 @@ function installBandeau() {
         if (CONF.cas_impersonate && !b_E.uid) detectImpersonationPbs();
 
 	h.onReady(function () {
-	    if (b_E.account_links) installAccountLinks(currentApp);
 	    installLogout();
 	    if (!b_E.no_footer) installFooter();
 	});
@@ -370,7 +356,7 @@ function mayUpdate() {
     }
 }
 
-currentApp = computeBestCurrentAppId() || {};
+currentApp = pE.currentApp = computeBestCurrentAppId() || {};
 
 if (!b_E.is_logged)
     b_E.is_logged = b_E.logout;

@@ -1,5 +1,24 @@
 (function () {
 
+function installAccountLinks(app) {
+    var appLinks_li = h.simpleQuerySelector('.portalPageBarAccountAppLinks');
+    if (app && app.title) {
+	appLinks_li['innerHTML'] = h.escapeQuotes(app.title);
+	h.toggleClass(appLinks_li, 'portalPageBarAccountSeparator');
+    }
+    h.simpleEachObject(b_E.account_links, function (text, link_spec) {
+	var sub_li = document.createElement("li");
+	sub_li.appendChild(pE.accountLink(text, link_spec));
+	h.insertAfter(appLinks_li, sub_li);
+    });
+}
+
+    if (b_E.account_links) {
+        h.onReady(function() {
+	    installAccountLinks(pE.currentApp);
+        });
+    }
+
 	function bandeau_ENT_Account_toggleOpen() {
 	    h.toggleClass(document.getElementById('portalPageBarAccount'), 'open');
 	    var isOpen = h.toggleClass(document.getElementById('portalPageBarAccountInner'), 'open');
