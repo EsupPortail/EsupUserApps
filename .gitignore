@@ -7,3 +7,4 @@ deploy
 .classpath
 .settings
 logs
+src/main/webapp/lib/*.js
