@@ -1,0 +1,42 @@
+window.prolongation_ENT.main({
+    "layout": {
+        "folders": [ {
+            "title": "Accueil",
+            "portlets": [
+                {
+                    "fname": "caccueil",
+                    "title": "Accueil",
+                    "description": "Page d'accueil",
+                    "url": "http://www.esup-portail.org/"
+                }
+            ]
+
+        }, {
+
+            "title": "Communication",
+            "portlets": [
+                {
+                    "fname": "listes",
+                    "title": "Listes de diffusion",
+                    "description": "",
+                    "hashelp": true,
+                    "url": "https://listes.esup-portail.org/"
+                },
+            ]
+        } ]
+    },
+    "userAttrs": {
+        "mail": [
+            "foo.bar@univ.fr"
+        ],
+        "eduPersonAffiliation": [
+            "member",
+            "employee",
+            "staff"
+        ],
+        "displayName": [
+            "Foo Bar"
+        ],
+    },
+    "user": "fbar",
+})
