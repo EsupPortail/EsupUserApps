@@ -22,7 +22,7 @@ function relogUrl(app) {
 }
 function computeLink(app) {
     // for uportal4 layout compatibility:
-    if (!app.url.match(/^http/)) app.url = CONF.ent_base_url + app.url.replace(/\/detached\//, "/max/");
+    if (!app.url.match(/^http/)) app.url = CONF.uportal_base_url + app.url.replace(/\/detached\//, "/max/");
     
     var url = app.url;
     var classes = '';
@@ -149,7 +149,7 @@ function simulateClickElt(elt) {
 function asyncLogout() {
     removeSessionStorageCache();
     if (CONF.cas_impersonate) h.removeCookie(CONF.cas_impersonate.cookie_name, CONF.cas_impersonate.cookie_domain, '/');
-    h.loadScript(CONF.bandeau_ENT_url + '/logout?callback=' + 'window.prolongation_ENT.onAsyncLogout');
+    h.loadScript(CONF.prolongationENT_url + '/logout?callback=' + 'window.prolongation_ENT.onAsyncLogout');
     return false;
 }
 pE.onAsyncLogout = function() {
@@ -201,7 +201,7 @@ function installBandeau() {
     if (pE.CSS) 
 	h.addCSS(pE.CSS.base);
     else
-	h.loadCSS(CONF.bandeau_ENT_url + "/" + CONF.theme + "/main.css", null);
+	h.loadCSS(CONF.prolongationENT_url + "/" + CONF.theme + "/main.css", null);
 
     var widthForNiceMenu = 800;
     // testing min-width is not enough: in case of a non-mobile comptabile page, the width will be big.
@@ -217,7 +217,7 @@ function installBandeau() {
 	if (pE.CSS) 
 	    h.addCSS("@media " + condition + " { \n" + pE.CSS.desktop + "}\n");
 	else
-	    h.loadCSS(CONF.bandeau_ENT_url + "/" + CONF.theme + "/desktop.css", condition);
+	    h.loadCSS(CONF.prolongationENT_url + "/" + CONF.theme + "/desktop.css", condition);
     }
 
     var header = computeHeader();
@@ -351,7 +351,7 @@ function mayUpdate() {
 	    // if user used "reload", the cached version of detectReload will change
 	    pE.detectReload = detectReload;
 	    b_E['detectReload'] = detectReload; // needed for migration
-	    h.loadScript(CONF.bandeau_ENT_url + "/detectReload");
+	    h.loadScript(CONF.prolongationENT_url + "/detectReload");
 	}
     }
 }

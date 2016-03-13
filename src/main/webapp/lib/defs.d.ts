@@ -25,8 +25,8 @@ interface PARAMS {
 
 interface CONF {
   theme: string;
-  bandeau_ENT_url: string;
-  ent_base_url: string
+  prolongationENT_url: string;
+  uportal_base_url: string
   ent_logout_url: string;
   layout_url: string;
   cas_impersonate: { cookie_name: string, cookie_domain: string };

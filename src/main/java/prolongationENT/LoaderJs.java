@@ -27,7 +27,7 @@ public class LoaderJs {
             // redirect to versioned loader.js which has long cache time
             int one_hour = 60 * 60;
             response.setHeader("Cache-Control", "max-age=" + one_hour);
-            response.sendRedirect(conf.bandeau_ENT_url + "/loader.js?v=" + jsHash);
+            response.sendRedirect(conf.prolongationENT_url + "/loader.js?v=" + jsHash);
         } else {
             int one_year = 60 * 60 * 24 * 365;
 	    response.setHeader("Etag", jsHash);
@@ -51,7 +51,7 @@ public class LoaderJs {
     	);
 
     	Map<String, Object> js_conf =
-    	    objectFieldsToMap(conf, "bandeau_ENT_url", "ent_base_url", "layout_url", "theme",
+    	    objectFieldsToMap(conf, "prolongationENT_url", "uportal_base_url", "layout_url", "theme",
                               "cas_impersonate", "disableLocalStorage", 
     	    		"time_before_checking_browser_cache_is_up_to_date", "ent_logout_url");
 
@@ -75,7 +75,7 @@ public class LoaderJs {
     
     String get_css_with_absolute_url(HttpServletRequest request, String css_file) {
 	String s = theme_file_contents(request, css_file);
-	return s.replaceAll("(url\\(['\" ]*)(?!['\" ])(?!https?:|/)", "$1" + conf.bandeau_ENT_url + "/" + conf.theme + "/");
+	return s.replaceAll("(url\\(['\" ]*)(?!['\" ])(?!https?:|/)", "$1" + conf.prolongationENT_url + "/" + conf.theme + "/");
     }
 	
 }

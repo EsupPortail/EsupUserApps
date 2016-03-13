@@ -5,7 +5,7 @@ function loader() {
     pE.maybe_loaded = true;
     
 
-	     b_E.url = pE.CONF.bandeau_ENT_url;
+	     b_E.url = pE.CONF.prolongationENT_url;
 
         var navigationStart = window.performance && window.performance.timing && window.performance.timing.navigationStart;
         pE.loadTime = navigationStart && (new Date().getTime() - navigationStart);

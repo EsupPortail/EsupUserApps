@@ -49,7 +49,7 @@ public class ComputeBandeau {
 	if (noCache || userId == null) {
 	    if (request.getParameter("auth_checked") == null) {
 		cleanupSession(request);
-		String final_url = conf.bandeau_ENT_url + "/layout?auth_checked"
+		String final_url = conf.prolongationENT_url + "/layout?auth_checked"
 		    + (request.getQueryString() != null ? "&" + request.getQueryString() : "");
 		response.sendRedirect(via_CAS(conf.cas_login_url, final_url) + "&gateway=true");
 	    } else {
@@ -253,7 +253,7 @@ public class ComputeBandeau {
     /* generate links */
     /* ******************************************************************************** */   
     String ent_url(App app, String fname, boolean isGuest, boolean noLogin, String idpAuthnRequest_url) {
-	String url = isGuest ? conf.ent_base_url_guest + "/Guest" : conf.ent_base_url + (noLogin ? "/render.userLayoutRootNode.uP" : "/MayLogin");
+	String url = isGuest ? conf.uportal_base_url_guest + "/Guest" : conf.uportal_base_url + (noLogin ? "/render.userLayoutRootNode.uP" : "/MayLogin");
 	return url + "?uP_fname=" + fname;
     }
 

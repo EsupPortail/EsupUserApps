@@ -22,7 +22,7 @@ public class WebXml implements ServletContextListener{
 
 		addFilter(sc, "CAS Validate", Cas20ProxyReceivingTicketValidationFilter.class,
 				asMap("casServerUrlPrefix", conf.cas_base_url)
-				 	   .add("serverName", url2host(conf.bandeau_ENT_url))
+				 	   .add("serverName", url2host(conf.prolongationENT_url))
 				       .add("redirectAfterValidation", "false"), 
 				"/layout");
     
