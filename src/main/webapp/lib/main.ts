@@ -2,46 +2,6 @@ pE.main = function (DATA, PARAMS, fromLocalStorage) {
 
 var CONF = pE.CONF;
 pE.PARAMS = PARAMS;
-    
-
-function bandeau_ENT_Account_toggleOpen() {
-    h.toggleClass(document.getElementById('portalPageBarAccount'), 'open');
-    var isOpen = h.toggleClass(document.getElementById('portalPageBarAccountInner'), 'open');
-
-    if (isOpen) {
-	var close = function() {
-	    h.removeClass(document.getElementById('portalPageBarAccount'), 'open');
-	    h.removeClass(document.getElementById('portalPageBarAccountInner'), 'open');
-	    document.removeEventListener("click", close, false);
-	};
-	setTimeout(function () { document.addEventListener("click", close, false); }, 0);
-    }
-    return false;
-}
-
-function bandeau_ENT_Menu_toggle() {
-    if (b_E.quirks && h.simpleContains(b_E.quirks, 'global-menuClosed-class'))
-	h.toggleClass(document.body, 'bandeau_ENT_menuClosed');
-    return h.toggleClass(document.getElementById('bandeau_ENT_Inner'), 'menuClosed');
-}
-
-function bandeau_ENT_Menu_toggleAndStore() {
-    var b = bandeau_ENT_Menu_toggle();
-    if (window.localStorage) localStorageSet("menuClosed", b ? "true" : "false");
-
-    return false;
-}
-
-function installToggleMenu(hide) {
-    var hideByDefault = b_E.hide_menu;
-    var toggleMenu = document.getElementById('bandeau_ENT_portalPageBarToggleMenu');
-    if (toggleMenu) {
-	toggleMenu.onclick = bandeau_ENT_Menu_toggleAndStore;
-	var savedState = window.localStorage && localStorageGet("menuClosed");
-	if (hide || savedState === "true" || savedState !== "false" && hideByDefault)
-	    bandeau_ENT_Menu_toggle();
-    }
-}
 
 function personAttr(attrName) {
     var v = DATA.userAttrs && DATA.userAttrs[attrName];
@@ -260,8 +220,8 @@ function installBandeau() {
     // testing min-width is not enough: in case of a non-mobile comptabile page, the width will be big.
     // also testing min-device-width will help
     var conditionForNiceMenu = '(min-width: ' + widthForNiceMenu + 'px) and (min-device-width: ' + widthForNiceMenu + 'px)';
-    var smallMenu = window.matchMedia ? !window.matchMedia(conditionForNiceMenu).matches : screen.width < widthForNiceMenu;
-    if (!smallMenu) {
+    pE.width_xs = window.matchMedia ? !window.matchMedia(conditionForNiceMenu).matches : screen.width < widthForNiceMenu;
+    if (!pE.width_xs) {
 	// on IE7&IE8, we do want to include the desktop CSS
 	// but since media queries fail, we need to give them a simpler media
 	var handleMediaQuery = "getElementsByClassName" in document; // not having getElementsByClassName is a good sign of not having media queries... (IE7 and IE8)
@@ -288,8 +248,7 @@ function installBandeau() {
 	    if (searchElt) searchElt.innerHTML = '';
         }
 
-	var barAccount = document.getElementById('portalPageBarAccount');
-	if (barAccount) barAccount.onclick = bandeau_ENT_Account_toggleOpen;
+        pE.callPlugins('post_header_add');
 
         if (CONF.cas_impersonate && !b_E.uid) detectImpersonationPbs();
 
@@ -298,9 +257,8 @@ function installBandeau() {
 	    installLogout();
 	    if (!b_E.no_footer) installFooter();
 	});
-	installToggleMenu(smallMenu);
 
-	if (smallMenu && document.body.scrollTop === 0) {
+	if (pE.width_xs && document.body.scrollTop === 0) {
 	    var bandeau = document.getElementById(bandeau_div_id());
 
 	    setTimeout(function() { 
@@ -333,18 +291,18 @@ function detectImpersonationPbs() {
     }
 }
 
-function localStorageGet(field) {
+pE.localStorageGet = function(field) {
     try {
 	return localStorage.getItem(pE.localStorage_prefix + field);
     } catch (err) {
 	return null;
     }
-}
-function localStorageSet(field, value) {
+};
+pE.localStorageSet = function(field, value) {
     try {
 	localStorage.setItem(pE.localStorage_prefix + field, value);
     } catch (err) {}
-}
+};
 function sessionStorageGet(field) {
     try {
 	return sessionStorage.getItem(pE.localStorage_prefix + field);

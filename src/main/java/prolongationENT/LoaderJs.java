@@ -63,6 +63,8 @@ public class LoaderJs {
             "pE.CSS = " + js_css + "\n\n" +
             "pE.TEMPLATES = " + templates + "\n\n" +
             helpers_js + main_js + "\n\n" +
+            file_get_contents(request, "lib/plugins.ts") +
+            file_get_contents(request, "lib/" + conf.theme + ".ts") + ";" +
             loader_js +
             "})()";
     }
