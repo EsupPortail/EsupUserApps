@@ -43,7 +43,7 @@ interface TEMPLATES {
 }
 
 interface prolongation_ENT_appParams {
-  quirks: {};
+  quirks: string[];
   current: string;
   currentAppIds: string[];
   div_id: string;
@@ -79,9 +79,39 @@ interface prolongation_ENT {
   CSS: CSS;
   TEMPLATES: TEMPLATES;
   
+  helpers: helpers;
   onAsyncLogout(): void;
   detectReload(time): void;
   main(DATA: DATA, PARAMS: PARAMS, notFromLocalStorage: boolean): string;
+}
+
+interface helpers {
+  mylog(string);
+  head(): HTMLElement;
+  now(): number;
+  removeClass(elt: Element, classToToggle: string); 
+  toggleClass(elt: Element, classToToggle: string); 
+  insertAfter(e: Element, newNode: Element);
+  simpleQuerySelectorAll(selector: string): Element[];
+  simpleQuerySelector(selector: string): Element;
+  getCookie(name: string): string;
+  removeCookie(name: string, domain: string, path: string);
+  simpleContains<T>(a: T[], val: T): boolean; 
+  simpleEach<T>(a: T[], val: (e: T) => void);
+  simpleEachObject(o, fn: (k: string, v, o?) => void); 
+  simpleFilter<T>(a: T[], fn: (e: T) => boolean): T[]; 
+  simpleMap<T,U>(a: T[], fn: (e: T) => U): U[];
+  escapeQuotes(s: string): string;
+  template(s: string, map: {}): string;
+  onIdOrBody_rec(id: string, f: () => void);
+  onIdOrBody(id: string, f: () => void);
+  onReady_rec(f: () => void);
+  onReady(f: () => void);
+  set_div_innerHTML(div_id: string, content: string);
+  loadCSS(url: string, media: string);
+  unloadCSS(url: string);
+  addCSS(css: string);
+  loadScript(url: string);
 }
 
 interface Window {

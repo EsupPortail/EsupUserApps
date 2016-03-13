@@ -204,7 +204,7 @@ function installLogout() {
     var logout_buttons = "#bandeau_ENT_Inner .portalPageBarLogout, #bandeau_ENT_Inner .portalPageBarAccountLogout";
     h.simpleEach(h.simpleQuerySelectorAll(logout_buttons),
 	       function (elt) { 
-		   elt.onclick = asyncLogout;
+		   elt['onclick'] = asyncLogout;
 	       });
 }
 
@@ -223,7 +223,7 @@ function _accountLink(text, link_spec) {
 function installAccountLinks(app) {
     var appLinks_li = h.simpleQuerySelector('.portalPageBarAccountAppLinks');
     if (app && app.title) {
-	appLinks_li.innerHTML = h.escapeQuotes(app.title);
+	appLinks_li['innerHTML'] = h.escapeQuotes(app.title);
 	h.toggleClass(appLinks_li, 'portalPageBarAccountSeparator');
     }
     h.simpleEachObject(b_E.account_links, function (text, link_spec) {
@@ -408,7 +408,7 @@ function mayUpdate() {
 	} else {
 	    // if user used "reload", the cached version of detectReload will change
 	    pE.detectReload = detectReload;
-	    b_E.detectReload = detectReload; // needed for migration
+	    b_E['detectReload'] = detectReload; // needed for migration
 	    h.loadScript(CONF.bandeau_ENT_url + "/detectReload");
 	}
     }

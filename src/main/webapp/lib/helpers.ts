@@ -1,4 +1,5 @@
-var h = {
+var h = pE.helpers; // for type checking
+h = {
 mylog: function(s) {
       if (window['console'] !== undefined) console.log(s);
 },
