@@ -218,6 +218,10 @@ body {
     position: relative;
 }
 
+.bandeau_ENT_Menu_Clear {
+  clear: both; height: 0; margin: 0;
+}
+
 #bandeau_ENT_Footer {
     clear: both;
     text-align: center;

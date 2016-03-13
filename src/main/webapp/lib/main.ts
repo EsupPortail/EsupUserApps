@@ -224,7 +224,7 @@ function installBandeau() {
     var menu = computeMenu(currentApp);
     var help = computeHelp(currentApp);
     var titlebar = computeTitlebar(currentApp);
-    var clear = "<p style='clear: both; height: 13px; margin: 0'></p>";
+    var clear = "<p class='bandeau_ENT_Menu_Clear'></p>";
     var menu_ = "<div class='bandeau_ENT_Menu_'>" + menu + clear + "</div>";
     var bandeau_html = "\n\n<div id='bandeau_ENT_Inner' class='menuOpen'>" + header + menu_ + titlebar + help + "</div>" + "\n\n";
     h.onIdOrBody(bandeau_div_id(), function () {

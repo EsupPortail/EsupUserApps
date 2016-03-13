@@ -391,6 +391,10 @@ body {
     position: relative;
 }
 
+.bandeau_ENT_Menu_Clear {
+  clear: both; height: 13px; margin: 0;
+}
+
 #bandeau_ENT_Footer {
     clear: both;
     text-align: center;
