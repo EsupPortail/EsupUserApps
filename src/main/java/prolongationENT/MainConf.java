@@ -1,5 +1,6 @@
 package prolongationENT;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +13,8 @@ class AuthConf {
 // NB: we would want MainConf extends AppsConf, AuthConf.
 // be we can't do it in java, so we cheat!
 class AppsConf extends AuthConf {
-    Map<String, Map<String, Object>> GROUPS;
-    Map<String, App> APPS;
+    Map<String, Map<String, Object>> GROUPS = new HashMap<>();
+    Map<String, App> APPS = new HashMap<>();
     Map<String, App> APPS_ATTRS;
     Map<String, List<String>> LAYOUT;
     
