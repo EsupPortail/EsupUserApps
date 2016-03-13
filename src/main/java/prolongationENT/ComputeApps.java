@@ -8,13 +8,13 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-class ComputeLayout {
+class ComputeApps {
     MainConf conf;
     Groups groups;
     Ldap ldap;
-    Log log = LogFactory.getLog(ComputeLayout.class);
+    Log log = LogFactory.getLog(ComputeApps.class);
     
-    ComputeLayout(MainConf conf) {
+    ComputeApps(MainConf conf) {
         this.conf = conf;
         ldap = new Ldap(conf.ldap);
         groups = new Groups(conf.GROUPS);
@@ -53,6 +53,20 @@ class ComputeLayout {
             if (found) r.add(appId);
         }
         return r;
+    }
+    
+    Set<String> canImpersonate(String uid, String service) {
+        Set<String> appIds = computeValidApps(uid, true);
+        if (service != null) {
+            // cleanup url
+	    service = service.replace(":443/", "/");
+            for (String appId : new HashSet<>(appIds)) {
+                App app = conf.APPS.get(appId);
+                boolean keep = app.serviceRegex != null && service.matches(app.serviceRegex);
+                if (!keep) appIds.remove(appId);
+            }
+        }
+        return appIds;
     }
   
     private Set<String> compute_wanted_attributes() {

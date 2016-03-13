@@ -1,14 +1,13 @@
 package prolongationENT;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -19,7 +18,7 @@ import static prolongationENT.Utils.*;
 
 public class ComputeBandeau {	   
     MainConf conf = null;
-    ComputeLayout handleGroups;
+    ComputeApps computeApps;
     Stats stats;
 
     static String prev_host_attr = "prev_host";
@@ -36,48 +35,49 @@ public class ComputeBandeau {
     
     org.apache.commons.logging.Log log = LogFactory.getLog(ComputeBandeau.class);
 
-    public ComputeBandeau(MainConf conf, ComputeLayout handleGroups) {
+    public ComputeBandeau(MainConf conf) {
     	this.conf = conf;
-    	this.handleGroups = handleGroups;
+    	computeApps = new ComputeApps(conf);
     	stats = new Stats(conf);      
 	}
-
     
-    String computeMainJs(HttpServletRequest request) {
-    	String helpers_js = file_get_contents(request, "lib/helpers.ts");
-    	String main_js = file_get_contents(request, "lib/main.ts");
-        String loader_js = file_get_contents(request, "lib/loader.ts");
+    void layout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	boolean noCache = request.getParameter("noCache") != null;
+	String userId = noCache ? null : get_CAS_userId(request);
+	String forcedId = request.getParameter("uid");
 
-    	String js_css = json_encode(
-    	    asMap("base",    get_css_with_absolute_url(request, "main.css"))
-    	     .add("desktop", get_css_with_absolute_url(request, "desktop.css"))
-    	);
+	if (noCache || userId == null) {
+	    if (request.getParameter("auth_checked") == null) {
+		cleanupSession(request);
+		String final_url = conf.bandeau_ENT_url + "/layout?auth_checked"
+		    + (request.getQueryString() != null ? "&" + request.getQueryString() : "");
+		response.sendRedirect(via_CAS(conf.cas_login_url, final_url) + "&gateway=true");
+	    } else {
+		// user is not authenticated.
+                respond_js(response,
+			   String.format(file_get_contents(request, "templates/notLogged.html"),
+					 json_encode(asMap("cas_login_url", conf.cas_login_url))));
+	    }
+	    return;
+	}
 
-    	String templates = json_encode(
-            asMap("header", file_get_contents(request, "templates/header.html"))
-    	);
-
-    	Map<String, Object> js_conf =
-    	    objectFieldsToMap(conf, "bandeau_ENT_url", "ent_base_url", "layout_url",
-                              "cas_impersonate", "disableLocalStorage", 
-    	    		"time_before_checking_browser_cache_is_up_to_date", "ent_logout_url");
-
-    	return
-            "(function () {\n" +
-            "if (!window.prolongation_ENT) window.prolongation_ENT = {};\n" +
-            file_get_contents(request, "lib/init.ts") +
-            "pE.CONF = " + json_encode(js_conf) + "\n\n" +
-            "pE.CSS = " + js_css + "\n\n" +
-            "pE.TEMPLATES = " + templates + "\n\n" +
-            helpers_js + main_js + "\n\n" +
-            loader_js +
-            "})()";
+	if (forcedId != null) {
+	    List<String> memberOf = computeApps.getLdapPeopleInfo(userId).get("memberOf");
+	    if (conf.admins.contains(userId) ||
+		memberOf != null && firstCommonElt(memberOf, conf.admins) != null) {
+		// ok
+	    } else {
+		forcedId = null;
+	    }
+	}
+	if (forcedId == null) forcedId = userId;
+	layout(request, response, forcedId, userId);
     }
     
 	void layout(HttpServletRequest request, HttpServletResponse response, String userId, String realUserId) throws ServletException, IOException {
 	//prev = 0;
 
-	Ldap.Attrs attrs = handleGroups.getLdapPeopleInfo(userId);
+	Ldap.Attrs attrs = computeApps.getLdapPeopleInfo(userId);
 
 	Map<String,AppDTO> userChannels = userChannels(userId, attrs);
 	List<LayoutDTO> userLayout = userLayout(conf.LAYOUT, userChannels);
@@ -94,7 +94,7 @@ public class ComputeBandeau {
             .add("layout", asMap("folders", userLayout));
 	if (!realUserId.equals(userId)) js_data.put("realUserId", realUserId);
         if (getCookie(request, conf.cas_impersonate.cookie_name) != null) {
-            js_data.put("canImpersonate", handleGroups.computeValidApps(realUserId, true));
+            js_data.put("canImpersonate", computeApps.computeValidApps(realUserId, true));
         }
 
         String callback = request.getParameter("callback");
@@ -115,14 +115,64 @@ public class ComputeBandeau {
 		     "// not update needed" :
 		     callback + "(\n\n" + js_data_ + ",\n\n" + json_encode(js_params) + "\n\n)");
     }
+
+    void canImpersonate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String uid = request.getParameter("uid");
+        String service = request.getParameter("service");
+        Collection<String> appIds = computeApps.canImpersonate(uid, service);
+        if (appIds.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        } else {
+            respond_json(response, appIds);
+        }
+    }
+    
+    void redirect(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	String activeTab = request.getParameter("uportalActiveTab");
+	String appId = null;
+	String location = null;
+	if (activeTab != null) {
+		// gasp, there is a http:// iframe, display only one channel (nb: if the first channel is http-only, it will be displayed outside of uportal)
+		appId = request.getParameter("firstId");
+	} else {
+	    appId = request.getParameter("id");
+	    if (appId == null) throw new RuntimeException("missing 'id=xxx' parameter");
+	}
+	if (appId != null) { 
+            App app = conf.APPS.get(appId);
+    	    if (app == null) throw new RuntimeException("invalid appId " + appId);
+            boolean isGuest = !hasParameter(request, "login") && !hasParameter(request, "relog");
+	    location = get_url(app, appId, hasParameter(request, "guest"), isGuest, conf.current_idpAuthnRequest_url);
+
+            // Below rely on /ProlongationENT/redirect proxied in applications.
+            // Example for Apache:
+            //   ProxyPass /ProlongationENT https://ent.univ.fr/ProlongationENT
+            if (hasParameter(request, "relog")) {
+                removeCookies(request, response, app.cookies);
+            }
+            if (hasParameter(request, "impersonate")) {
+                String wantedUid = getCookie(request, conf.cas_impersonate.cookie_name);
+                response.addCookie(newCookie("CAS_IMPERSONATED", wantedUid, app.cookies.path));
+            }
+	}
+	response.sendRedirect(location);
+    }
+
+    void removeCookies(HttpServletRequest request, HttpServletResponse response, Cookies toRemove) {
+        for (String prefix : toRemove.name_prefixes()) {
+            for(Cookie c : getCookies(request)) { 
+                if (!c.getName().startsWith(prefix)) continue;
+                response.addCookie(newCookie(c.getName(), null, toRemove.path()));
+            }
+        }
+        for (String name : toRemove.names()) {
+            response.addCookie(newCookie(name, null, toRemove.path()));
+        }
+    }
         
     static long time_before_forcing_CAS_authentication_again(boolean different_referrer) {
   	return different_referrer ? 10 : 120; // seconds
-    }
-    
-    String get_css_with_absolute_url(HttpServletRequest request, String css_file) {
-	String s = file_get_contents(request, css_file);
-	return s.replaceAll("(url\\(['\" ]*)(?!['\" ])(?!https?:|/)", "$1" + conf.bandeau_ENT_url + "/");
     }
    
     /* ******************************************************************************** */
@@ -192,7 +242,7 @@ public class ComputeBandeau {
     Map<String, AppDTO> userChannels(final String userId, Ldap.Attrs person) {
         Map<String, AppDTO> rslt = new HashMap<>();
 	
-	for (String fname : handleGroups.computeValidApps(person, false)) {
+	for (String fname : computeApps.computeValidApps(person, false)) {
 		App app = conf.APPS.get(fname);
 		rslt.put(fname, new AppDTO(fname, app, get_user_url(app, fname, conf.current_idpAuthnRequest_url)));
 	  }
