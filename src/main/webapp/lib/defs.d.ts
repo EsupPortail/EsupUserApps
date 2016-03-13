@@ -95,6 +95,7 @@ interface prolongation_ENT {
 }
 
 interface plugin {
+  post_compute_currentApp();
   post_header_add();
 }
 interface helpers {

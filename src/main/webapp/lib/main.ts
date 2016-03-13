@@ -361,18 +361,7 @@ currentApp = pE.currentApp = computeBestCurrentAppId() || {};
 if (!b_E.is_logged)
     b_E.is_logged = b_E.logout;
 
-if (currentApp.fname === "aleph") {
-    delete b_E.logout;
-    b_E.is_logged = { fn: function(find) { var e = find("span#meconnecter"); return e && e.innerHTML === "Consulter mon compte"; } };
-    b_E.account_links = { "Mon compte lecteur": { fn: function(find) { return find('#compte').parentNode } } };
-}
-if (currentApp.fname === "domino") {
-    window.cssToLoadIfInsideIframe = "https://esup-data.univ-paris1.fr/esup/canal/css/domino.css"; 
-}
-if (currentApp.fname === "HyperPlanning-ens") {
-    if (currentApp.title)
-	currentApp.title = "Mon emploi du temps";
-}
+pE.callPlugins('post_compute_currentApp');
 
 if (fromLocalStorage && b_E.url !== sessionStorageGet('url')) {
     h.mylog("not using bandeau from sessionStorage which was computed for " + sessionStorageGet('url') + " whereas " + b_E.url + " is wanted");

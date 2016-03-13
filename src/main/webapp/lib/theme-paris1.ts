@@ -58,7 +58,23 @@ function installAccountLinks(app) {
 	    }
 	}
 
-  var plugin = { 
+  var plugin = {
+    
+    post_compute_currentApp: function () {      
+      if (pE.currentApp.fname === "aleph") {
+          delete b_E.logout;
+          b_E.is_logged = { fn: function(find) { var e = find("span#meconnecter"); return e && e.innerHTML === "Consulter mon compte"; } };
+          b_E.account_links = { "Mon compte lecteur": { fn: function(find) { return find('#compte').parentNode } } };
+      }
+      if (pE.currentApp.fname === "domino") {
+          window.cssToLoadIfInsideIframe = "https://esup-data.univ-paris1.fr/esup/canal/css/domino.css"; 
+      }
+      if (pE.currentApp.fname === "HyperPlanning-ens") {
+          if (pE.currentApp.title)
+      	pE.currentApp.title = "Mon emploi du temps";
+      }
+    }, 
+    
 		post_header_add: function() {
 			var barAccount = document.getElementById('portalPageBarAccount');
 			if (barAccount) barAccount.onclick = bandeau_ENT_Account_toggleOpen;
