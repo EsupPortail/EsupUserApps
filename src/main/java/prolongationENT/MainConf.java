@@ -36,6 +36,7 @@ class MainConf extends AppsConf {
     String layout_url;
     String _currentIdpId;
     String current_idpAuthnRequest_url;
+    String theme = "theme-paris1";
 
     Set<String> apps_no_bandeau = new HashSet<>();
     Set<String> url_bandeau_compatible = new HashSet<>();

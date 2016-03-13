@@ -55,7 +55,7 @@ public class ComputeBandeau {
 	    } else {
 		// user is not authenticated.
                 respond_js(response,
-			   String.format(file_get_contents(request, "templates/notLogged.html"),
+			   String.format(file_get_contents(request, conf.theme + "/templates/notLogged.html"),
 					 json_encode(asMap("cas_login_url", conf.cas_login_url))));
 	    }
 	    return;

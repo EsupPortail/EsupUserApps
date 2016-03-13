@@ -254,7 +254,7 @@ function installBandeau() {
     if (pE.CSS) 
 	h.addCSS(pE.CSS.base);
     else
-	h.loadCSS(CONF.bandeau_ENT_url + "/main.css", null);
+	h.loadCSS(CONF.bandeau_ENT_url + "/" + CONF.theme + "/main.css", null);
 
     var widthForNiceMenu = 800;
     // testing min-width is not enough: in case of a non-mobile comptabile page, the width will be big.
@@ -270,7 +270,7 @@ function installBandeau() {
 	if (pE.CSS) 
 	    h.addCSS("@media " + condition + " { \n" + pE.CSS.desktop + "}\n");
 	else
-	    h.loadCSS(CONF.bandeau_ENT_url + "/desktop.css", condition);
+	    h.loadCSS(CONF.bandeau_ENT_url + "/" + CONF.theme + "/desktop.css", condition);
     }
 
     var header = computeHeader();

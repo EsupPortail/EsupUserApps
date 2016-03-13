@@ -46,12 +46,12 @@ public class LoaderJs {
     	);
 
     	String templates = json_encode(
-            asMap("header", file_get_contents(request, "templates/header.html"))
-             .add("footer", file_get_contents(request, "templates/footer.html"))
+            asMap("header", theme_file_contents(request, "templates/header.html"))
+             .add("footer", theme_file_contents(request, "templates/footer.html"))
     	);
 
     	Map<String, Object> js_conf =
-    	    objectFieldsToMap(conf, "bandeau_ENT_url", "ent_base_url", "layout_url",
+    	    objectFieldsToMap(conf, "bandeau_ENT_url", "ent_base_url", "layout_url", "theme",
                               "cas_impersonate", "disableLocalStorage", 
     	    		"time_before_checking_browser_cache_is_up_to_date", "ent_logout_url");
 
@@ -66,10 +66,14 @@ public class LoaderJs {
             loader_js +
             "})()";
     }
+
+    String theme_file_contents(HttpServletRequest request, String file) {
+        return file_get_contents(request, conf.theme + "/" + file);
+    }
     
     String get_css_with_absolute_url(HttpServletRequest request, String css_file) {
-	String s = file_get_contents(request, css_file);
-	return s.replaceAll("(url\\(['\" ]*)(?!['\" ])(?!https?:|/)", "$1" + conf.bandeau_ENT_url + "/");
+	String s = theme_file_contents(request, css_file);
+	return s.replaceAll("(url\\(['\" ]*)(?!['\" ])(?!https?:|/)", "$1" + conf.bandeau_ENT_url + "/" + conf.theme + "/");
     }
 	
 }
