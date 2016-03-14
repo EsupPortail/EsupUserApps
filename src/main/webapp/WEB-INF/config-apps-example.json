@@ -1,0 +1,66 @@
+// NB: not pure json, comments & some trailing commas are allowed :)
+{    
+    "LAYOUT": {
+        "Accueil": [
+            "accueil",
+        ],
+        "Intranet": [
+            "intranet",
+        ],
+        "Scolarité": [
+            "MonDossierWeb", "pjweb", "ipweb", "pstage-etu",
+        ],
+    },
+
+    "APPS": {
+        "accueil": {
+            "title": "Accueil",
+            "description": "Page d'accueil de l'ENT",
+            "url": "https://ent.univ.fr/accueil/",
+            "groups": [
+                "Etablissement",
+            ],
+        },
+        "intranet": {
+            "title": "Intranet",
+            "description": "Espace de communication des services de l'université reservé aux personnels",
+            "url": "https://intranet.univ.fr/",
+            "groups": [
+                "Personnels",
+            ],
+        },
+        "MonDossierWeb": {
+            "title": "Mon dossier étudiant",
+            "description": "Consultation du dossier étudiant apogée",
+            "groups": [
+                "Etudiants",
+                "Anciens",
+            ],
+        },
+        "ipweb": {
+            "text": "Mes inscriptions pédagogiques",
+            "title": "Mes inscriptions pédagogiques avec IpWeb",
+            "description": "Inscriptions pédagogiques en ligne",
+            "url": "https://ipconsult.univ-paris1.fr",
+            "groups": [ "EtudiantsMembre" ],
+        },
+    },
+    
+    "GROUPS": {
+        "Etablissement": {
+            "uid": ".+",
+        },
+        "Personnels": {
+            "eduPersonAffiliation": "teacher|staff|employee|researcher|emeritus",
+        },
+        "Anciens": {
+            "eduPersonAffiliation": "alum",
+        },
+        "Etudiants": {
+            "eduPersonAffiliation": "student",
+        },
+        "EtudiantsMembre": {
+            "eduPersonAffiliation": [ "student", "member" ],
+        },
+    },
+}
