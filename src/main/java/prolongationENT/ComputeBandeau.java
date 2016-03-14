@@ -91,7 +91,7 @@ public class ComputeBandeau {
             .add("userAttrs", exportAttrs(userId, attrs))
             .add("layout", asMap("folders", userLayout));
 	if (!realUserId.equals(userId)) js_data.put("realUserId", realUserId);
-        if (getCookie(request, conf.cas_impersonate.cookie_name) != null) {
+        if (getCookieCasImpersonate(request) != null) {
             js_data.put("canImpersonate", computeApps.computeValidApps(realUserId, true));
         }
 
@@ -150,7 +150,7 @@ public class ComputeBandeau {
                 removeCookies(request, response, app.cookies);
             }
             if (hasParameter(request, "impersonate")) {
-                String wantedUid = getCookie(request, conf.cas_impersonate.cookie_name);
+                String wantedUid = getCookieCasImpersonate(request);
                 response.addCookie(newCookie("CAS_IMPERSONATED", wantedUid, app.cookies.path));
             }
 	}
@@ -295,6 +295,10 @@ public class ComputeBandeau {
 	    session.removeAttribute(prev_time_attr);
 	    session.removeAttribute(prev_host_attr);
 	}
+    }
+    
+    String getCookieCasImpersonate(HttpServletRequest request) {
+      return conf.cas_impersonate != null ? getCookie(request, conf.cas_impersonate.cookie_name) : null;
     }
 
     /* ******************************************************************************** */
