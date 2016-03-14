@@ -1,11 +1,15 @@
 <script>
- window.prolongation_ENT_args = { current: 'portal-administration' }
- 
- if (!document.location.hash.match(/login/)) {
-    window.prolongation_ENT_args.onNotLogged = function (pE) {
-      document.location = pE.CONF.cas_login_url + "?service=" + encodeURIComponent(document.location + "#login");
-    };
- }
+ window.prolongation_ENT_args = { 
+   current: 'portal-administration', 
+   onload: function (pE) {
+     // cool, we logged in. now we can clean url
+     if (document.location.hash) document.location.hash = '';
+   },
+   onNotLogged: function (pE) {
+     if (!document.location.hash.match(/login/)) // avoid dead-loop, just in case?
+       document.location = pE.CONF.cas_login_url + "?service=" + encodeURIComponent(document.location + "#login");
+   },
+ };
  
 </script>
 <script src="/ProlongationENT/loader.js"></script>
