@@ -54,9 +54,7 @@ public class ComputeBandeau {
 		response.sendRedirect(via_CAS(conf.cas_login_url, final_url) + "&gateway=true");
 	    } else {
 		// user is not authenticated.
-                respond_js(response,
-			   String.format(file_get_contents(request, conf.theme + "/templates/notLogged.html"),
-					 json_encode(asMap("cas_login_url", conf.cas_login_url))));
+                respond_json_or_jsonp(request, response, asMap("error", "Unauthorized"));
 	    }
 	    return;
 	}

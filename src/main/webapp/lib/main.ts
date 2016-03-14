@@ -1,5 +1,11 @@
 pE.main = function (DATA, PARAMS, fromLocalStorage) {
 
+if (!DATA.user) {
+  if (b_E.onNotLogged)
+       b_E.onNotLogged(pE.CONF.cas_login_url);
+  return;
+}
+
 var CONF = pE.CONF;
 pE.PARAMS = PARAMS;
 

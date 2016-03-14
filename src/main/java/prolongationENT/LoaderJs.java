@@ -51,7 +51,7 @@ public class LoaderJs {
     	);
 
     	Map<String, Object> js_conf =
-    	    objectFieldsToMap(conf, "prolongationENT_url", "uportal_base_url", "layout_url", "theme",
+    	    objectFieldsToMap(conf, "prolongationENT_url", "cas_login_url", "uportal_base_url", "layout_url", "theme",
                               "cas_impersonate", "disableLocalStorage", 
     	    		"time_before_checking_browser_cache_is_up_to_date", "ent_logout_url");
 

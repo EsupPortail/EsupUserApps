@@ -26,7 +26,8 @@ interface PARAMS {
 interface CONF {
   theme: string;
   prolongationENT_url: string;
-  uportal_base_url: string
+  uportal_base_url: string;
+  cas_login_url: string;
   ent_logout_url: string;
   layout_url: string;
   cas_impersonate: { cookie_name: string, cookie_domain: string };
@@ -60,6 +61,7 @@ interface prolongation_ENT_appParams {
   no_titlebar: boolean;
   no_footer: boolean;
 
+  onNotLogged(cas_login_url: string);
   onload(DATA: DATA, PARAMS: PARAMS, CONF: CONF): void;
 
   url: string;

@@ -189,6 +189,13 @@ class Utils {
 	response.setContentType("application/json; charset=utf8");
 	response.getWriter().write(json_encode(json));
     }
+    static void respond_json_or_jsonp(HttpServletRequest request, HttpServletResponse response, Object json) throws IOException {
+      String callback = request.getParameter("callback");
+      if (callback == null)
+        respond_json(response, json);
+      else
+        respond_js(response, callback + "(" + json_encode(json) + ")");      
+    }
 
 	static void addFilter(ServletContext sc, String name, Class<? extends Filter> clazz, Map<String,String> params, String... urls) {
         FilterRegistration.Dynamic o = sc.addFilter(name, clazz);
