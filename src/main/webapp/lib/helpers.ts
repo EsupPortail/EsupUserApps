@@ -207,8 +207,8 @@ loadScript: function(url) {
 };
 
 var loadBandeauJs = function(params) {
-    if (args.uid)
-	params.push("uid=" + encodeURIComponent(args.uid));
+    if (pE.wanted_uid)
+	params.push("uid=" + encodeURIComponent(pE.wanted_uid));
     params.push("app=" + (args.currentAppIds ? args.currentAppIds : [args.current]).join(","));
 
     var angle = window.orientation || '';
