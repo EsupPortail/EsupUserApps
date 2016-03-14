@@ -45,7 +45,7 @@ interface TEMPLATES {
   footer: string;
 }
 
-interface prolongation_ENT_appParams {
+interface prolongation_ENT_args {
   quirks: string[];
   current: string;
   currentAppIds: string[];
@@ -70,7 +70,6 @@ interface prolongation_ENT_appParams {
 
 interface prolongation_ENT {
   currentApp: app;
-  appParams: prolongation_ENT_appParams;
   wanted_uid: string;
   localStorage_prefix: string;
   localStorage_js_text_field: string;
@@ -131,6 +130,6 @@ interface helpers {
 
 interface Window {
   cssToLoadIfInsideIframe: string;
-  bandeau_ENT: prolongation_ENT_appParams;
   prolongation_ENT: prolongation_ENT;
+  prolongation_ENT_args: prolongation_ENT_args;
 }
