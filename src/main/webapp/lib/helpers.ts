@@ -221,3 +221,4 @@ var loadBandeauJs = function(params) {
     params.push("callback=window.prolongation_ENT.main");
     h.loadScript(pE.CONF.layout_url + (params.length ? "?" + params.join('&') : ''));
 };
+pE.helpers = h;
