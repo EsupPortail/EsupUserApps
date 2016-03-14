@@ -19,8 +19,8 @@
    setCasCookie('');
  };
 
- function onBandeauLoad(DATA, PARAMS, CONF) {
-    if (!DATA.realUserId) return alert("impersonate not allowed");
+ function onBandeauLoad(pE) {
+    if (!pE.DATA.realUserId) return alert("impersonate not allowed");
  }
 
  var pE_args = window.prolongation_ENT_args = { current: "bandeau-ent-assistance" };

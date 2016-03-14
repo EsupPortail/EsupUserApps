@@ -61,8 +61,8 @@ interface prolongation_ENT_args {
   no_titlebar: boolean;
   no_footer: boolean;
 
-  onNotLogged(cas_login_url: string);
-  onload(DATA: DATA, PARAMS: PARAMS, CONF: CONF): void;
+  onNotLogged(pE: prolongation_ENT);
+  onload(pE: prolongation_ENT): void;
 
   url: string;
   uid: string;

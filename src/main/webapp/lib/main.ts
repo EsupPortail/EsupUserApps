@@ -2,11 +2,12 @@ pE.main = function (DATA, PARAMS, fromLocalStorage) {
 
 if (!DATA.user) {
   if (b_E.onNotLogged)
-       b_E.onNotLogged(pE.CONF.cas_login_url);
+       b_E.onNotLogged(pE);
   return;
 }
 
 var CONF = pE.CONF;
+pE.DATA = DATA;
 pE.PARAMS = PARAMS;
 
 function personAttr(attrName) {
@@ -261,7 +262,7 @@ function installBandeau() {
 	if (b_E.quirks && h.simpleContains(b_E.quirks, 'window-resize'))
 	     setTimeout(triggerWindowResize, 0);
 
-	if (b_E.onload) b_E.onload(DATA, pE.PARAMS, CONF);
+	if (b_E.onload) b_E.onload(pE);
     });
 
 }
