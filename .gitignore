@@ -8,3 +8,6 @@ deploy
 .settings
 logs
 src/main/webapp/lib/*.js
+src/main/webapp/WEB-INF/config.json
+src/main/webapp/WEB-INF/config-apps.json
+src/main/webapp/WEB-INF/config-auth.json
