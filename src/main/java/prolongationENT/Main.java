@@ -29,7 +29,7 @@ public class Main extends HttpServlet {
     };
     
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (conf == null) initConf(request);
+        if (conf == null || conf.disableServerCache) initConf(request);
         switch (request.getServletPath()) {
            case "/loader.js":      loader_js     (request, response); break;
            case "/detectReload":   detectReload  (request, response); break;
