@@ -1,8 +1,8 @@
 pE.main = function (DATA, PARAMS, fromLocalStorage) {
 
 if (!DATA.user) {
-  if (b_E.onNotLogged)
-       b_E.onNotLogged(pE);
+  if (args.onNotLogged)
+       args.onNotLogged(pE);
   return;
 }
 
@@ -67,7 +67,7 @@ function getValidApps() {
 }
 
 function computeBestCurrentAppId() {
-  var ids = b_E.current ? [b_E.current] : b_E.currentAppIds;
+  var ids = args.current ? [args.current] : args.currentAppIds;
   if (!ids) return;
 	// multi ids for this app, hopefully only one id is allowed for this user...
 	// this is useful for apps appearing with different titles based on user affiliation
@@ -93,13 +93,13 @@ function computeHelp(app) {
 }
 
 function computeTitlebar(app) {
-    if (app && app.title && !b_E.no_titlebar)
+    if (app && app.title && !args.no_titlebar)
 	return "<div class='bandeau_ENT_Titlebar'><a href='" + app.url + "'>" + h.escapeQuotes(app.title) + "</a></div>";
     else
 	return '';
 }
 function bandeau_div_id() {
-    return b_E.div_id || (b_E.div_is_uid && DATA.user) || 'bandeau_ENT';
+    return args.div_id || (args.div_is_uid && DATA.user) || 'bandeau_ENT';
 }
 
 function loadSpecificCss() {
@@ -134,14 +134,14 @@ function find_DOM_elt(elt_spec) {
 }
 
 function logout_DOM_elt() {
-    if (b_E.logout)
-	return find_DOM_elt(b_E.logout);
+    if (args.logout)
+	return find_DOM_elt(args.logout);
 }
 
 function isLogged() {
-    if (b_E.login)
-	return !find_DOM_elt(b_E.login);
-    return b_E.is_logged && find_DOM_elt(b_E.is_logged);
+    if (args.login)
+	return !find_DOM_elt(args.login);
+    return args.is_logged && find_DOM_elt(args.is_logged);
 }
 
 function simulateClickElt(elt) {
@@ -237,18 +237,18 @@ function installBandeau() {
     h.onIdOrBody(bandeau_div_id(), function () {
 	h.set_div_innerHTML(bandeau_div_id(), bandeau_html);
 
-	if (!b_E.showSearch) {
+	if (!args.showSearch) {
 	    var searchElt = document.getElementById("portalPageBarSearch");
 	    if (searchElt) searchElt.innerHTML = '';
         }
 
         pE.callPlugins('post_header_add');
 
-        if (CONF.cas_impersonate && !b_E.uid) detectImpersonationPbs();
+        if (CONF.cas_impersonate && !args.uid) detectImpersonationPbs();
 
 	h.onReady(function () {
 	    installLogout();
-	    if (!b_E.no_footer) installFooter();
+	    if (!args.no_footer) installFooter();
 	});
 
 	if (pE.width_xs && document.body.scrollTop === 0) {
@@ -259,10 +259,10 @@ function installBandeau() {
 		window.scrollTo(0, bandeau.clientHeight); 
 	    }, 0);
 	}
-	if (b_E.quirks && h.simpleContains(b_E.quirks, 'window-resize'))
+	if (args.quirks && h.simpleContains(args.quirks, 'window-resize'))
 	     setTimeout(triggerWindowResize, 0);
 
-	if (b_E.onload) b_E.onload(pE);
+	if (args.onload) args.onload(pE);
     });
 
 }
@@ -310,7 +310,7 @@ function sessionStorageSet(field, value) {
 }
 function setSessionStorageCache(js_text) {
     sessionStorageSet(pE.localStorage_js_text_field, js_text);
-    sessionStorageSet("url", b_E.url);
+    sessionStorageSet("url", args.url);
     sessionStorageSet(currentApp.fname + ":time", h.now());
 
     // for old Prolongation, cleanup our mess
@@ -357,7 +357,7 @@ function mayUpdate() {
 	} else {
 	    // if user used "reload", the cached version of detectReload will change
 	    pE.detectReload = detectReload;
-	    b_E['detectReload'] = detectReload; // needed for migration
+	    args['detectReload'] = detectReload; // needed for migration
 	    h.loadScript(CONF.prolongationENT_url + "/detectReload");
 	}
     }
@@ -365,15 +365,15 @@ function mayUpdate() {
 
 currentApp = pE.currentApp = computeBestCurrentAppId() || {};
 
-if (!b_E.is_logged)
-    b_E.is_logged = b_E.logout;
+if (!args.is_logged)
+    args.is_logged = args.logout;
 
 pE.callPlugins('post_compute_currentApp');
 
-if (fromLocalStorage && b_E.url !== sessionStorageGet('url')) {
-    h.mylog("not using bandeau from sessionStorage which was computed for " + sessionStorageGet('url') + " whereas " + b_E.url + " is wanted");
+if (fromLocalStorage && args.url !== sessionStorageGet('url')) {
+    h.mylog("not using bandeau from sessionStorage which was computed for " + sessionStorageGet('url') + " whereas " + args.url + " is wanted");
     return "invalid";
-} else if ((b_E.is_logged || b_E.login) && !isLogged()) {
+} else if ((args.is_logged || args.login) && !isLogged()) {
     h.onReady(function () {
 	    if (isLogged()) installBandeau();
 	    mayUpdate();

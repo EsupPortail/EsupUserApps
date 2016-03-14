@@ -6,14 +6,14 @@ function installAccountLinks(app) {
 	appLinks_li['innerHTML'] = h.escapeQuotes(app.title);
 	h.toggleClass(appLinks_li, 'portalPageBarAccountSeparator');
     }
-    h.simpleEachObject(b_E.account_links, function (text, link_spec) {
+    h.simpleEachObject(args.account_links, function (text, link_spec) {
 	var sub_li = document.createElement("li");
 	sub_li.appendChild(pE.accountLink(text, link_spec));
 	h.insertAfter(appLinks_li, sub_li);
     });
 }
 
-    if (b_E.account_links) {
+    if (args.account_links) {
         h.onReady(function() {
 	    installAccountLinks(pE.currentApp);
         });
@@ -35,7 +35,7 @@ function installAccountLinks(app) {
 	}
 
 	function bandeau_ENT_Menu_toggle() {
-	    if (b_E.quirks && h.simpleContains(b_E.quirks, 'global-menuClosed-class'))
+	    if (args.quirks && h.simpleContains(args.quirks, 'global-menuClosed-class'))
 		h.toggleClass(document.body, 'bandeau_ENT_menuClosed');
 	    return h.toggleClass(document.getElementById('bandeau_ENT_Inner'), 'menuClosed');
 	}
@@ -48,7 +48,7 @@ function installAccountLinks(app) {
 	}
 
 	function installToggleMenu(hide) {
-	    var hideByDefault = b_E.hide_menu;
+	    var hideByDefault = args.hide_menu;
 	    var toggleMenu = document.getElementById('bandeau_ENT_portalPageBarToggleMenu');
 	    if (toggleMenu) {
 		toggleMenu.onclick = bandeau_ENT_Menu_toggleAndStore;
@@ -62,9 +62,9 @@ function installAccountLinks(app) {
     
     post_compute_currentApp: function () {      
       if (pE.currentApp.fname === "aleph") {
-          delete b_E.logout;
-          b_E.is_logged = { fn: function(find) { var e = find("span#meconnecter"); return e && e.innerHTML === "Consulter mon compte"; } };
-          b_E.account_links = { "Mon compte lecteur": { fn: function(find) { return find('#compte').parentNode } } };
+          delete args.logout;
+          args.is_logged = { fn: function(find) { var e = find("span#meconnecter"); return e && e.innerHTML === "Consulter mon compte"; } };
+          args.account_links = { "Mon compte lecteur": { fn: function(find) { return find('#compte').parentNode } } };
       }
       if (pE.currentApp.fname === "domino") {
           window.cssToLoadIfInsideIframe = "https://esup-data.univ-paris1.fr/esup/canal/css/domino.css"; 

@@ -5,12 +5,12 @@ function loader() {
     pE.maybe_loaded = true;
     
 
-	     b_E.url = pE.CONF.prolongationENT_url;
+	     args.url = pE.CONF.prolongationENT_url;
 
         var navigationStart = window.performance && window.performance.timing && window.performance.timing.navigationStart;
         pE.loadTime = navigationStart && (new Date().getTime() - navigationStart);
 
-       pE.wanted_uid = b_E.uid || h.getCookie("CAS_IMPERSONATED");
+       pE.wanted_uid = args.uid || h.getCookie("CAS_IMPERSONATED");
   	   pE.localStorage_prefix = "bandeau_ENT:" + (pE.wanted_uid ? pE.wanted_uid + ":" : '');
 	     pE.localStorage_js_text_field = "v6:js_text";
 	
