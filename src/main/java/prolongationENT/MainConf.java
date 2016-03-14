@@ -63,6 +63,7 @@ class MainConf extends AppsConf {
     String ent_logout_url;
 
     MainConf init() {
+        if (cas_base_url == null) throw new RuntimeException("config.json must set cas_base_url");
         if (cas_login_url == null) cas_login_url = cas_base_url + "/login";
         if (cas_logout_url == null) cas_logout_url = cas_base_url + "/logout";
         if (uportal_base_url_guest == null) uportal_base_url_guest = uportal_base_url;
