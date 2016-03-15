@@ -60,7 +60,7 @@ public class LoaderJs {
             "if (!window.prolongation_ENT) window.prolongation_ENT = {};\n" +
             file_get_contents(request, "lib/init.ts") +
             "pE.CONF = " + json_encode(js_conf) + "\n\n" +
-            "pE.CSS = " + js_css + "\n\n" +
+            (conf.disableCSSInlining ? "" : "pE.CSS = " + js_css + "\n\n") +
             "pE.TEMPLATES = " + templates + "\n\n" +
             helpers_js + main_js + "\n\n" +
             file_get_contents(request, "lib/plugins.ts") +

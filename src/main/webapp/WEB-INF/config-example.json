@@ -13,4 +13,6 @@
     "disableLocalStorage": false,
     // do disable server cache in production, 
     "disableServerCache": false,
+    // to debug theme CSS in browser, it's easier to load directly the CSS
+    "disableCSSInlining": false,
 }

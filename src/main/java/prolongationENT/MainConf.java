@@ -55,6 +55,7 @@ class MainConf extends AppsConf {
     boolean isCasSingleSignOutWorking;
     boolean disableLocalStorage;
     boolean disableServerCache;
+    boolean disableCSSInlining;
 
     // below have valid default values
     String cas_login_url;
