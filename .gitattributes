@@ -1,0 +1,4 @@
+* text=auto
+*.java whitespace=tab-in-indent
+*.ts whitespace=tab-in-indent
+*.js whitespace=tab-in-indent
