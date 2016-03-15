@@ -60,11 +60,6 @@
       "check-else",
       "check-whitespace"
     ],
-    "xquotemark": [
-      true,
-      "double",
-      "avoid-escape"
-    ],
     "semicolon": true,
     "switch-default": true,
     "trailing-comma": [
