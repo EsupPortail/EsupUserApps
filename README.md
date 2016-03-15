@@ -10,9 +10,33 @@ Configuration
 * deploy using ```mvn package``` (or modify ```build.properties``` and use ```ant deploy```)
 * test the result with ```https://ent.univ.fr/ProlongationENT/test/```
 
-### intégration dans une application
+### ProlongationENT with external uPortal4 ```/layout.json``` web service
 
-When it works, simply add the following to applications:
+You can delegate to uPortal the computing of user's layout (channels, apps).
+
+You must first install ```doc/uportal4/layout.jsp``` in uPortal's webapp directory.
+
+Then configure ```layout_url``` in config.json:
+```js
+   "layout_url": "https://ent.univ.fr/layout.jsp",
+```
+
+### reverse proxy caching
+
+It is recommanded to use apache (or nginx or ...) to cache loader.js since it is a single point of failure.
+In apache, using:
+
+```apache
+CacheEnable disk /ProlongationENT
+```
+
+will ensure the latest cached version when the servlet is down.
+
+
+Intégration dans une application
+-------------
+
+Simply add the following to applications:
 
 ```html
 <script> window.prolongation_ENT_args = { current: 'xxx' } </script>
@@ -41,17 +65,6 @@ Substitute "s|<body>|<body> <script>window.prolongation_ENT_args = { current: 'x
 * quirks
 
 NB: for the full list, see ```interface prolongation_ENT_args``` in ```lib/defs.d.ts```
-
-### reverse proxy caching
-
-It is recommanded to use apache (or nginx or ...) to cache loader.js since it is a single point of failure.
-In apache, using:
-
-```apache
-CacheEnable disk /ProlongationENT
-```
-
-will ensure the latest cached version when the servlet is down.
 
 Themes
 -------------------
