@@ -4,7 +4,9 @@
     "cas_base_url": "https://cas.univ.fr/cas",
     "uportal_base_url": "https://ent.univ.fr",
     "prolongationENT_url": "http://localhost:8082/ProlongationENT",
-    "layout_url": "https://ent.univ.fr/layout.jsp",
+
+    // needed when you use an external layout web service:
+    //"layout_url": "https://ent.univ.fr/layout.jsp",
 
     "visit_max_inactive": 1800, // 30 min
     "time_before_checking_browser_cache_is_up_to_date": 60,
