@@ -30,32 +30,32 @@ public class LoaderJs {
             response.sendRedirect(conf.prolongationENT_url + "/loader.js?v=" + jsHash);
         } else {
             int one_year = 60 * 60 * 24 * 365;
-	    response.setHeader("Etag", jsHash);
-	    respond_js(response, one_year, js);
-    	}
+            response.setHeader("Etag", jsHash);
+            respond_js(response, one_year, js);
+        }
     }
     
     String compute(HttpServletRequest request) {
-    	String helpers_js = file_get_contents(request, "lib/helpers.ts");
-    	String main_js = file_get_contents(request, "lib/main.ts");
+        String helpers_js = file_get_contents(request, "lib/helpers.ts");
+        String main_js = file_get_contents(request, "lib/main.ts");
         String loader_js = file_get_contents(request, "lib/loader.ts");
 
-    	String js_css = json_encode(
-    	    asMap("base",    get_css_with_absolute_url(request, "main.css"))
-    	     .add("desktop", get_css_with_absolute_url(request, "desktop.css"))
-    	);
+        String js_css = json_encode(
+            asMap("base",    get_css_with_absolute_url(request, "main.css"))
+             .add("desktop", get_css_with_absolute_url(request, "desktop.css"))
+        );
 
-    	String templates = json_encode(
+        String templates = json_encode(
             asMap("header", theme_file_contents(request, "templates/header.html"))
              .add("footer", theme_file_contents(request, "templates/footer.html"))
-    	);
+        );
 
-    	Map<String, Object> js_conf =
-    	    objectFieldsToMap(conf, "prolongationENT_url", "cas_login_url", "uportal_base_url", "layout_url", "theme",
+        Map<String, Object> js_conf =
+            objectFieldsToMap(conf, "prolongationENT_url", "cas_login_url", "uportal_base_url", "layout_url", "theme",
                               "cas_impersonate", "disableLocalStorage", 
-    	    		"time_before_checking_browser_cache_is_up_to_date", "ent_logout_url");
+                              "time_before_checking_browser_cache_is_up_to_date", "ent_logout_url");
 
-    	return
+        return
             "(function () {\n" +
             "if (!window.prolongation_ENT) window.prolongation_ENT = {};\n" +
             file_get_contents(request, "lib/init.ts") +
@@ -74,9 +74,9 @@ public class LoaderJs {
     }
     
     String get_css_with_absolute_url(HttpServletRequest request, String css_file) {
-	String s = theme_file_contents(request, css_file);
-	return s.replaceAll("(url\\(['\" ]*)(?!['\" ])(?!https?:|/)", "$1" + conf.prolongationENT_url + "/" + conf.theme + "/");
+        String s = theme_file_contents(request, css_file);
+        return s.replaceAll("(url\\(['\" ]*)(?!['\" ])(?!https?:|/)", "$1" + conf.prolongationENT_url + "/" + conf.theme + "/");
     }
-	
+
 }
 

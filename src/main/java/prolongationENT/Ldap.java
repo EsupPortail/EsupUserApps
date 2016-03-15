@@ -31,21 +31,21 @@ class Ldap {
     Log log = LogFactory.getLog(Ldap.class);
 
     Ldap(LdapConf ldapConf) {
-	this.ldapConf = ldapConf;
+        this.ldapConf = ldapConf;
     }
     
     private DirContext ldap_connect() {
-	Map<String,String> env =
-	    asMap(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory")
+        Map<String,String> env =
+            asMap(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory")
              .add(Context.PROVIDER_URL, ldapConf.url)
              .add(Context.SECURITY_AUTHENTICATION, "simple")
              .add(Context.SECURITY_PRINCIPAL, ldapConf.bindDN)
              .add(Context.SECURITY_CREDENTIALS, ldapConf.bindPasswd);
 
-	try {
-	    return new InitialDirContext(new Hashtable<>(env));
-	} catch (NamingException e) {
-	    log.error("error connecting to ldap server", e);
+        try {
+            return new InitialDirContext(new Hashtable<>(env));
+        } catch (NamingException e) {
+            log.error("error connecting to ldap server", e);
             throw new RuntimeException("error connecting to ldap server");
         }
     }
@@ -58,19 +58,19 @@ class Ldap {
     }
 
     @SuppressWarnings("unchecked")
-	Attrs getLdapInfo(String dn, Collection<String> wanted_attributes) {
-    	try {
-	        Attributes attrs = getAttributes(dn, wanted_attributes.toArray(new String[0]));
-	        Attrs r = new Attrs();
-	        for (String attr : wanted_attributes) {
-                    Attribute vals = attrs.get(attr.toLowerCase());
-					if (vals != null)
-                        r.put(attr, Collections.list((NamingEnumeration<String>) vals.getAll()));
-	        }
-	        return r;
-    	} catch (NamingException e) {
-    		return null;
-    	}
+    Attrs getLdapInfo(String dn, Collection<String> wanted_attributes) {
+        try {
+            Attributes attrs = getAttributes(dn, wanted_attributes.toArray(new String[0]));
+            Attrs r = new Attrs();
+            for (String attr : wanted_attributes) {
+                Attribute vals = attrs.get(attr.toLowerCase());
+                if (vals != null)
+                    r.put(attr, Collections.list((NamingEnumeration<String>) vals.getAll()));
+            }
+            return r;
+        } catch (NamingException e) {
+            return null;
+        }
     }
 
     private Attributes getAttributes(String dn, String[] wanted_attributes) throws NamingException {

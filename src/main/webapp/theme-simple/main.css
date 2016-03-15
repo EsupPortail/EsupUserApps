@@ -1,31 +1,31 @@
 
 #bandeau_ENT_Inner, #bandeau_ENT_Footer {
-  margin: 0;
-  background-color: #F1F1F1;
-  font:13px/1.231 Verdana, Arial, Helvetica, sans-serif;
-  color: #fff;
+    margin: 0;
+    background-color: #F1F1F1;
+    font:13px/1.231 Verdana, Arial, Helvetica, sans-serif;
+    color: #fff;
 }  
 /* force sane values */
 #bandeau_ENT_Inner, #bandeau_ENT_Inner span {
-  text-align: left !important;
+    text-align: left !important;
 
-  font-size:13px !important;
-  font-size:13px/1.231 !important;
-  font-family: Verdana, Arial, Helvetica, sans-serif !important;
-  font-weight: normal !important;
-  box-sizing: content-box;
+    font-size:13px !important;
+    font-size:13px/1.231 !important;
+    font-family: Verdana, Arial, Helvetica, sans-serif !important;
+    font-weight: normal !important;
+    box-sizing: content-box;
 }
 
 .bandeau_ENT_Menu li {
-  margin: 0;
-  box-sizing: content-box;
+    margin: 0;
+    box-sizing: content-box;
 }
 #bandeau_ENT_Inner a {
-  color: #fff !important;
+    color: #fff !important;
 }
 
 #bandeau_ENT_Inner img {
-  border: 0;
+    border: 0;
 }
 
 /* Portal Page Bar */
@@ -69,7 +69,7 @@
     width: 10em;
 }
 #portalPageBarSearch input.text::-ms-clear {
-  display: none;
+    display: none;
 }
 #portalPageBarSearch input.search {
     background-color: #fff;
@@ -92,117 +92,117 @@
 
 /*********************************************************************************/
 .bandeau_ENT_portalLogo {
- padding: 0;
- height: 34px;
- background-color: black;
- width: 100%;
- border-bottom: 1px solid #20528e;
+    padding: 0;
+    height: 34px;
+    background-color: black;
+    width: 100%;
+    border-bottom: 1px solid #20528e;
 }
 
 .bandeau_ENT_portalLogo a {
-  display: inline-block;
-  width: 77px;
-  height: 34px;
-  background-image: url(logo.png);
-  background-size: cover;
+    display: inline-block;
+    width: 77px;
+    height: 34px;
+    background-image: url(logo.png);
+    background-size: cover;
 }
 
 
 /*********************************************************************************/
 body {
- margin-top: 0;
- margin-left: 0;
- margin-right: 0;
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .bandeau_ENT_Menu {
- margin: 0;
- padding-left: 0;
- display: block;
+    margin: 0;
+    padding-left: 0;
+    display: block;
 
- column-width: 16em; -moz-column-width: 16em; -webkit-column-width: 16em;
+    column-width: 16em; -moz-column-width: 16em; -webkit-column-width: 16em;
 }
 
 .bandeau_ENT_Menu a, .bandeau_ENT_Menu span {
- padding:0.3em 0.2em 0.9em 0.2em;
- color: black;
- text-decoration:none;
+    padding:0.3em 0.2em 0.9em 0.2em;
+    color: black;
+    text-decoration:none;
 }
 
 .bandeau_ENT_Menu > li {
- z-index: 2;
- padding: 5px 11px 0px 11px;
+    z-index: 2;
+    padding: 5px 11px 0px 11px;
 
-  break-inside: avoid; page-break-inside: avoid; -webkit-column-break-inside: avoid;
+    break-inside: avoid; page-break-inside: avoid; -webkit-column-break-inside: avoid;
 }
 
 *:first-child+html .bandeau_ENT_Menu > li {
- padding:0;
+    padding:0;
 } /* hack needed for IE7 */
 
 .bandeau_ENT_Menu > li:hover { 
- z-index: 100003;
- } /* above activeTab in case of multi-line */
+    z-index: 100003;
+} /* above activeTab in case of multi-line */
 
 /* subrow */
 .bandeau_ENT_Menu li ul {
- padding:0.5em 0;
+    padding:0.5em 0;
 }
 .bandeau_ENT_Menu li:hover ul { display: block; }
 
 .bandeau_ENT_Menu li ul li {
- list-style-type:none;
- display:inline;
+    list-style-type:none;
+    display:inline;
 }
 .bandeau_ENT_Menu li ul a {
-   padding:0em 1em;
-   text-decoration:none; 
-   color:#acc9e6 !important;
-   text-shadow:1px 1px 1px rgba(0,0,0,.5);
-   z-index: 100005;
+    padding:0em 1em;
+    text-decoration:none; 
+    color:#acc9e6 !important;
+    text-shadow:1px 1px 1px rgba(0,0,0,.5);
+    z-index: 100005;
 }
 .bandeau_ENT_Menu li ul a:hover {
- color:#eee !important;
+    color:#eee !important;
 }
 
 /* Flyout Navigation */
 .bandeau_ENT_Menu li ul {
-   padding:0;
-   margin: 0; /* needed on IE8, no drawbacks on others */
-   background:transparent; 
+    padding:0;
+    margin: 0; /* needed on IE8, no drawbacks on others */
+    background:transparent; 
 }
 
 .bandeau_ENT_Menu li ul li {
- list-style:none;
+    list-style:none;
 }
 .bandeau_ENT_Menu li ul li {
-  display:list-item; position:static; padding:0;
+    display:list-item; position:static; padding:0;
 }
 #bandeau_ENT_Inner .bandeau_ENT_Menu li ul li a {
-  display:block;
+    display:block;
 }
 
 .bandeau_ENT_Menu li ul {
-  padding:2px;
-  background-color: #fff;
-  border: 1px solid #999999;
+    padding:2px;
+    background-color: #fff;
+    border: 1px solid #999999;
 }
 .bandeau_ENT_Menu li ul li:first-child { 
-  border-top: none !important; 
+    border-top: none !important; 
 }
 #bandeau_ENT_Inner .bandeau_ENT_Menu li ul li a {
- color:#213885 !important; 
- font-weight:normal; 
- font-size:13px !important;
- text-decoration:none !important;
- text-align:left;
- display:block;
- border: 0px solid #555 !important;
- text-shadow:none;
- padding: 6px;
+    color:#213885 !important; 
+    font-weight:normal; 
+    font-size:13px !important;
+    text-decoration:none !important;
+    text-align:left;
+    display:block;
+    border: 0px solid #555 !important;
+    text-shadow:none;
+    padding: 6px;
 }
 #bandeau_ENT_Inner .bandeau_ENT_Menu li ul li a:hover {
- color:#000000 !important; 
+    color:#000000 !important; 
 }
 
 /* when impersonated */
@@ -219,7 +219,7 @@ body {
 }
 
 .bandeau_ENT_Menu_Clear {
-  clear: both; height: 0; margin: 0;
+    clear: both; height: 0; margin: 0;
 }
 
 #bandeau_ENT_Footer {
@@ -264,16 +264,16 @@ body {
     font-size: 26px;
 }
 @media screen and (max-width: 450px) {
-  #portalPageBarSearch input.text {
-     width: 4em;
-  }
+    #portalPageBarSearch input.text {
+        width: 4em;
+    }
 
-  .bandeau_ENT_portalLogo {
-      text-align: left !important;
-  }
+    .bandeau_ENT_portalLogo {
+        text-align: left !important;
+    }
 
 }
 
 @media print {
-  #bandeau_ENT_Inner { display: none; }
+    #bandeau_ENT_Inner { display: none; }
 }

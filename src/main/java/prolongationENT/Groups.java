@@ -14,12 +14,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 
-class Groups {	   
+class Groups {
     Map<String, Map<String, List<Pattern>>> GROUPS;
     Log log = LogFactory.getLog(Ldap.class);
 
     Groups(Map<String, Map<String, Object>> GROUPS) {
-	this.GROUPS = prepareRegexes(GROUPS);
+        this.GROUPS = prepareRegexes(GROUPS);
     }
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -46,7 +46,7 @@ class Groups {
         for (Map<String, List<Pattern>> attr2regexes : GROUPS.values()) {
             r.addAll(attr2regexes.keySet());
         }
-	return r;
+        return r;
     }
     
     boolean hasGroup(Map<String, List<String>> person, String name) {

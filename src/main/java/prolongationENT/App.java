@@ -26,7 +26,7 @@ class App extends ACLs {
 
     App init() {
         if (url != null && admins != null) {
-        	compute_default_cookies_path_and_serviceRegex();
+            compute_default_cookies_path_and_serviceRegex();
         }
         return this;
     }

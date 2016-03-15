@@ -16,10 +16,10 @@ import org.apache.commons.logging.LogFactory;
 
 import static prolongationENT.Utils.*;
 
-public class Main extends HttpServlet {	   
+public class Main extends HttpServlet {           
     MainConf conf = null;
     LoaderJs loaderJs;
-	ComputeBandeau computeBandeau;
+    ComputeBandeau computeBandeau;
     
     org.apache.commons.logging.Log log = LogFactory.getLog(Main.class);
 
@@ -31,14 +31,14 @@ public class Main extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (conf == null || conf.disableServerCache) initConf(request);
         switch (request.getServletPath()) {
-           case "/loader.js":      loader_js     (request, response); break;
-           case "/detectReload":   detectReload  (request, response); break;
-           case "/purgeCache":     purgeCache    (request, response); break;
+            case "/loader.js":      loader_js     (request, response); break;
+            case "/detectReload":   detectReload  (request, response); break;
+            case "/purgeCache":     purgeCache    (request, response); break;
 
-           case "/layout":         layout        (request, response); break;       
-           case "/logout":         logout        (request, response); break;
-           case "/redirect":       redirect      (request, response); break;
-           case "/canImpersonate": canImpersonate(request, response); break;
+            case "/layout":         layout        (request, response); break;       
+            case "/logout":         logout        (request, response); break;
+            case "/redirect":       redirect      (request, response); break;
+            case "/canImpersonate": canImpersonate(request, response); break;
         }
     }
     
@@ -47,25 +47,25 @@ public class Main extends HttpServlet {
     }
     
     void detectReload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	long five_days = 60 * 60 * 24 * 5;
-	respond_js(response, five_days, "window.prolongation_ENT.detectReload(" + now() + ");");
+        long five_days = 60 * 60 * 24 * 5;
+        respond_js(response, five_days, "window.prolongation_ENT.detectReload(" + now() + ");");
     }
     
     void purgeCache(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	    log.warn("purging cache");
-	    initConf(request);
+        log.warn("purging cache");
+        initConf(request);
     }
 
     
     void layout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	computeBandeau.layout(request, response);
+        computeBandeau.layout(request, response);
     }
     
     void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	session_invalidate(request);
+        session_invalidate(request);
 
-	String callback = request.getParameter("callback");
-	respond_js(response, callback + "();");
+        String callback = request.getParameter("callback");
+        respond_js(response, callback + "();");
     }
     
     void canImpersonate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -77,16 +77,16 @@ public class Main extends HttpServlet {
     }
     
     synchronized void initConf(HttpServletRequest request) {
-    	conf = getMainConf(request.getSession().getServletContext());
+        conf = getMainConf(request.getSession().getServletContext());
         loaderJs = new LoaderJs(request, conf);
         computeBandeau = new ComputeBandeau(conf);
     }   
 
     static MainConf getMainConf(ServletContext sc) {
-    	Gson gson = new Gson();
-    	MainConf conf = gson.fromJson(getConf(sc, "config.json"), MainConf.class);
-    	conf.merge(gson.fromJson(getConf(sc, "config-auth.json"), AuthConf.class));
-    	conf.merge(gson.fromJson(getConf(sc, "config-apps.json"), AppsConf.class).init());
+        Gson gson = new Gson();
+        MainConf conf = gson.fromJson(getConf(sc, "config.json"), MainConf.class);
+        conf.merge(gson.fromJson(getConf(sc, "config-auth.json"), AuthConf.class));
+        conf.merge(gson.fromJson(getConf(sc, "config-apps.json"), AppsConf.class).init());
         conf.init();
         return conf;
     }
@@ -96,8 +96,8 @@ public class Main extends HttpServlet {
         if (s == null) return new JsonObject(); // do not fail here, checks are done on required attrs
         // allow trailing commas
         s = s.replaceAll(",(\\s*[\\]}])", "$1");
-    	return new JsonParser().parse(s).getAsJsonObject();
+        return new JsonParser().parse(s).getAsJsonObject();
     }
-	
+        
 }
 

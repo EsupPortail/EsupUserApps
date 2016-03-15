@@ -33,8 +33,8 @@ if ((user == null || user.equals("guest")) && request.getParameter("auth_checked
 } else {
     response.setContentType((callback != null ? "application/javascript": "application/json") + "; charset=UTF-8");
     if (callback != null) {
-	out.print(callback + "(");
-	out.flush();
+        out.print(callback + "(");
+        out.flush();
     }
     request.getRequestDispatcher("/layout.json").include(request, response);
     if (callback != null) out.println(")");

@@ -49,51 +49,51 @@ class Utils {
     }
 
     private static Log log() {
-	return log(Utils.class);
+        return log(Utils.class);
     }
     
     static Log log(Class<?> clazz) {
-	return LogFactory.getLog(clazz);
+        return LogFactory.getLog(clazz);
     }
     
     static String removePrefixOrNull(String s, String prefix) {
-	return s.startsWith(prefix) ? s.substring(prefix.length()) : null;
+        return s.startsWith(prefix) ? s.substring(prefix.length()) : null;
     }
 
     static String via_CAS(String cas_login_url, String href) {
-	return cas_login_url + "?service="  + urlencode(href);
+        return cas_login_url + "?service="  + urlencode(href);
     }
     
     static URL toURL(String url) {
-	try {
-	    return new URL(url);
-	} catch (java.net.MalformedURLException e) {
-	    log().error(e, e);
-	    return null;
-	}
+        try {
+            return new URL(url);
+        } catch (java.net.MalformedURLException e) {
+            log().error(e, e);
+            return null;
+        }
     }
 
     static String url2host(String url) {
-	URL url_ = toURL(url);
-	return url_ != null ? url_.getHost() : null;
+        URL url_ = toURL(url);
+        return url_ != null ? url_.getHost() : null;
     }
 
     static String urlencode(String s) {
-	try {
-	    return java.net.URLEncoder.encode(s, "UTF-8");
-	}
-	catch (java.io.UnsupportedEncodingException uee) {
-	    return s;
-	}
+        try {
+            return java.net.URLEncoder.encode(s, "UTF-8");
+        }
+        catch (java.io.UnsupportedEncodingException uee) {
+            return s;
+        }
     }
 
     static String urldecode(String s) {
-       try {
-           return java.net.URLDecoder.decode(s, "UTF-8");
-       }
-       catch (java.io.UnsupportedEncodingException uee) {
-           return s;
-       }
+        try {
+            return java.net.URLDecoder.decode(s, "UTF-8");
+        }
+        catch (java.io.UnsupportedEncodingException uee) {
+            return s;
+        }
     }
   
     static String json_encode(Object o) {
@@ -102,31 +102,31 @@ class Utils {
     }
 
     static String computeMD5(String s) {
-	try {
-	    //System.out.println("computing digest of " + file);
-	    MessageDigest md = MessageDigest.getInstance("MD5");
-	    byte[] digest = md.digest(s.getBytes());
-	    return (new HexBinaryAdapter()).marshal(digest);
-	} catch (NoSuchAlgorithmException e) {
-	    throw new RuntimeException(e);
-	}
+        try {
+            //System.out.println("computing digest of " + file);
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digest = md.digest(s.getBytes());
+            return (new HexBinaryAdapter()).marshal(digest);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     static boolean hasParameter(HttpServletRequest request, String attrName) {
-	return request.getParameter(attrName) != null;
+        return request.getParameter(attrName) != null;
     }
 
     // wrapper around request.getCookies() which never returns null
     static Cookie[] getCookies(HttpServletRequest request) {
-	Cookie[] l = request.getCookies();
-	return l != null ? l : new Cookie[] {};
+        Cookie[] l = request.getCookies();
+        return l != null ? l : new Cookie[] {};
     }
     
     static String getCookie(HttpServletRequest request, String name) {
-	for(Cookie c : getCookies(request)) { 
+        for(Cookie c : getCookies(request)) { 
             if (c.getName().equals(name)) return c.getValue();
         }  
-	return null;
+        return null;
     }
     static Cookie newCookie(String name, String val, String path) {
         Cookie c = new Cookie(name, val);
@@ -136,88 +136,88 @@ class Utils {
     }
 
     static String file_get_contents(ServletContext sc, String file) {
-	try {
+        try {
             InputStream in = sc.getResourceAsStream("/" + file);
             if (in == null) {
                 log().error("error reading file " + file);
                 return null;
             }
-	    return IOUtils.toString(in, "UTF-8");
-	} catch (IOException e) {
-	    log().error("error reading file " + file, e);
-	    return null;
-	}
+            return IOUtils.toString(in, "UTF-8");
+        } catch (IOException e) {
+            log().error("error reading file " + file, e);
+            return null;
+        }
     }
     static String file_get_contents(HttpServletRequest request, String file) {
-	return file_get_contents(request.getSession().getServletContext(), file);
+        return file_get_contents(request.getSession().getServletContext(), file);
     }
     
     // inspired from java-cas-client code
     static String get_CAS_userId(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Assertion assertion = (Assertion) (session == null ? request
-					   .getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION) : session
-					   .getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION));
+                                           .getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION) : session
+                                           .getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION));
         return assertion == null ? null : assertion.getPrincipal().getName();
     }
     
     static void session_invalidate(HttpServletRequest request) {
-	HttpSession session = request.getSession(false);
-	if (session == null) return;
-	try {
-	    session.invalidate();
-	} catch (IllegalStateException ise) {
-	    // IllegalStateException indicates session was already invalidated.
-	    // This is fine.  LogoutServlet is looking to guarantee the logged out session is invalid;
-	    // it need not insist that it be the one to perform the invalidating.
-	}
+        HttpSession session = request.getSession(false);
+        if (session == null) return;
+        try {
+            session.invalidate();
+        } catch (IllegalStateException ise) {
+            // IllegalStateException indicates session was already invalidated.
+            // This is fine.  LogoutServlet is looking to guarantee the logged out session is invalid;
+            // it need not insist that it be the one to perform the invalidating.
+        }
     }
     
     static long now() {
-	return System.currentTimeMillis() / 1000L;
+        return System.currentTimeMillis() / 1000L;
     }   
-	
+        
     static void respond_js(HttpServletResponse response, long cacheMaxAge, String js) throws IOException {
-	response.setHeader("Cache-Control", "max-age=" + cacheMaxAge);
-	respond_js(response, js);
+        response.setHeader("Cache-Control", "max-age=" + cacheMaxAge);
+        respond_js(response, js);
     }
     static void respond_js(HttpServletResponse response, String js) throws IOException {
-	response.setContentType("application/javascript; charset=utf8");
-	response.getWriter().write(js);
+        response.setContentType("application/javascript; charset=utf8");
+        response.getWriter().write(js);
     }
     static void respond_json(HttpServletResponse response, Object json) throws IOException {
-	response.setContentType("application/json; charset=utf8");
-	response.getWriter().write(json_encode(json));
+        response.setContentType("application/json; charset=utf8");
+        response.getWriter().write(json_encode(json));
     }
     static void respond_json_or_jsonp(HttpServletRequest request, HttpServletResponse response, Object json) throws IOException {
-      String callback = request.getParameter("callback");
-      if (callback == null)
-        respond_json(response, json);
-      else
-        respond_js(response, callback + "(" + json_encode(json) + ")");      
+        String callback = request.getParameter("callback");
+        if (callback == null)
+            respond_json(response, json);
+        else
+            respond_js(response, callback + "(" + json_encode(json) + ")");      
     }
 
-	static void addFilter(ServletContext sc, String name, Class<? extends Filter> clazz, Map<String,String> params, String... urls) {
+    static void addFilter(ServletContext sc, String name, Class<? extends Filter> clazz, Map<String,String> params, String... urls) {
         FilterRegistration.Dynamic o = sc.addFilter(name, clazz);
         if (params != null) o.setInitParameters(params);
         o.addMappingForUrlPatterns(null, true, urls);
-	}
-	
-	static void addServlet(ServletContext sc, String name, Class<? extends Servlet> clazz, Map<String,String> params, String... urls) {
+    }
+        
+    static void addServlet(ServletContext sc, String name, Class<? extends Servlet> clazz, Map<String,String> params, String... urls) {
         ServletRegistration.Dynamic o = sc.addServlet(name, clazz);
         if (params != null) o.setInitParameters(params);
         o.addMapping(urls);
-	}
+    }
 
     static MapBuilder<Object> objectFieldsToMap(Object o, String... fieldNames) {
-	MapBuilder<Object> map = new MapBuilder<>();
-	for (String name : fieldNames) {
-	    try {
-		map.put(name, o.getClass().getDeclaredField(name).get(o));
-	    } catch (NoSuchFieldException | IllegalAccessException e) {
-		log().error(e);
-	    }
-	}
-	return map;
+        MapBuilder<Object> map = new MapBuilder<>();
+        for (String name : fieldNames) {
+            try {
+                map.put(name, o.getClass().getDeclaredField(name).get(o));
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                log().error(e);
+            }
+        }
+        return map;
     }
 }

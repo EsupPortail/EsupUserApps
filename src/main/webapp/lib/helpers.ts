@@ -1,7 +1,7 @@
 var h = pE.helpers; // for type checking
 h = {
 mylog: function(s) {
-      if (window['console'] !== undefined) console.log(s);
+    if (window['console'] !== undefined) console.log(s);
 },
 
 head: function () {
@@ -18,20 +18,20 @@ removeClass: function (elt, classToToggle) {
        
     var without = elt.className.replace(regex , '');
     if (elt.className === without) {
-	return false;
+        return false;
     } else {
         elt.className = without;
-	return true;
+        return true;
     }
 },
 
 /* return true if class has been added */
 toggleClass: function (elt, classToToggle) {
     if (h.removeClass(elt, classToToggle)) {
-	return false;
+        return false;
     } else {
         elt.className += ' ' + classToToggle;
-	return true;
+        return true;
     }
 },
 
@@ -41,11 +41,11 @@ insertAfter: function (e, newNode) {
 
 simpleQuerySelectorAll: function (selector) {
     if (document.querySelectorAll) 
-	try {
+        try {
             return document.querySelectorAll(selector);
-	} catch (err) {
-	    return [];
-	}
+        } catch (err) {
+            return [];
+        }
 
     // IE
     window['__qsaels'] = [];
@@ -57,13 +57,13 @@ simpleQuerySelectorAll: function (selector) {
 
 simpleQuerySelector: function (selector) {
     if (document.querySelector) 
-	try {
+        try {
             return document.querySelector(selector);
-	} catch (err) {
-	    return null;
-	}
+        } catch (err) {
+            return null;
+        }
     else
-	return h.simpleQuerySelectorAll(selector)[0];
+        return h.simpleQuerySelectorAll(selector)[0];
 },
 
 getCookie: function (name) {
@@ -85,13 +85,13 @@ simpleContains: function(a, val) {
 simpleEach: function (a, fn) {
     var len = a.length;
     for(var i = 0; i < len; i++) {
-	fn(a[i], i, a);
+        fn(a[i], i, a);
     }
 },
 
 simpleEachObject: function (o, fn) {
     for(var k in o) {
-	fn(k, o[k], o);
+        fn(k, o[k], o);
     }
 },
 
@@ -99,7 +99,7 @@ simpleFilter: function(a, fn) {
     var r = [];
     var len = a.length;
     for(var i = 0; i < len; i++) {
-	if (fn(a[i])) r.push(a[i]);
+        if (fn(a[i])) r.push(a[i]);
     }
     return r;
 },
@@ -108,7 +108,7 @@ simpleMap: function(a, fn) {
     var r = [];
     var len = a.length;
     for(var i = 0; i < len; i++) {
-	r.push(fn(a[i]));
+        r.push(fn(a[i]));
     }
     return r;
 },
@@ -116,8 +116,8 @@ simpleMap: function(a, fn) {
 escapeQuotes: function(s) {
     var str = s;
     if (str) {
-	str=str.replace(/\'/g,'&#39;');
-	str=str.replace(/\"/g,'&quot;');
+        str=str.replace(/\'/g,'&#39;');
+        str=str.replace(/\"/g,'&quot;');
     }
     return str;
 },
@@ -129,43 +129,43 @@ template: function(s, map) {
 
 onIdOrBody_rec: function(id, f) {
     if (id && document.getElementById(id) || document.body)
-	f();
+        f();
     else
-	setTimeout(function () { h.onIdOrBody_rec(id, f) }, 9);
+        setTimeout(function () { h.onIdOrBody_rec(id, f) }, 9);
 },
 
 onIdOrBody: function(id, f) {
     if (id && document.getElementById(id) || document.body) {
-	f();
+        f();
     } else if (document.addEventListener) {
-	document.addEventListener('DOMContentLoaded', f);
+        document.addEventListener('DOMContentLoaded', f);
     } else 
-	h.onIdOrBody_rec(id, f);
+        h.onIdOrBody_rec(id, f);
 },
 
 onReady_rec: function(f) {
     if (document['attachEvent'] ? document.readyState === "complete" : document.readyState !== "loading")
-	f();
+        f();
     else
-	setTimeout(function () { h.onReady_rec(f) }, 9);
+        setTimeout(function () { h.onReady_rec(f) }, 9);
 },
 
 onReady: function (f) {
     // IE10 and lower don't handle "interactive" properly
     if (document['attachEvent'] ? document.readyState === "complete" : document.readyState !== "loading") {
-	f();
+        f();
     } else if (document.addEventListener) {
-	document.addEventListener('DOMContentLoaded', f);
+        document.addEventListener('DOMContentLoaded', f);
     } else 
-	h.onReady_rec(f);
+        h.onReady_rec(f);
 },
 
 set_div_innerHTML: function(div_id, content) {
     var elt = document.getElementById(div_id);
     if (!elt) {
-	elt = document.createElement("div");
-	elt.setAttribute("id", div_id);
-	document.body.insertBefore(elt, document.body.firstChild);
+        elt = document.createElement("div");
+        elt.setAttribute("id", div_id);
+        document.body.insertBefore(elt, document.body.firstChild);
     }
     elt.innerHTML = content;
 },
@@ -188,9 +188,9 @@ addCSS: function(css) {
     var elt = document.createElement('style');
     elt.setAttribute("type", 'text/css');
     if (elt['styleSheet'])
-	elt['styleSheet'].cssText = css;
+        elt['styleSheet'].cssText = css;
     else
-	elt.appendChild(document.createTextNode(css));
+        elt.appendChild(document.createTextNode(css));
     h.head().appendChild(elt);
     return elt;
 },
@@ -208,7 +208,7 @@ loadScript: function(url) {
 
 var loadBandeauJs = function(params) {
     if (pE.wanted_uid)
-	params.push("uid=" + encodeURIComponent(pE.wanted_uid));
+        params.push("uid=" + encodeURIComponent(pE.wanted_uid));
     params.push("app=" + (args.currentAppIds ? args.currentAppIds : [args.current]).join(","));
 
     var angle = window.orientation || '';

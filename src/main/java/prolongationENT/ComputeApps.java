@@ -25,7 +25,7 @@ class ComputeApps {
     }
 
     Ldap.Attrs getLdapPeopleInfo(String uid) {
-	return ldap.getLdapPeopleInfo(uid, compute_wanted_attributes());
+        return ldap.getLdapPeopleInfo(uid, compute_wanted_attributes());
     }
     
     Set<String> computeValidApps(Ldap.Attrs person, boolean wantImpersonate) {
@@ -59,7 +59,7 @@ class ComputeApps {
         Set<String> appIds = computeValidApps(uid, true);
         if (service != null) {
             // cleanup url
-	    service = service.replace(":443/", "/");
+            service = service.replace(":443/", "/");
             for (String appId : new HashSet<>(appIds)) {
                 App app = conf.APPS.get(appId);
                 boolean keep = app.serviceRegex != null && service.matches(app.serviceRegex);
@@ -72,8 +72,8 @@ class ComputeApps {
     private Set<String> compute_wanted_attributes() {
         Set<String> r = groups.needed_ldap_attributes();
         r.add("memberOf"); // hard code memberOf
-	r.addAll(conf.wanted_user_attributes);
+        r.addAll(conf.wanted_user_attributes);
         return r;
-  }
+    }
     
 }

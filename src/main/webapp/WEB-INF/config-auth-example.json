@@ -1,9 +1,9 @@
 // NB: not pure json, comments are allowed :)
 {
-	"ldap": { 
-	    "url": "ldap://ldap ldap://ldap2",
-            "bindDN": "cn=prolongation-ent,ou=admin,dc=univ,dc=fr",
-            "bindPasswd": "xxx",
-            "peopleDN": "ou=people,dc=univ,dc=fr"
-        }
+    "ldap": { 
+        "url": "ldap://ldap ldap://ldap2",
+        "bindDN": "cn=prolongation-ent,ou=admin,dc=univ,dc=fr",
+        "bindPasswd": "xxx",
+        "peopleDN": "ou=people,dc=univ,dc=fr"
+    }
 }

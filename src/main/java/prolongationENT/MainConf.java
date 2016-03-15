@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 class AuthConf {
-	Ldap.LdapConf ldap;
+    Ldap.LdapConf ldap;
 }
 
 // NB: we would want MainConf extends AppsConf, AuthConf.
@@ -19,7 +19,7 @@ class AppsConf extends AuthConf {
     Map<String, List<String>> LAYOUT;
     
     AppsConf init() {
-    	for (App app : APPS.values()) {
+        for (App app : APPS.values()) {
             if (app.inherit != null) {
                 app.merge(APPS_ATTRS.get(app.inherit));
             }
@@ -29,8 +29,8 @@ class AppsConf extends AuthConf {
     }
 }
 
-class MainConf extends AppsConf {	   
-	Set<String> admins = new HashSet<>();
+class MainConf extends AppsConf {           
+    Set<String> admins = new HashSet<>();
     String cas_base_url;
     String uportal_base_url;
     String uportal_base_url_guest;
@@ -69,16 +69,16 @@ class MainConf extends AppsConf {
         if (uportal_base_url_guest == null) uportal_base_url_guest = uportal_base_url;
         if (prolongationENT_url == null) prolongationENT_url = uportal_base_url_guest + "/ProlongationENT";
         if (layout_url == null) layout_url = prolongationENT_url + "/layout";
-	if (ent_logout_url == null) ent_logout_url = Utils.via_CAS(cas_logout_url, uportal_base_url + "/Logout"); // nb: esup logout may not logout of CAS if user was not logged in esup portail, so forcing CAS logout in case
+        if (ent_logout_url == null) ent_logout_url = Utils.via_CAS(cas_logout_url, uportal_base_url + "/Logout"); // nb: esup logout may not logout of CAS if user was not logged in esup portail, so forcing CAS logout in case
         return this;
     }
 
     void merge(AppsConf conf) {
-    	GROUPS = conf.GROUPS;
-    	APPS = conf.APPS;
-    	LAYOUT = conf.LAYOUT;
+        GROUPS = conf.GROUPS;
+        APPS = conf.APPS;
+        LAYOUT = conf.LAYOUT;
     }
     void merge(AuthConf conf) {
-    	ldap = conf.ldap;
+        ldap = conf.ldap;
     }    
 }

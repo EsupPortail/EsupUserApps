@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.LogFactory;
 
 
-class Stats {	   
+class Stats {           
     MainConf conf = null;
 
     static String request_last_time_attr_prefix = "request_last_time_";
@@ -21,27 +21,27 @@ class Stats {
     org.apache.commons.logging.Log log = LogFactory.getLog(Stats.class);
     
     Stats(MainConf conf) {
-    	this.conf = conf;
+        this.conf = conf;
     }
     
     void log(HttpServletRequest request, String userId, Set<String> userChannels) {
         HttpSession session = request.getSession(false);
-	String app = request.getParameter("app");
-	if (app == null) return;
-	String[] app_ = app.split(",");
-	List<String> apps = intersect(app_, userChannels);
+        String app = request.getParameter("app");
+        if (app == null) return;
+        String[] app_ = app.split(",");
+        List<String> apps = intersect(app_, userChannels);
         app = apps.isEmpty() ? app_[0] : apps.get(0);
         
-	log.info(
-		"[" + new java.util.Date() + "] " +
-		"[IP:" + request.getRemoteAddr() + "] " +
-		"[ID:" + userId + "] " +
-		"[APP:" + app + "] " +
-		"[URL:" + request.getHeader("Referer") + "] " +
-		"[USER-AGENT:" + request.getHeader("User-Agent") +"] " +
-		"[RES:" + request.getParameter("res") +"] " +
-		"[VISIT:" + get_visit_id(session) + ":" + get_app_visit_nb(session, app) +"] " +
-                "[LOAD-TIME:" + request.getParameter("time") + "]");
+        log.info(
+                 "[" + new java.util.Date() + "] " +
+                 "[IP:" + request.getRemoteAddr() + "] " +
+                 "[ID:" + userId + "] " +
+                 "[APP:" + app + "] " +
+                 "[URL:" + request.getHeader("Referer") + "] " +
+                 "[USER-AGENT:" + request.getHeader("User-Agent") +"] " +
+                 "[RES:" + request.getParameter("res") +"] " +
+                 "[VISIT:" + get_visit_id(session) + ":" + get_app_visit_nb(session, app) +"] " +
+                 "[LOAD-TIME:" + request.getParameter("time") + "]");
             
     }
 
@@ -65,7 +65,7 @@ class Stats {
     }
 
     String get_visit_id(HttpSession session) {
-	String id = (String) session.getAttribute(visit_id_attr);
+        String id = (String) session.getAttribute(visit_id_attr);
         if (isNewVisit(session, "") || id == null) {
             id = UUID.randomUUID().toString();
             session.setAttribute(visit_id_attr, id);
@@ -75,7 +75,7 @@ class Stats {
 
     Long get_app_visit_nb(HttpSession session, String app) {
         String attr = app_visit_nb_attr_prefix + app;
-	Long nb = (Long) session.getAttribute(attr);
+        Long nb = (Long) session.getAttribute(attr);
         if (isNewVisit(session, app) || nb == null) {
             nb = counter(session, global_visit_nb_attr);
             session.setAttribute(attr, nb);
@@ -84,11 +84,11 @@ class Stats {
     }
 
     List<String> intersect(String[] l1, Set<String> l2) {
-	List<String> r = new ArrayList<>();
-	for (String e : l1)
-	    if (l2.contains(e))
-		r.add(e);
-	return r;	    
+        List<String> r = new ArrayList<>();
+        for (String e : l1)
+            if (l2.contains(e))
+                r.add(e);
+        return r;            
     }
 
 }
