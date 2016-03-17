@@ -42,23 +42,20 @@ public class ComputeBandeau {
     }
     
     void layout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        boolean noCache = request.getParameter("noCache") != null;
-        String userId = noCache ? null : get_CAS_userId(request);
-        String forcedId = request.getParameter("uid");
-
-        if (noCache || userId == null) {
-            if (request.getParameter("auth_checked") == null) {
-                cleanupSession(request);
-                String final_url = conf.prolongationENT_url + "/layout?auth_checked"
-                    + (request.getQueryString() != null ? "&" + request.getQueryString() : "");
-                response.sendRedirect(via_CAS(conf.cas_login_url, final_url) + "&gateway=true");
+        if (request.getParameter("noCache") != null) {
+            needAuthentication(request, response);
+        } else {
+            String userId = get_CAS_userId(request);
+            if (userId == null) {
+                needAuthentication(request, response);
             } else {
-                // user is not authenticated.
-                respond_json_or_jsonp(request, response, asMap("error", "Unauthorized"));
+                layout(request, response, userId);
             }
-            return;
         }
+    }
 
+    void layout(HttpServletRequest request, HttpServletResponse response, String userId) throws IOException {
+        String forcedId = request.getParameter("uid");  
         if (forcedId != null) {
             List<String> memberOf = computeApps.getLdapPeopleInfo(userId).get("memberOf");
             if (conf.admins.contains(userId) ||
@@ -69,14 +66,10 @@ public class ComputeBandeau {
             }
         }
         if (forcedId == null) forcedId = userId;
-        layout(request, response, forcedId, userId);
+        layout(request, response, forcedId, userId, computeApps.getLdapPeopleInfo(userId));
     }
-    
-    void layout(HttpServletRequest request, HttpServletResponse response, String userId, String realUserId) throws ServletException, IOException {
-        //prev = 0;
-
-        Ldap.Attrs attrs = computeApps.getLdapPeopleInfo(userId);
-
+                
+    void layout(HttpServletRequest request, HttpServletResponse response, String userId, String realUserId, Ldap.Attrs attrs) throws IOException {
         Map<String,AppDTO> userChannels = userChannels(attrs);
         List<LayoutDTO> userLayout = userLayout(conf.LAYOUT, userChannels);
 
@@ -157,6 +150,18 @@ public class ComputeBandeau {
         response.sendRedirect(location);
     }
 
+    void needAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
+            if (request.getParameter("auth_checked") == null) {
+                cleanupSession(request);
+                String final_url = conf.prolongationENT_url + "/layout?auth_checked"
+                    + (request.getQueryString() != null ? "&" + request.getQueryString() : "");
+                response.sendRedirect(via_CAS(conf.cas_login_url, final_url) + "&gateway=true");
+            } else {
+                // user is not authenticated.
+                respond_json_or_jsonp(request, response, asMap("error", "Unauthorized"));
+            }
+    }
+    
     void removeCookies(HttpServletRequest request, HttpServletResponse response, Cookies toRemove) {
         for (String prefix : toRemove.name_prefixes()) {
             for(Cookie c : getCookies(request)) { 
