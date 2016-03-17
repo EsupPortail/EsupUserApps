@@ -77,7 +77,7 @@ public class ComputeBandeau {
 
         Ldap.Attrs attrs = computeApps.getLdapPeopleInfo(userId);
 
-        Map<String,AppDTO> userChannels = userChannels(userId, attrs);
+        Map<String,AppDTO> userChannels = userChannels(attrs);
         List<LayoutDTO> userLayout = userLayout(conf.LAYOUT, userChannels);
 
         stats.log(request, realUserId, userChannels.keySet());
@@ -237,7 +237,7 @@ public class ComputeBandeau {
         return rslt;  
     }
     
-    Map<String, AppDTO> userChannels(final String userId, Ldap.Attrs person) {
+    Map<String, AppDTO> userChannels(Ldap.Attrs person) {
         Map<String, AppDTO> rslt = new HashMap<>();
         
         for (String fname : computeApps.computeValidApps(person, false)) {
