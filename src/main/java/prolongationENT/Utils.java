@@ -43,6 +43,17 @@ class Utils {
         }
     }
 
+    static boolean isEmpty(String s) {
+        return s == null || s.isEmpty();
+    }
+    
+    static <T> T firstNonNull(T... values) {
+        for (T value : values) {
+            if (value != null) return value;
+        }
+        return null;
+    }
+    
     static String firstCommonElt(Iterable<String> l1, Set<String> l2) {
         for (String e : l1) if (l2.contains(e)) return e;
         return null;

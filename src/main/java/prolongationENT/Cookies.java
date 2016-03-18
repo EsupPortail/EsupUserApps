@@ -3,6 +3,7 @@ package prolongationENT;
 import java.util.List;
 import java.util.LinkedList;
 
+import static prolongationENT.Utils.firstNonNull;
 
 class Cookies {
     static String[] default_names = new String[] { "JSESSIONID", "PHPSESSID" };
@@ -13,7 +14,7 @@ class Cookies {
     List<String> name_prefixes;
 
     String path() {
-        return path != null ? path : "/";
+        return firstNonNull(path, "/");
     }
 
     List<String> names() {
