@@ -23,7 +23,7 @@ import static prolongationENT.Utils.asMap;
 class Ldap {
     static class Attrs extends HashMap<String, List<String>> {}
 
-    class LdapConf {
+    static class LdapConf {
         String url, bindDN, bindPasswd, peopleDN;
     }
     LdapConf ldapConf;

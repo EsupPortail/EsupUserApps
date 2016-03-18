@@ -46,7 +46,7 @@ class MainConf extends AppsConf {
     int visit_max_inactive = 1800; // 30 min
     int time_before_checking_browser_cache_is_up_to_date = 60;
 
-    class Cas_impersonate {
+    static class Cas_impersonate {
         String cookie_name;
         String cookie_domain;
     };

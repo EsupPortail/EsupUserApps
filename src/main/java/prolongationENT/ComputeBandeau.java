@@ -24,7 +24,7 @@ public class ComputeBandeau {
     static String prev_host_attr = "prev_host";
     static String prev_time_attr = "prev_time";    
 
-    class LayoutDTO {
+    static class LayoutDTO {
         public LayoutDTO(String title, Collection<AppDTO> portlets) {
             this.title = title;
             this.portlets = portlets;
