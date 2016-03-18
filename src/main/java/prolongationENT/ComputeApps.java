@@ -27,7 +27,7 @@ class ComputeApps {
     }
 
     Ldap.Attrs getLdapPeopleInfo(String uid) {
-        return ldap.getLdapPeopleInfo(uid, compute_wanted_attributes());
+        return ldap.getLdapPeopleInfo("uid", uid, compute_wanted_attributes());
     }
     
     Set<String> computeValidApps(Ldap.Attrs person, boolean wantImpersonate) {

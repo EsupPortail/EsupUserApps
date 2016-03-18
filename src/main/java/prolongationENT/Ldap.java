@@ -2,6 +2,7 @@ package prolongationENT;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -14,6 +15,8 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -58,9 +61,10 @@ class Ldap {
     }
 
     @SuppressWarnings("unchecked")
-    Attrs getLdapInfo(String dn, Collection<String> wanted_attributes) {
+    Attrs searchOne(String dn, String filter, Collection<String> wanted_attributes) {
         try {
-            Attributes attrs = getAttributes(dn, wanted_attributes.toArray(new String[0]));
+            Attributes attrs = searchOne(dn, filter, wanted_attributes.toArray(new String[0]));
+            if (attrs == null) return null;
             Attrs r = new Attrs();
             for (String attr : wanted_attributes) {
                 Attribute vals = attrs.get(attr.toLowerCase());
@@ -73,18 +77,29 @@ class Ldap {
         }
     }
 
-    private Attributes getAttributes(String dn, String[] wanted_attributes) throws NamingException {
+    private Attributes searchOneRaw(String dn, String filter, String[] wanted_attributes) throws NamingException {
+        SearchControls ctrls = new SearchControls();
+        ctrls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+        ctrls.setReturningAttributes(wanted_attributes);
+        ctrls.setCountLimit(2);
+        Enumeration<SearchResult> l = getDirContext().search(dn, filter, ctrls);
+        if (!l.hasMoreElements()) return null;
+        SearchResult r = l.nextElement();
+        return r != null && !l.hasMoreElements() ? r.getAttributes() : null;
+    }
+
+    private Attributes searchOne(String dn, String filter, String[] wanted_attributes) throws NamingException {
         try {
-            return getDirContext().getAttributes(dn, wanted_attributes);
+            return searchOneRaw(dn, filter, wanted_attributes);
         } catch (CommunicationException e) {
             // retry, maybe a new LDAP connection will work
             dirContext = null;
-            return getDirContext().getAttributes(dn, wanted_attributes);
+            return searchOneRaw(dn, filter, wanted_attributes);
         }
     }
     
-    Attrs getLdapPeopleInfo(String uid, Collection<String> wanted_attributes) {
-        return getLdapInfo("uid=" + uid + "," + ldapConf.peopleDN, wanted_attributes);
+    Attrs getLdapPeopleInfo(String attr, String val, Collection<String> wanted_attributes) {
+        return searchOne(ldapConf.peopleDN, "(" + attr + "=" + val + ")", wanted_attributes);
     }
 
     static String getFirst(Attrs attrs, String name) {
