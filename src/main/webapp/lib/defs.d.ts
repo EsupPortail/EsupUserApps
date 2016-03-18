@@ -51,6 +51,7 @@ interface prolongation_ENT_args {
   currentAppIds: string[];
   div_id: string;
   div_is_uid: boolean;
+  extra_css: string;
   logout: boolean;
   login: boolean;
   is_logged: boolean | { fn: (find: any) => boolean };
@@ -130,7 +131,6 @@ interface helpers {
 }
 
 interface Window {
-  cssToLoadIfInsideIframe: string;
   prolongation_ENT: prolongation_ENT;
   prolongation_ENT_args: prolongation_ENT_args;
 }

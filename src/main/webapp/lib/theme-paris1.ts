@@ -68,13 +68,18 @@
     var plugin = {
         
         post_compute_currentApp: function () {      
+            if (window['cssToLoadIfInsideIframe']) {
+                // migrate to new syntax
+                args.extra_css = window['cssToLoadIfInsideIframe'];
+            }
+
             if (pE.currentApp.fname === "aleph") {
                 delete args.logout;
                 args.is_logged = { fn: function(find) { var e = find("span#meconnecter"); return e && e.innerHTML === "Consulter mon compte"; } };
                 args.account_links = { "Mon compte lecteur": { fn: function(find) { return find('#compte').parentNode } } };
             }
             if (pE.currentApp.fname === "domino") {
-                window.cssToLoadIfInsideIframe = "https://esup-data.univ-paris1.fr/esup/canal/css/domino.css"; 
+                args.extra_css = "https://esup-data.univ-paris1.fr/esup/canal/css/domino.css"; 
             }
             if (pE.currentApp.fname === "HyperPlanning-ens") {
                 if (pE.currentApp.title)

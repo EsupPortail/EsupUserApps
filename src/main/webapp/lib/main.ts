@@ -102,16 +102,16 @@ function bandeau_div_id() {
 }
 
 function loadSpecificCss() {
-    if (window.cssToLoadIfInsideIframe) {
-        var v = window.cssToLoadIfInsideIframe;
+    if (args.extra_css) {
+        var v = args.extra_css;
         if (typeof v === "string")
             h.loadCSS(v, null);
     }
 }
 
 function unloadSpecificCss() {
-    if (window.cssToLoadIfInsideIframe) {
-        var v = window.cssToLoadIfInsideIframe;
+    if (args.extra_css) {
+        var v = args.extra_css;
         if (typeof v === "string")
             h.unloadCSS(v);
     }
