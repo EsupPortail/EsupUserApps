@@ -1,8 +1,12 @@
 package prolongationENT;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.net.URL;
+import java.net.HttpURLConnection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -162,6 +166,16 @@ class Utils {
     static String file_get_contents(HttpServletRequest request, String file) {
         return file_get_contents(request.getSession().getServletContext(), file);
     }
+
+    static String file_get_contents(File file) throws IOException {
+        return new String(Files.readAllBytes(file.toPath()), "UTF-8");
+    }
+
+    static InputStream urlGET(URL url) throws IOException {
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.connect();
+        return conn.getInputStream();
+    }
     
     // inspired from java-cas-client code
     static String get_CAS_userId(HttpServletRequest request) {
@@ -230,5 +244,9 @@ class Utils {
             }
         }
         return map;
+    }
+
+    static Long delta_ms(Date d1, Date d2) {
+        return d1 == null || d2 == null ? null : d2.getTime() - d1.getTime();
     }
 }

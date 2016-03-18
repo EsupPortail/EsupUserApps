@@ -51,6 +51,8 @@ class MainConf extends AppsConf {
         String cookie_domain;
     };
     Cas_impersonate cas_impersonate;
+
+    Shibboleth.Conf shibboleth;
     
     boolean isCasSingleSignOutWorking;
     boolean disableLocalStorage;
@@ -82,4 +84,8 @@ class MainConf extends AppsConf {
     void merge(AuthConf conf) {
         ldap = conf.ldap;
     }    
+    void merge(Shibboleth.Conf conf) {
+        if (conf.federation_metadata_url != null)
+            shibboleth = conf;
+    }
 }

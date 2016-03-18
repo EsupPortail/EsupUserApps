@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.LogFactory;
 
 import static prolongationENT.Utils.*;
+import static prolongationENT.Ldap.getFirst;
 
 public class ComputeBandeau {           
     MainConf conf = null;
@@ -42,7 +43,9 @@ public class ComputeBandeau {
     }
     
     void layout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getParameter("noCache") != null) {
+        if (hasValidProxyKey(request)) {
+            proxied_layout(request, response);
+        }  else if (request.getParameter("noCache") != null) {
             needAuthentication(request, response);
         } else {
             String userId = get_CAS_userId(request);
@@ -51,6 +54,16 @@ public class ComputeBandeau {
             } else {
                 layout(request, response, userId);
             }
+        }
+    }
+
+    void proxied_layout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Ldap.Attrs attrs = computeApps.getShibbolethUserInfo(request);
+        String userId = firstNonNull(getFirst(attrs, "uid"), getFirst(attrs, "id"));
+        if (userId != null) {
+            layout(request, response, userId, userId, attrs);
+        } else {
+            respond_json_or_jsonp(request, response, asMap("error", "Unauthorized"));
         }
     }
 
@@ -244,10 +257,11 @@ public class ComputeBandeau {
     
     Map<String, AppDTO> userChannels(Ldap.Attrs person) {
         Map<String, AppDTO> rslt = new HashMap<>();
+        String idpAuthnRequest_url = firstNonNull(getFirst(person, "SingleSignOnService-url"), conf.current_idpAuthnRequest_url);
         
         for (String fname : computeApps.computeValidApps(person, false)) {
             App app = conf.APPS.get(fname);
-            rslt.put(fname, new AppDTO(fname, app, get_user_url(app, fname, conf.current_idpAuthnRequest_url)));
+            rslt.put(fname, new AppDTO(fname, app, get_user_url(app, fname, idpAuthnRequest_url)));
         }
         return rslt;
     }
@@ -306,6 +320,12 @@ public class ComputeBandeau {
         return conf.cas_impersonate != null ? getCookie(request, conf.cas_impersonate.cookie_name) : null;
     }
 
+    boolean hasValidProxyKey(HttpServletRequest request) {
+        String key = request.getHeader("ProlongationENT-Proxy-Key");
+        return key != null && conf.shibboleth != null &&
+            conf.shibboleth.proxyKeys.contains(key);
+    }
+    
     /* ******************************************************************************** */
     /* simple helper functions */
     /* ******************************************************************************** */   

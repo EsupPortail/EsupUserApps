@@ -219,6 +219,6 @@ var loadBandeauJs = function(params) {
     if (pE.PARAMS) params.push('if_none_match=' + pE.PARAMS.hash); // pE.PARAMS is null when called from loader.ts
     if (pE.loadTime) params.push("time=" + pE.loadTime);
     params.push("callback=window.prolongation_ENT.main");
-    h.loadScript(pE.CONF.layout_url + (params.length ? "?" + params.join('&') : ''));
+    h.loadScript((args.layout_url || pE.CONF.layout_url) + (params.length ? "?" + params.join('&') : ''));
 };
 pE.helpers = h;

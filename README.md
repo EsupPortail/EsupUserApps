@@ -74,6 +74,40 @@ If you need javascript to animate HTML templates, you can also write ```webapp/l
 
 If you write a new theme, or need help writing it, please contact Pascal Rigaux or esup-utilisateurs@esup-portail.org (french list).
 
+
+Shibboleth
+-------------------
+
+For shibbolethized applications, the simpler is to integrate CAS-isified ProlongationENT.
+Your users will get ProlongationENT, whereas other users will have nothing.
+
+You can also use shibbolethized ProlongationENT:
+* configure ```config-shibboleth.json```, create a new random key for ```proxyKeys```
+* in the apache of your application, do:
+
+```apache
+SSLProxyEngine on
+<Location /ProlongationENT>
+  ProxyPass https://ent.univ.fr/ProlongationENT
+</Location>
+<Location /ProlongationENT/layout> 
+  AuthType shibboleth
+  ShibRequireSession Off
+  require shibboleth
+  ShibUseHeaders On
+  RequestHeader set ProlongationENT-Proxy-Key XXXrandomXXX
+</Location>
+```
+
+* in the application:
+
+```html
+<script> window.prolongation_ENT_args = { current: 'xxx', layout_url: '/ProlongationENT/layout' } </script>
+<script src="https://ent.univ.fr/ProlongationENT/loader.js"></script>
+```
+
+
+
 Technical details
 -------------------
 

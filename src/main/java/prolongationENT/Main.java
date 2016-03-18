@@ -77,7 +77,8 @@ public class Main extends HttpServlet {
     }
     
     synchronized void initConf(HttpServletRequest request) {
-        conf = getMainConf(request.getSession().getServletContext());
+        ServletContext sc = request.getSession().getServletContext();
+        conf = getMainConf(sc);
         loaderJs = new LoaderJs(request, conf);
         computeBandeau = new ComputeBandeau(conf);
     }   
@@ -87,6 +88,7 @@ public class Main extends HttpServlet {
         MainConf conf = gson.fromJson(getConf(sc, "config.json"), MainConf.class);
         conf.merge(gson.fromJson(getConf(sc, "config-auth.json"), AuthConf.class));
         conf.merge(gson.fromJson(getConf(sc, "config-apps.json"), AppsConf.class).init());
+        conf.merge(gson.fromJson(getConf(sc, "config-shibboleth.json"), Shibboleth.Conf.class));
         conf.init();
         return conf;
     }

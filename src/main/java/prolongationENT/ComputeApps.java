@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -14,6 +16,7 @@ class ComputeApps {
     MainConf conf;
     Groups groups;
     Ldap ldap;
+    Shibboleth shibboleth;
     Log log = LogFactory.getLog(ComputeApps.class);
     
     ComputeApps(MainConf conf) {
@@ -28,6 +31,17 @@ class ComputeApps {
 
     Ldap.Attrs getLdapPeopleInfo(String uid) {
         return ldap.getLdapPeopleInfo("uid", uid, compute_wanted_attributes());
+    }
+
+    Ldap.Attrs getShibbolethUserInfo(HttpServletRequest request) {
+        if (shibboleth == null) shibboleth = new Shibboleth(conf.shibboleth, request.getSession().getServletContext());
+
+        Ldap.Attrs attrs = shibboleth.getUserInfo(request, compute_wanted_attributes());
+        String eppn = getFirst(attrs, "eduPersonPrincipalName");
+        if (eppn != null) {
+            ldap.mergeAttrs(attrs, ldap.getLdapPeopleInfo("eduPersonPrincipalName", eppn, compute_wanted_attributes()));
+        }
+        return attrs;
     }
     
     Set<String> computeValidApps(Ldap.Attrs person, boolean wantImpersonate) {

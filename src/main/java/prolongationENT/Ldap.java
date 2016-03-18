@@ -102,6 +102,13 @@ class Ldap {
         return searchOne(ldapConf.peopleDN, "(" + attr + "=" + val + ")", wanted_attributes);
     }
 
+    void mergeAttrs(Attrs attrs, Attrs more) {
+        if (more == null) return;
+        for (String name: more.keySet())
+            if (!attrs.containsKey(name))
+                attrs.put(name, more.get(name));
+    }
+    
     static String getFirst(Attrs attrs, String name) {
         List<String> val = attrs.get(name);
         return val != null ? val.get(0) : null;

@@ -64,6 +64,7 @@ interface prolongation_ENT_args {
   onNotLogged(pE: prolongation_ENT);
   onload(pE: prolongation_ENT): void;
 
+  layout_url: string;
   uid: string;
 }
 
