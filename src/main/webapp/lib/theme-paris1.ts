@@ -58,6 +58,13 @@
         }
     }
 
+    function mayHideAccountLink() {
+        if (pE.validApps["CCompte-pers"] || pE.validApps["CCompte-etu"]) return;
+        
+        var elt = h.simpleQuerySelector('.portalPageBarAccountAnchor');
+        if (elt) elt.remove();
+    }
+    
     var plugin = {
         
         post_compute_currentApp: function () {      
@@ -79,6 +86,7 @@
             var barAccount = document.getElementById('portalPageBarAccount');
             if (barAccount) barAccount.onclick = bandeau_ENT_Account_toggleOpen;
             installToggleMenu(pE.width_xs);
+            mayHideAccountLink();
         },
     };
 

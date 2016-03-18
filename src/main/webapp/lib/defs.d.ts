@@ -78,6 +78,7 @@ interface prolongation_ENT {
   
   maybe_loaded: boolean;
   
+  validApps: {};
   DATA: DATA;
   CONF: CONF;
   PARAMS: PARAMS;

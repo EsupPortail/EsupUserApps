@@ -58,12 +58,14 @@ function computeMenu(currentApp) {
     return "<ul class='bandeau_ENT_Menu'>\n" + toggleMenuSpacer + li_list.join("\n") + "\n</ul>";
 }
 
-function getValidApps() {
-    var l = [];
+function computeValidApps() {
+    var m = {};
     h.simpleEach(DATA.layout.folders, function (tab) {
-        l.push.apply(l, tab.portlets);
+        h.simpleEach(tab.portlets, function (app) {
+            m[app.fname] = app;
+        });
     });
-    return l;
+    return m;
 }
 
 function computeBestCurrentAppId() {
@@ -71,14 +73,11 @@ function computeBestCurrentAppId() {
     if (!ids) return;
     // multi ids for this app, hopefully only one id is allowed for this user...
     // this is useful for apps appearing with different titles based on user affiliation
-    var validApps = getValidApps();
-    var currentApps = h.simpleFilter(validApps, function (app) { 
-        return h.simpleContains(ids, app.fname);
-    });
-    if (currentApps.length > 1) {
-        h.mylog("multiple appIds (" + currentApps + ") for this user, choosing first");
+    ids = h.simpleFilter(ids, function (id) { return pE.validApps[id]; });
+    if (ids.length > 1) {
+        h.mylog("multiple appIds (" + ids + ") for this user, choosing first");
     }
-    return currentApps[0];
+    return pE.validApps[ids[0]];
 }
 
 function computeHelp(app) {
@@ -363,6 +362,7 @@ function mayUpdate() {
     }
 }
 
+pE.validApps = computeValidApps();
 currentApp = pE.currentApp = computeBestCurrentAppId() || {};
 
 if (!args.is_logged)
