@@ -8,6 +8,8 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import static prolongationENT.Ldap.getFirst;
+
 class ComputeApps {
     MainConf conf;
     Groups groups;
@@ -29,7 +31,7 @@ class ComputeApps {
     }
     
     Set<String> computeValidApps(Ldap.Attrs person, boolean wantImpersonate) {
-        String user = person.get("uid").get(0);
+        String user = getFirst(person, "uid");
         Map<String, Boolean> groupsCache = new HashMap<>();
 
         Set<String> r = new HashSet<>();

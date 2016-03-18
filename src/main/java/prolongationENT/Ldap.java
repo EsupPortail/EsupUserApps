@@ -87,4 +87,9 @@ class Ldap {
         return getLdapInfo("uid=" + uid + "," + ldapConf.peopleDN, wanted_attributes);
     }
 
+    static String getFirst(Attrs attrs, String name) {
+        List<String> val = attrs.get(name);
+        return val != null ? val.get(0) : null;
+    }
+
 }
