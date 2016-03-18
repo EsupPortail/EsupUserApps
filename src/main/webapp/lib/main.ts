@@ -309,7 +309,7 @@ function sessionStorageSet(field, value) {
 }
 function setSessionStorageCache(js_text) {
     sessionStorageSet(pE.localStorage_js_text_field, js_text);
-    sessionStorageSet("url", args.url);
+    sessionStorageSet("url", pE.CONF.prolongationENT_url);
     sessionStorageSet(currentApp.fname + ":time", h.now());
     
     // for old Prolongation, cleanup our mess
@@ -370,8 +370,8 @@ args.is_logged = args.logout;
 
 pE.callPlugins('post_compute_currentApp');
 
-if (fromLocalStorage && args.url !== sessionStorageGet('url')) {
-    h.mylog("not using bandeau from sessionStorage which was computed for " + sessionStorageGet('url') + " whereas " + args.url + " is wanted");
+if (fromLocalStorage && pE.CONF.prolongationENT_url !== sessionStorageGet('url')) {
+    h.mylog("not using bandeau from sessionStorage which was computed for " + sessionStorageGet('url') + " whereas " + pE.CONF.prolongationENT_url + " is wanted");
     return "invalid";
 } else if ((args.is_logged || args.login) && !isLogged()) {
     h.onReady(function () {

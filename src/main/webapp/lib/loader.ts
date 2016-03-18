@@ -4,9 +4,6 @@ function loader() {
 
     pE.maybe_loaded = true;
     
-
-    args.url = pE.CONF.prolongationENT_url;
-
     var navigationStart = window.performance && window.performance.timing && window.performance.timing.navigationStart;
     pE.loadTime = navigationStart && (new Date().getTime() - navigationStart);
 
