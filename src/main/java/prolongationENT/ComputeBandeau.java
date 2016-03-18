@@ -79,7 +79,7 @@ public class ComputeBandeau {
             }
         }
         if (forcedId == null) forcedId = userId;
-        layout(request, response, forcedId, userId, computeApps.getLdapPeopleInfo(userId));
+        layout(request, response, forcedId, userId, computeApps.getLdapPeopleInfo(forcedId));
     }
                 
     void layout(HttpServletRequest request, HttpServletResponse response, String userId, String realUserId, Ldap.Attrs attrs) throws IOException {
