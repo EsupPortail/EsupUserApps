@@ -25,7 +25,7 @@ class Stats {
     }
     
     void log(HttpServletRequest request, String userId, Set<String> userChannels) {
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession();
         String app = request.getParameter("app");
         if (app == null) return;
         String[] app_ = app.split(",");
