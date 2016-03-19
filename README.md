@@ -123,11 +123,13 @@ A neat feature is "background" update: the sessionStorage layout is used, but if
 
 #### ```/purgeCache```
 
-The configuration files and ```/loader.js``` are computed on startup (or webapp reload). If you modify a file, call ```/purgeCache``` to take changes into account.
+The configuration files and ```/loader.js``` are computed on startup (or webapp reload). If you modify a file, call ```/purgeCache``` to take changes into account (when debugging, you can use config option ```disableServerCache```)
 
 #### ```/layout```
 
-In JSONP mode, it tries to authenticate the user and then computes its "layout". Configure ```config-apps.json``` first!
+It tries to authenticate the user (using CAS) and then computes its "layout". Configure ```config-apps.json``` first!
+
+It is mostly compatible with uPortal's ```/layout.json```
 
 #### ```/detectReload```
 
