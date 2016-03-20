@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import static prolongationENT.Utils.asMap;
     
 class Ldap {
+    @SuppressWarnings("serial")
     static class Attrs extends HashMap<String, List<String>> {}
 
     static class LdapConf {

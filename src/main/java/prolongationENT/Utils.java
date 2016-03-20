@@ -40,6 +40,7 @@ class Utils {
         return new MapBuilder<V>().add(key, value);
     }
 
+    @SuppressWarnings("serial")
     static class MapBuilder<V> extends HashMap<String, V> {
         MapBuilder<V> add(String key, V value) {
             this.put(key, value);
@@ -51,6 +52,7 @@ class Utils {
         return s == null || s.isEmpty();
     }
     
+    @SafeVarargs
     static <T> T firstNonNull(T... values) {
         for (T value : values) {
             if (value != null) return value;

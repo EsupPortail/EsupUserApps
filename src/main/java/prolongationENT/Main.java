@@ -16,6 +16,7 @@ import org.apache.commons.logging.LogFactory;
 
 import static prolongationENT.Utils.*;
 
+@SuppressWarnings("serial")
 public class Main extends HttpServlet {           
     MainConf conf = null;
     LoaderJs loaderJs;
