@@ -11,7 +11,7 @@ import org.apache.commons.logging.LogFactory;
 
 
 class Stats {           
-    MainConf conf = null;
+    Conf.Main conf = null;
 
     static String request_last_time_attr_prefix = "request_last_time_";
     static String visit_id_attr = "visit_id";    
@@ -20,7 +20,7 @@ class Stats {
 
     org.apache.commons.logging.Log log = LogFactory.getLog(Stats.class);
     
-    Stats(MainConf conf) {
+    Stats(Conf.Main conf) {
         this.conf = conf;
     }
     

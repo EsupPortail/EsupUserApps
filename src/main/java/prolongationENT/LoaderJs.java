@@ -10,13 +10,13 @@ import org.apache.commons.logging.LogFactory;
 import static prolongationENT.Utils.*;
 
 public class LoaderJs {
-    MainConf conf;
+    Conf.Main conf;
     String js;
     String jsHash;
     
     org.apache.commons.logging.Log log = LogFactory.getLog(LoaderJs.class);
 
-    public LoaderJs(HttpServletRequest request, MainConf conf) {
+    public LoaderJs(HttpServletRequest request, Conf.Main conf) {
         this.conf = conf;
         js = compute(request);
         jsHash = computeMD5(js);

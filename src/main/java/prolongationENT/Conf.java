@@ -6,19 +6,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-class AuthConf {
+class Conf {
+
+static class Auth {
     Ldap.LdapConf ldap;
 }
 
-// NB: we would want MainConf extends AppsConf, AuthConf.
+// NB: we would want Conf.Main extends Conf.Apps, Conf.Auth.
 // be we can't do it in java, so we cheat!
-class AppsConf extends AuthConf {
+static class Apps extends Conf.Auth {
     Map<String, Map<String, Object>> GROUPS = new HashMap<>();
     Map<String, App> APPS = new HashMap<>();
     Map<String, App> APPS_ATTRS;
     Map<String, List<String>> LAYOUT;
     
-    AppsConf init() {
+    Conf.Apps init() {
         for (App app : APPS.values()) {
             if (app.inherit != null) {
                 app.merge(APPS_ATTRS.get(app.inherit));
@@ -29,7 +31,7 @@ class AppsConf extends AuthConf {
     }
 }
 
-class MainConf extends AppsConf {           
+static class Main extends Conf.Apps {
     Set<String> admins = new HashSet<>();
     String cas_base_url;
     String uportal_base_url;
@@ -65,7 +67,7 @@ class MainConf extends AppsConf {
     String prolongationENT_url;
     String ent_logout_url;
 
-    MainConf init() {
+    Conf.Main init() {
         if (cas_base_url == null) throw new RuntimeException("config.json must set cas_base_url");
         if (cas_login_url == null) cas_login_url = cas_base_url + "/login";
         if (cas_logout_url == null) cas_logout_url = cas_base_url + "/logout";
@@ -76,16 +78,18 @@ class MainConf extends AppsConf {
         return this;
     }
 
-    void merge(AppsConf conf) {
+    void merge(Conf.Apps conf) {
         GROUPS = conf.GROUPS;
         APPS = conf.APPS;
         LAYOUT = conf.LAYOUT;
     }
-    void merge(AuthConf conf) {
+    void merge(Conf.Auth conf) {
         ldap = conf.ldap;
     }    
     void merge(Shibboleth.Conf conf) {
         if (conf.federation_metadata_url != null)
             shibboleth = conf;
     }
+}
+
 }

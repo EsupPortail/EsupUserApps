@@ -16,7 +16,7 @@ public class WebXml implements ServletContextListener {
     }
 
     private void configure(ServletContext sc) {
-        MainConf conf = Main.getMainConf(sc);
+        Conf.Main conf = Main.getConf(sc);
                 
         addFilter(sc, "CAS Single Sign Out", SingleSignOutFilter.class, null, "/layout");
 

@@ -18,7 +18,7 @@ import static prolongationENT.Utils.*;
 import static prolongationENT.Ldap.getFirst;
 
 public class ComputeBandeau {           
-    MainConf conf = null;
+    Conf.Main conf = null;
     ComputeApps computeApps;
     Stats stats;
 
@@ -27,7 +27,7 @@ public class ComputeBandeau {
 
     org.apache.commons.logging.Log log = LogFactory.getLog(ComputeBandeau.class);
 
-    public ComputeBandeau(MainConf conf) {
+    public ComputeBandeau(Conf.Main conf) {
         this.conf = conf;
         computeApps = new ComputeApps(conf);
         stats = new Stats(conf);      

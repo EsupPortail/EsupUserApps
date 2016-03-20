@@ -18,7 +18,7 @@ import static prolongationENT.Utils.*;
 
 @SuppressWarnings("serial")
 public class Main extends HttpServlet {           
-    MainConf conf = null;
+    Conf.Main conf = null;
     LoaderJs loaderJs;
     ComputeBandeau computeBandeau;
     
@@ -79,16 +79,16 @@ public class Main extends HttpServlet {
     
     synchronized void initConf(HttpServletRequest request) {
         ServletContext sc = request.getSession().getServletContext();
-        conf = getMainConf(sc);
+        conf = getConf(sc);
         loaderJs = new LoaderJs(request, conf);
         computeBandeau = new ComputeBandeau(conf);
     }   
 
-    static MainConf getMainConf(ServletContext sc) {
+    static Conf.Main getConf(ServletContext sc) {
         Gson gson = new Gson();
-        MainConf conf = gson.fromJson(getConf(sc, "config.json"), MainConf.class);
-        conf.merge(gson.fromJson(getConf(sc, "config-auth.json"), AuthConf.class));
-        conf.merge(gson.fromJson(getConf(sc, "config-apps.json"), AppsConf.class).init());
+        Conf.Main conf = gson.fromJson(getConf(sc, "config.json"), Conf.Main.class);
+        conf.merge(gson.fromJson(getConf(sc, "config-auth.json"), Conf.Auth.class));
+        conf.merge(gson.fromJson(getConf(sc, "config-apps.json"), Conf.Apps.class).init());
         conf.merge(gson.fromJson(getConf(sc, "config-shibboleth.json"), Shibboleth.Conf.class));
         conf.init();
         return conf;

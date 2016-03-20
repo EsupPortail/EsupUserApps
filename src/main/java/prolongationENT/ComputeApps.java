@@ -13,13 +13,13 @@ import org.apache.commons.logging.LogFactory;
 import static prolongationENT.Ldap.getFirst;
 
 class ComputeApps {
-    MainConf conf;
+    Conf.Main conf;
     Groups groups;
     Ldap ldap;
     Shibboleth shibboleth;
     Log log = LogFactory.getLog(ComputeApps.class);
     
-    ComputeApps(MainConf conf) {
+    ComputeApps(Conf.Main conf) {
         this.conf = conf;
         ldap = new Ldap(conf.ldap);
         groups = new Groups(conf.GROUPS);
