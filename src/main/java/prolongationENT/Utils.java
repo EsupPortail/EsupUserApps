@@ -201,7 +201,16 @@ class Utils {
     static long now() {
         return System.currentTimeMillis() / 1000L;
     }   
-        
+
+    static void bad_request(HttpServletResponse response, String msg) {
+        log().info(msg);
+        try {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, msg);
+        } catch (IOException e) {
+            log().error(e);
+        }
+    }
+
     static void respond_js(HttpServletResponse response, long cacheMaxAge, String js) throws IOException {
         response.setHeader("Cache-Control", "max-age=" + cacheMaxAge);
         respond_js(response, js);

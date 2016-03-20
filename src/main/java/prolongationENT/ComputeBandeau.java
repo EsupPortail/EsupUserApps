@@ -132,11 +132,11 @@ public class ComputeBandeau {
             appId = request.getParameter("firstId");
         } else {
             appId = request.getParameter("id");
-            if (appId == null) throw new RuntimeException("missing 'id=xxx' parameter");
+            if (appId == null) { bad_request(response, "missing 'id=xxx' parameter"); return; }
         }
         if (appId != null) { 
             App app = conf.APPS.get(appId);
-            if (app == null) throw new RuntimeException("invalid appId " + appId);
+            if (app == null) { bad_request(response, "invalid appId " + appId); return; }
             boolean isGuest = !hasParameter(request, "login") && !hasParameter(request, "relog");
             location = get_url(app, appId, hasParameter(request, "guest"), isGuest, conf.current_idpAuthnRequest_url);
 
