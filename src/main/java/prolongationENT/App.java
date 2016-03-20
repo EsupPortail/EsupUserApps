@@ -1,7 +1,13 @@
 package prolongationENT;
 
 import java.net.URL;
+import java.util.Set;
 import java.util.regex.Pattern;
+
+class ACLs {
+    Set<String> users;
+    Set<String> groups;
+}
 
 class App extends ACLs {
     String text;
