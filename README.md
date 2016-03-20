@@ -14,7 +14,7 @@ Configuration
 
 You can delegate to uPortal the computing of user's layout (channels, apps).
 
-You must first install ```doc/uportal4/layout.jsp``` in uPortal's webapp directory.
+You must first install ```utils/uportal4/layout.jsp``` in uPortal's webapp directory.
 
 Then configure ```layout_url``` in config.json:
 ```js
