@@ -3,6 +3,9 @@
 
 <module name="Checker">
   <module name="TreeWalker">
+    <!-- Avoid imports of the sun.* packages -->
+    <module name="IllegalImport"/>
+    <module name="RedundantImport"/>
     <module name="UnusedImports"/>
   </module>
 </module>
