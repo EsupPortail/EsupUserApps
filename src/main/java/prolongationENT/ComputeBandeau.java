@@ -186,7 +186,7 @@ public class ComputeBandeau {
     /* heuristics to detect if user may have changed (unneeded if CAS single logout?) */
     /* ******************************************************************************** */   
     boolean referer_hostname_changed(HttpServletRequest request, HttpSession session) {
-        String referer = (String) request.getHeader("Referer");
+        String referer = request.getHeader("Referer");
         if (referer == null) return false;
 
         String current_host = url2host(referer);
