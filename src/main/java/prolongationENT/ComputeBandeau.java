@@ -166,7 +166,7 @@ public class ComputeBandeau {
             }
     }
     
-    void removeCookies(HttpServletRequest request, HttpServletResponse response, Cookies toRemove) {
+    void removeCookies(HttpServletRequest request, HttpServletResponse response, App.Cookies toRemove) {
         for (String prefix : toRemove.name_prefixes()) {
             for(Cookie c : getCookies(request)) { 
                 if (!c.getName().startsWith(prefix)) continue;
