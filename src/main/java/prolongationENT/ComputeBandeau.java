@@ -25,15 +25,6 @@ public class ComputeBandeau {
     static String prev_host_attr = "prev_host";
     static String prev_time_attr = "prev_time";    
 
-    static class LayoutDTO {
-        public LayoutDTO(String title, Collection<AppDTO> portlets) {
-            this.title = title;
-            this.portlets = portlets;
-        }
-        String title;
-        Collection<AppDTO> portlets;
-    }
-    
     org.apache.commons.logging.Log log = LogFactory.getLog(ComputeBandeau.class);
 
     public ComputeBandeau(MainConf conf) {
@@ -83,8 +74,8 @@ public class ComputeBandeau {
     }
                 
     void layout(HttpServletRequest request, HttpServletResponse response, String userId, String realUserId, Ldap.Attrs attrs) throws IOException {
-        Map<String,AppDTO> userChannels = userChannels(attrs);
-        List<LayoutDTO> userLayout = userLayout(conf.LAYOUT, userChannels);
+        Map<String,Export.App> userChannels = userChannels(attrs);
+        List<Export.Layout> userLayout = userLayout(conf.LAYOUT, userChannels);
 
         stats.log(request, realUserId, userChannels.keySet());
         
@@ -240,28 +231,28 @@ public class ComputeBandeau {
         return user;
     }
     
-    List<LayoutDTO> userLayout(Map<String, List<String>> layout, Map<String, AppDTO> userChannels) {
-        List<LayoutDTO> rslt = new ArrayList<>();
+    List<Export.Layout> userLayout(Map<String, List<String>> layout, Map<String, Export.App> userChannels) {
+        List<Export.Layout> rslt = new ArrayList<>();
         for (Map.Entry<String, List<String>> e : layout.entrySet()) {
-            List<AppDTO> l = new ArrayList<>();
+            List<Export.App> l = new ArrayList<>();
             for (String fname : e.getValue()) {
-                AppDTO app = userChannels.get(fname);
+                Export.App app = userChannels.get(fname);
                 if (app != null)
                     l.add(app);
             }
             if (!l.isEmpty())
-                rslt.add(new LayoutDTO(e.getKey(), l));
+                rslt.add(new Export.Layout(e.getKey(), l));
         }
         return rslt;  
     }
     
-    Map<String, AppDTO> userChannels(Ldap.Attrs person) {
-        Map<String, AppDTO> rslt = new HashMap<>();
+    Map<String, Export.App> userChannels(Ldap.Attrs person) {
+        Map<String, Export.App> rslt = new HashMap<>();
         String idpAuthnRequest_url = firstNonNull(getFirst(person, "SingleSignOnService-url"), conf.current_idpAuthnRequest_url);
         
         for (String fname : computeApps.computeValidApps(person, false)) {
             App app = conf.APPS.get(fname);
-            rslt.put(fname, new AppDTO(fname, app, get_user_url(app, fname, idpAuthnRequest_url)));
+            rslt.put(fname, new Export.App(fname, app, get_user_url(app, fname, idpAuthnRequest_url)));
         }
         return rslt;
     }
