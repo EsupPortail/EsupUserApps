@@ -45,6 +45,8 @@ class ComputeApps {
     }
     
     Set<String> computeValidApps(Ldap.Attrs person, boolean wantImpersonate) {
+        if (person == null) return new HashSet<>();
+
         String user = getFirst(person, "uid");
         Map<String, Boolean> groupsCache = new HashMap<>();
 
