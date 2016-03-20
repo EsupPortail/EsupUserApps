@@ -56,6 +56,8 @@ class App extends ACLs {
     
 
     void merge(App app) {
+        if (app.url != null) url = app.url;
+
         if (app.serviceRegex != null) serviceRegex = app.serviceRegex;
         if (app.admins != null) admins = app.admins;
         if (app.cookies != null) cookies = app.cookies;
