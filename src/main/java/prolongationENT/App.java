@@ -3,15 +3,9 @@ package prolongationENT;
 import java.net.URL;
 import java.util.List;
 import java.util.LinkedList;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import static prolongationENT.Utils.firstNonNull;
-
-class ACLs {
-    Set<String> users;
-    Set<String> groups;
-}
 
 class App extends ACLs {
     
