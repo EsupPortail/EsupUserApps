@@ -37,14 +37,10 @@ static class Main extends Conf.Apps {
     Set<String> admins = new HashSet<>();
     String cas_base_url;
     String uportal_base_url;
-    String uportal_base_url_guest;
     String layout_url;
     String _currentIdpId;
     String current_idpAuthnRequest_url;
     String theme = "theme-simple";
-
-    Set<String> apps_no_bandeau = new HashSet<>();
-    Set<String> url_bandeau_compatible = new HashSet<>();
 
     Set<String> wanted_user_attributes;
     int visit_max_inactive = 1800; // 30 min
@@ -73,8 +69,7 @@ static class Main extends Conf.Apps {
         if (cas_base_url == null) throw new RuntimeException("config.json must set cas_base_url");
         if (cas_login_url == null) cas_login_url = cas_base_url + "/login";
         if (cas_logout_url == null) cas_logout_url = cas_base_url + "/logout";
-        if (uportal_base_url_guest == null) uportal_base_url_guest = uportal_base_url;
-        if (prolongationENT_url == null) prolongationENT_url = uportal_base_url_guest + "/ProlongationENT";
+        if (prolongationENT_url == null) prolongationENT_url = uportal_base_url + "/ProlongationENT";
         if (layout_url == null) layout_url = prolongationENT_url + "/layout";
         if (ent_logout_url == null) ent_logout_url = Utils.via_CAS(cas_logout_url, uportal_base_url + "/Logout"); // nb: esup logout may not logout of CAS if user was not logged in esup portail, so forcing CAS logout in case
         return this;

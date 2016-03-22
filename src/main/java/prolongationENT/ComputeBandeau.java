@@ -137,8 +137,7 @@ public class ComputeBandeau {
         if (appId != null) { 
             App app = conf.APPS.get(appId);
             if (app == null) { bad_request(response, "invalid appId " + appId); return; }
-            boolean isGuest = !hasParameter(request, "login") && !hasParameter(request, "relog");
-            location = get_url(app, appId, hasParameter(request, "guest"), isGuest, conf.current_idpAuthnRequest_url);
+            location = get_url(app, appId, conf.current_idpAuthnRequest_url);
 
             // Below rely on /ProlongationENT/redirect proxied in applications.
             // Example for Apache:
@@ -252,7 +251,7 @@ public class ComputeBandeau {
         
         for (String fname : computeApps.computeValidApps(person, false)) {
             App app = conf.APPS.get(fname);
-            rslt.put(fname, new Export.App(fname, app, get_user_url(app, fname, idpAuthnRequest_url)));
+            rslt.put(fname, new Export.App(fname, app, get_url(app, fname, idpAuthnRequest_url)));
         }
         return rslt;
     }
@@ -260,11 +259,6 @@ public class ComputeBandeau {
     /* ******************************************************************************** */
     /* generate links */
     /* ******************************************************************************** */   
-    String ent_url(App app, String fname, boolean isGuest, boolean noLogin, String idpAuthnRequest_url) {
-        String url = isGuest ? conf.uportal_base_url_guest + "/Guest" : conf.uportal_base_url + (noLogin ? "/render.userLayoutRootNode.uP" : "/MayLogin");
-        return url + "?uP_fname=" + fname;
-    }
-
     // quick'n'dirty version: it expects a simple mapping from url to SP entityId and SP SAML v1 url
     static String via_idpAuthnRequest_url(String idpAuthnRequest_url, String url, String shibbolethSPPrefix) {
         String spId = url.replaceFirst("(://[^/]*)(.*)", "$1");
@@ -284,19 +278,11 @@ public class ComputeBandeau {
         return url;
     }
 
-    String get_url(App app, String appId, boolean isGuest, boolean noLogin, String idpAuthnRequest_url) {
+    String get_url(App app, String appId, String idpAuthnRequest_url) {
         String url = app.url;
-        //log.warn(json_encode(app));
-        if (url != null && (!conf.apps_no_bandeau.contains(appId) || idpAuthnRequest_url != null && conf.url_bandeau_compatible.contains(appId))) {
-            url = url_maybe_adapt_idp(idpAuthnRequest_url, app.url, app.shibbolethSPPrefix);
-            return url;
-        } else {
-            return ent_url(app, appId, isGuest, noLogin, null);
-        }
-    }
-
-    String get_user_url(App app, String appId, String idpAuthnRequest_url) {
-        return get_url(app, appId, false, false, idpAuthnRequest_url);
+        url = url.replace("{fname}", appId);
+        url = url_maybe_adapt_idp(idpAuthnRequest_url, url, app.shibbolethSPPrefix);
+        return url;
     }
     
     void cleanupSession(HttpServletRequest request) {

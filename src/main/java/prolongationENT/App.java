@@ -59,7 +59,9 @@ class App extends ACLs {
     }
 
     App init() {
-        if (url != null && admins != null) {
+        if (url == null) throw new RuntimeException("invalid config-apps.json: missing url for " + title);
+
+        if (admins != null) {
             compute_default_cookies_path_and_serviceRegex();
         }
         return this;
