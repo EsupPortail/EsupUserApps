@@ -306,17 +306,6 @@ public class ComputeBandeau {
     private static Utils.MapBuilder<Object> asMapO(String k, Object v) {
         return asMap(k, v);
     }
-
-    /*
-    long prev = 0;
-    void logDelta(String step) {
-        long current = System.currentTimeMillis();
-        if (prev != 0) {
-            log.warn("TIMING: " + step + ": " + (current - prev) + "ms");
-        }
-        prev = current;
-    } 
-    */   
         
 }
 
