@@ -44,7 +44,7 @@ class App extends ACLs {
     boolean hideFromMobile = false;
     boolean hashelp = false;
 
-    String inherit;
+    List<String> inherit;
     String serviceRegex;
     ACLs admins;
     Cookies cookies = new Cookies();

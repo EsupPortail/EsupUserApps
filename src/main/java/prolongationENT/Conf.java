@@ -23,7 +23,9 @@ static class Apps extends Conf.Auth {
     Conf.Apps init() {
         for (App app : APPS.values()) {
             if (app.inherit != null) {
-                app.merge(APPS_ATTRS.get(app.inherit));
+                for (String base: app.inherit) {
+                    app.merge(APPS_ATTRS.get(base));
+                }
             }
             app.init();
         }
