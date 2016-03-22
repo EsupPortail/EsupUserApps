@@ -124,25 +124,24 @@ public class ComputeBandeau {
     
     void redirect(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String appId = null;
-        String location = null;
-            appId = request.getParameter("id");
-            if (appId == null) { bad_request(response, "missing 'id=xxx' parameter"); return; }
+        String appId = request.getParameter("id");
+        if (appId == null) { bad_request(response, "missing 'id=xxx' parameter"); return; }
 
-            App app = conf.APPS.get(appId);
-            if (app == null) { bad_request(response, "invalid appId " + appId); return; }
-            location = get_url(app, appId, conf.current_idpAuthnRequest_url);
+        App app = conf.APPS.get(appId);
+        if (app == null) { bad_request(response, "invalid appId " + appId); return; }
+        
+        String location = get_url(app, appId, conf.current_idpAuthnRequest_url);
 
-            // Below rely on /ProlongationENT/redirect proxied in applications.
-            // Example for Apache:
-            //   ProxyPass /ProlongationENT https://ent.univ.fr/ProlongationENT
-            if (hasParameter(request, "relog")) {
-                removeCookies(request, response, app.cookies);
-            }
-            if (hasParameter(request, "impersonate")) {
-                String wantedUid = getCookieCasImpersonate(request);
-                response.addCookie(newCookie("CAS_IMPERSONATED", wantedUid, app.cookies.path));
-            }
+        // Below rely on /ProlongationENT/redirect proxied in applications.
+        // Example for Apache:
+        //   ProxyPass /ProlongationENT https://ent.univ.fr/ProlongationENT
+        if (hasParameter(request, "relog")) {
+            removeCookies(request, response, app.cookies);
+        }
+        if (hasParameter(request, "impersonate")) {
+            String wantedUid = getCookieCasImpersonate(request);
+            response.addCookie(newCookie("CAS_IMPERSONATED", wantedUid, app.cookies.path));
+        }
             
         response.sendRedirect(location);
     }
