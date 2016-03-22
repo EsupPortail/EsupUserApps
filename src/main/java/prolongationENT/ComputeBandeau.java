@@ -124,17 +124,11 @@ public class ComputeBandeau {
     
     void redirect(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String activeTab = request.getParameter("uportalActiveTab");
         String appId = null;
         String location = null;
-        if (activeTab != null) {
-            // gasp, there is a http:// iframe, display only one channel (nb: if the first channel is http-only, it will be displayed outside of uportal)
-            appId = request.getParameter("firstId");
-        } else {
             appId = request.getParameter("id");
             if (appId == null) { bad_request(response, "missing 'id=xxx' parameter"); return; }
-        }
-        if (appId != null) { 
+
             App app = conf.APPS.get(appId);
             if (app == null) { bad_request(response, "invalid appId " + appId); return; }
             location = get_url(app, appId, conf.current_idpAuthnRequest_url);
@@ -149,7 +143,7 @@ public class ComputeBandeau {
                 String wantedUid = getCookieCasImpersonate(request);
                 response.addCookie(newCookie("CAS_IMPERSONATED", wantedUid, app.cookies.path));
             }
-        }
+            
         response.sendRedirect(location);
     }
 
