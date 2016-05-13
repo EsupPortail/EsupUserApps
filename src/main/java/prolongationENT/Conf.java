@@ -44,6 +44,15 @@ static class Main extends Conf.Apps {
     String current_idpAuthnRequest_url;
     String theme = "theme-simple";
 
+    static class Themes {
+        static class Alternatives {
+            Set<String> list;
+            String cookieName = "ProlongationENT_theme";
+        }
+        Alternatives alternatives;
+    }
+    Themes themes = new Themes();
+
     Set<String> wanted_user_attributes;
     int visit_max_inactive = 1800; // 30 min
     int time_before_checking_browser_cache_is_up_to_date = 60;
