@@ -172,6 +172,10 @@ class Utils {
     static String file_get_contents(File file) throws IOException {
         return new String(Files.readAllBytes(file.toPath()), "UTF-8");
     }
+    
+    static InputStream urlGET(String url) throws IOException {
+        return urlGET(toURL(url));
+    }   
 
     static InputStream urlGET(URL url) throws IOException {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

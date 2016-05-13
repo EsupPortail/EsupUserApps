@@ -148,10 +148,6 @@ class Shibboleth {
             return null;
         }
     }
-    
-    static InputStream urlGET(String url) throws IOException {
-        return Utils.urlGET(toURL(url));
-    }   
 
     static String[] getShibHeader(HttpServletRequest request, String name) {
         String value = request.getHeader(name);
