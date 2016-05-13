@@ -18,7 +18,7 @@ public class LoaderJs {
 
     public LoaderJs(HttpServletRequest request, Conf.Main conf) {
         this.conf = conf;
-        js = compute(request);
+        js = compute(request, conf.theme);
         jsHash = computeMD5(js);
     }
     
@@ -35,25 +35,26 @@ public class LoaderJs {
         }
     }
     
-    String compute(HttpServletRequest request) {
+    String compute(HttpServletRequest request, String theme) {
         String helpers_js = file_get_contents(request, "lib/helpers.ts");
         String main_js = file_get_contents(request, "lib/main.ts");
         String loader_js = file_get_contents(request, "lib/loader.ts");
 
         String js_css = json_encode(
-            asMap("base",    get_css_with_absolute_url(request, "main.css"))
-             .add("desktop", get_css_with_absolute_url(request, "desktop.css"))
+            asMap("base",    get_css_with_absolute_url(request, theme, "main.css"))
+             .add("desktop", get_css_with_absolute_url(request, theme, "desktop.css"))
         );
 
         String templates = json_encode(
-            asMap("header", theme_file_contents(request, "templates/header.html"))
-             .add("footer", theme_file_contents(request, "templates/footer.html"))
+            asMap("header", theme_file_contents(request, theme, "templates/header.html"))
+             .add("footer", theme_file_contents(request, theme, "templates/footer.html"))
         );
 
         Map<String, Object> js_conf =
-            objectFieldsToMap(conf, "prolongationENT_url", "cas_login_url", "uportal_base_url", "layout_url", "theme",
+            objectFieldsToMap(conf, "prolongationENT_url", "cas_login_url", "uportal_base_url", "layout_url",
                               "cas_impersonate", "disableLocalStorage", 
                               "time_before_checking_browser_cache_is_up_to_date", "ent_logout_url");
+        js_conf.put("theme", theme);
 
         return
             "(function () {\n" +
@@ -64,18 +65,18 @@ public class LoaderJs {
             "pE.TEMPLATES = " + templates + "\n\n" +
             helpers_js + main_js + "\n\n" +
             file_get_contents(request, "lib/plugins.ts") +
-            file_get_contents(request, "lib/" + conf.theme + ".ts") + ";" +
+            file_get_contents(request, "lib/" + theme + ".ts") + ";" +
             loader_js +
             "})()";
     }
 
-    String theme_file_contents(HttpServletRequest request, String file) {
-        return file_get_contents(request, conf.theme + "/" + file);
+    String theme_file_contents(HttpServletRequest request, String theme, String file) {
+        return file_get_contents(request, theme + "/" + file);
     }
     
-    String get_css_with_absolute_url(HttpServletRequest request, String css_file) {
-        String s = theme_file_contents(request, css_file);
-        return s.replaceAll("(url\\(['\" ]*)(?!['\" ])(?!https?:|/)", "$1" + conf.prolongationENT_url + "/" + conf.theme + "/");
+    String get_css_with_absolute_url(HttpServletRequest request, String theme, String css_file) {
+        String s = theme_file_contents(request, theme, css_file);
+        return s.replaceAll("(url\\(['\" ]*)(?!['\" ])(?!https?:|/)", "$1" + conf.prolongationENT_url + "/" + theme + "/");
     }
 
 }
