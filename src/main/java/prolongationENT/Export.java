@@ -8,6 +8,7 @@ class Export {
     static class App {
         String fname;
         String text;
+        String shortText;
         String title;
         String description;
         String url;
@@ -16,6 +17,7 @@ class Export {
         public App(String fname, prolongationENT.App app, String url) {
             this.fname = fname;
             text = app.text;
+            shortText = app.shortText;
             title = app.title;
             description = firstNonNull(app.description, "");
             this.url = url;

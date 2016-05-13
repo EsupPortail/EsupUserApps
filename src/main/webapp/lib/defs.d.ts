@@ -1,6 +1,7 @@
 interface app {
   fname: string;
   text: string;
+  shortText: string;
   title: string;
   description: string;
   url: string;

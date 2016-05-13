@@ -36,6 +36,7 @@ class App extends ACLs {
         }
     }
 
+    String shortText;
     String text;
     String title;
     String description;
