@@ -76,7 +76,7 @@
             if (pE.currentApp.fname === "aleph") {
                 delete args.logout;
                 args.is_logged = { fn: function(find) { var e = find("span#meconnecter"); return e && e.innerHTML === "Consulter mon compte"; } };
-                args.account_links = { "Mon compte lecteur": { fn: function(find) { return find('#compte').parentNode } } };
+                args.account_links = { "Mon compte lecteur": { fn: function(find) { return find('#compte').parentNode; } } };
             }
             if (pE.currentApp.fname === "domino") {
                 args.extra_css = "https://esup-data.univ-paris1.fr/esup/canal/css/domino.css"; 

@@ -1,0 +1,58 @@
+<div id="pE-header">
+  
+  <span class="pE-title">
+    <a href="https://ent.univ-paris1.fr/accueil/">
+      <span class="pE-logo"></span>
+      <span class="pE-title-ent">ENT /</span>
+    </a>
+    <span class="pE-title-app">${appTitle}</span>
+  </span>
+
+  <div id='pE-buttons' class='XpE-menu-is-open'>
+    ${topApps}
+    <a href="https://ent.univ-paris1.fr/accueil">
+      <div class="pE-goto-accueil">Plus</div>
+    </a>
+  </div>
+  <div id='pE-openMoreButtons'>
+    <div class="pE-button">
+      <a>
+        <img class="if-closed" src='${themeUrl}/open-menu.svg'>
+        <img class="if-open" src='${themeUrl}/close-menu.svg'>
+        <br> <span>Menu</span>
+      </a>
+    </div>
+  </div>
+  <div id='pE-photo'>
+    <div style='background-image: url(${photoUrl})'></div>
+    <span class='pE-arrow-down'></span>
+  </div>
+
+
+  <div id='pE-account'>
+    <ul>
+      <li class='pE-above-buttons'></li>
+      <li class='pE-accountDescr'>${userDetails}</li>
+      <li class='pE-accountSeparator pE-accountAnchor ${accountAnchorClass}'>
+        <a title='Interface de gestion de compte de l&#39;université Paris 1 Panthéon-Sorbonne.' href='https://ent.univ-paris1.fr/compte'>
+          <span>Mon compte Paris1</span>
+        </a>
+      </li>
+
+      <li class='pE-accountAnchor ${pagePersoClass}'>
+        <a title='Page perso' href='https://www.univ-paris1.fr/ent/intranet2/dsiun/compte/modifier-ma-page-personnelle/'>
+          <span>Page perso</span>
+        </a>
+      </li>
+            
+      <li class='pE-accountLogout'>
+        <a title='Se déconnecter' href='${logout_url}'>
+          <div class="pE-accountLogout-icon"></div>
+          <span>Déconnexion</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+</div>
+
