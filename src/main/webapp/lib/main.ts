@@ -194,7 +194,7 @@ function installFooter() {
         elt.setAttribute("id", id);
         document.body.appendChild(elt);
     }
-    elt.innerHTML = pE.TEMPLATES.footer;
+    elt.innerHTML = pE.callPlugins("computeFooter") || pE.TEMPLATES.footer;
 }
 
 var currentApp;
@@ -225,14 +225,17 @@ function installBandeau() {
         else
             h.loadCSS(CONF.prolongationENT_url + "/" + CONF.theme + "/desktop.css", condition);
     }
-    
-    var header = computeHeader();
-    var menu = computeMenu(currentApp);
-    var help = computeHelp(currentApp);
-    var titlebar = computeTitlebar(currentApp);
-    var clear = "<p class='bandeau_ENT_Menu_Clear'></p>";
-    var menu_ = "<div class='bandeau_ENT_Menu_'>" + menu + clear + "</div>";
-    var bandeau_html = "\n\n<div id='bandeau_ENT_Inner' class='menuOpen'>" + header + menu_ + titlebar + help + "</div>" + "\n\n";
+
+    var bandeau_html = pE.callPlugins("computeHeader");
+    if (!bandeau_html) {
+        var header = computeHeader();
+        var menu = computeMenu(currentApp);
+        var help = computeHelp(currentApp);
+        var titlebar = computeTitlebar(currentApp);
+        var clear = "<p class='bandeau_ENT_Menu_Clear'></p>";
+        var menu_ = "<div class='bandeau_ENT_Menu_'>" + menu + clear + "</div>";
+        bandeau_html = "\n\n<div id='bandeau_ENT_Inner' class='menuOpen'>" + header + menu_ + titlebar + help + "</div>" + "\n\n";
+    }
     h.onIdOrBody(bandeau_div_id(), function () {
         h.set_div_innerHTML(bandeau_div_id(), bandeau_html);
         

@@ -90,7 +90,7 @@ interface prolongation_ENT {
   localStorageSet(field: string, value: string);
   localStorageGet(field: string): string;
   accountLink(text: string, link_spec: any): HTMLAnchorElement;
-  callPlugins(event: string);
+  callPlugins(event: string): any;
   plugins: plugin[];
   onAsyncLogout(): void;
   detectReload(time): void;

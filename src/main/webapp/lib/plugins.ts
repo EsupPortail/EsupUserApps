@@ -1,7 +1,9 @@
 pE.plugins = [];
 
 pE.callPlugins = function(event) {
-  h.simpleEach(pE.plugins, function (plugin) {
-      if (plugin[event]) plugin[event]();
-  });
+    var v;
+    h.simpleEach(pE.plugins, function (plugin) {
+        if (plugin[event]) v = plugin[event]();
+    });
+    return v;
 };
