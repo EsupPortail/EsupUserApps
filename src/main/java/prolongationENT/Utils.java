@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterRegistration;
@@ -45,6 +46,40 @@ class Utils {
         MapBuilder<V> add(String key, V value) {
             this.put(key, value);
             return this;
+        }
+    }
+
+    static class CacheEntry<V> {
+        Date date;
+        V val;
+
+        CacheEntry(V val) {
+            this.val = val;
+            this.date = new Date();
+        }
+    }
+
+    static class Cache<V> {
+        ConcurrentHashMap<String, CacheEntry<V>> map;
+        int lifetime; // in seconds
+
+        Cache(int lifetime) {
+            map = new ConcurrentHashMap<>();
+            this.lifetime = lifetime;
+        }
+        V get(String key) {
+            CacheEntry<V> e = map.get(key);
+            if (e == null)
+                return null;
+            else if (lifetime <= 0 || delta_ms(e.date, new Date()) < lifetime * 1000)
+                return e.val;
+            else {
+                map.remove(key);
+                return null;
+            }
+        }
+        void put(String key, V value) {
+            map.put(key, new CacheEntry<>(value));
         }
     }
 

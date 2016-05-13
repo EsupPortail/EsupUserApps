@@ -90,6 +90,7 @@ public class Main extends HttpServlet {
         conf.merge(gson.fromJson(getConf(sc, "config-auth.json"), Conf.Auth.class));
         conf.merge(gson.fromJson(getConf(sc, "config-apps.json"), Conf.Apps.class).init());
         conf.merge(gson.fromJson(getConf(sc, "config-shibboleth.json"), Shibboleth.Conf.class));
+        conf.topApps = gson.fromJson(getConf(sc, "config-topApps.json"), TopAppsAgimus.GlobalConf.class).init();
         conf.init();
         return conf;
     }

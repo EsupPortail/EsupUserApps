@@ -21,6 +21,7 @@ public class ComputeBandeau {
     Conf.Main conf = null;
     ComputeApps computeApps;
     Stats stats;
+    TopAppsAgimus topApps, topApps_latest;
 
     static String prev_host_attr = "prev_host";
     static String prev_time_attr = "prev_time";    
@@ -31,6 +32,10 @@ public class ComputeBandeau {
         this.conf = conf;
         computeApps = new ComputeApps(conf);
         stats = new Stats(conf);      
+        if (conf.topApps.stable != null) {
+            topApps        = new TopAppsAgimus(conf.topApps.stable);
+            topApps_latest = new TopAppsAgimus(conf.topApps.latest);
+        }
     }
     
     void layout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -90,6 +95,9 @@ public class ComputeBandeau {
         if (!realUserId.equals(userId)) js_data.put("realUserId", realUserId);
         if (getCookieCasImpersonate(request) != null) {
             js_data.put("canImpersonate", computeApps.computeValidApps(realUserId, true));
+        }
+        if (topApps != null) {
+            js_data.put("topApps", hasParameter(request, "latestTopApps") ? topApps_latest.get(attrs) : topApps.get(attrs));
         }
 
         String callback = request.getParameter("callback");

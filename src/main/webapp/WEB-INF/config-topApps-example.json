@@ -1,0 +1,13 @@
+{
+    "elasticSearchWrapperUrl": "http://agimus.univ.fr/topApps",
+    "blacklist": ["accueil"],
+    "latest": {
+        "cacheLifetime": "5m",
+        "interval": "1M",
+    },
+    "stable": {
+        "cacheLifetime": "1w",
+        "interval": "1y",
+        "moduloDates": [ "08-01", "01-01" ],
+    },
+}

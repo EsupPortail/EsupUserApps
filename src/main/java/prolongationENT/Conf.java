@@ -64,6 +64,8 @@ static class Main extends Conf.Apps {
     Cas_impersonate cas_impersonate;
 
     Shibboleth.Conf shibboleth;
+
+    TopAppsAgimus.GlobalConf topApps;
     
     boolean isCasSingleSignOutWorking;
     boolean disableLocalStorage;
