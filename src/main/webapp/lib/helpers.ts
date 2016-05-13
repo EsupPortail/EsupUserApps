@@ -14,7 +14,7 @@ now: function () {
 
 /* return true if class has been removed */
 removeClass: function (elt, classToToggle) {
-    var regex = new RegExp(classToToggle, 'g');
+    var regex = new RegExp("\\b" + classToToggle + "\\b", 'g');
        
     var without = elt.className.replace(regex , '');
     if (elt.className === without) {
