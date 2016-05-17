@@ -214,6 +214,7 @@ class Utils {
 
     static InputStream urlGET(URL url) throws IOException {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setUseCaches(true); // do not pass "Pragma: no-cache" by default. It is java default behaviour but tomcat modifies this, cf "urlCacheProtection"
         conn.connect();
         return conn.getInputStream();
     }
