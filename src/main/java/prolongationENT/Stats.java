@@ -34,7 +34,7 @@ class Stats {
         
         log.info(
                  "[" + new java.util.Date() + "] " +
-                 "[IP:" + request.getRemoteAddr() + "] " +
+                 "[IP:" + getRemoteAddr(request) + "] " +
                  "[ID:" + userId + "] " +
                  "[APP:" + app + "] " +
                  "[URL:" + request.getHeader("Referer") + "] " +
@@ -45,6 +45,10 @@ class Stats {
             
     }
 
+    String getRemoteAddr(HttpServletRequest request) {
+        String addr = request.getHeader("X-Forwarded-For");
+        return addr != null ? addr : request.getRemoteAddr();
+    }
 
     boolean isNewVisit(HttpSession session, String app) {
         String attr = request_last_time_attr_prefix + app;
