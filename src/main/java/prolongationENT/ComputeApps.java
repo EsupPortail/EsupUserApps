@@ -34,7 +34,7 @@ class ComputeApps {
     }
 
     Ldap.Attrs getShibbolethUserInfo(HttpServletRequest request) {
-        if (shibboleth == null) shibboleth = new Shibboleth(conf.shibboleth, request.getSession().getServletContext());
+        if (shibboleth == null) shibboleth = new Shibboleth(conf.shibboleth, request.getServletContext());
 
         Ldap.Attrs attrs = shibboleth.getUserInfo(request, compute_wanted_attributes());
         String eppn = getFirst(attrs, "eduPersonPrincipalName");

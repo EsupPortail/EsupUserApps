@@ -201,7 +201,7 @@ class Utils {
         }
     }
     static String file_get_contents(HttpServletRequest request, String file) {
-        return file_get_contents(request.getSession().getServletContext(), file);
+        return file_get_contents(request.getServletContext(), file);
     }
 
     static String file_get_contents(File file) throws IOException {

@@ -78,7 +78,7 @@ public class Main extends HttpServlet {
     }
     
     synchronized void initConf(HttpServletRequest request) {
-        ServletContext sc = request.getSession().getServletContext();
+        ServletContext sc = request.getServletContext();
         conf = getConf(sc);
         loaderJs = new LoaderJs(request, conf);
         computeBandeau = new ComputeBandeau(conf);
