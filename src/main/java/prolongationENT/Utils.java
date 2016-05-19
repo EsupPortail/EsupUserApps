@@ -254,7 +254,11 @@ class Utils {
     }
 
     static void setCacheControlMaxAge(HttpServletResponse response, long cacheMaxAge) {
-        response.setHeader("Cache-Control", "max-age=" + cacheMaxAge);
+        if (response.getHeader("Set-Cookie") != null) {
+            log().error("never set public caching if you create a session: it would cause havoc with apache reverse proxy using mod_cache without 'CacheIgnoreHeaders Set-Cookie'");
+        } else {
+            response.setHeader("Cache-Control", "max-age=" + cacheMaxAge);
+        }
     }
     
     static void respond_js(HttpServletResponse response, long cacheMaxAge, String js) throws IOException {
