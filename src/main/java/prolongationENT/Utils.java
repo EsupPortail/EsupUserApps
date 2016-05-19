@@ -253,8 +253,12 @@ class Utils {
         }
     }
 
-    static void respond_js(HttpServletResponse response, long cacheMaxAge, String js) throws IOException {
+    static void setCacheControlMaxAge(HttpServletResponse response, long cacheMaxAge) {
         response.setHeader("Cache-Control", "max-age=" + cacheMaxAge);
+    }
+    
+    static void respond_js(HttpServletResponse response, long cacheMaxAge, String js) throws IOException {
+        setCacheControlMaxAge(response, cacheMaxAge);
         respond_js(response, js);
     }
     static void respond_js(HttpServletResponse response, String js) throws IOException {

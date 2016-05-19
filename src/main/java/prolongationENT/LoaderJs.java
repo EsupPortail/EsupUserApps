@@ -37,7 +37,7 @@ public class LoaderJs {
                                                              conf.themes.alternatives.cookieName));
             } else {
                 // redirect to versioned loader.js which has long cache time
-                response.setHeader("Cache-Control", "max-age=" + one_hour);
+                setCacheControlMaxAge(response, one_hour);
                 response.sendRedirect(conf.prolongationENT_url + "/loader.js?v=" + jsHash);
             }
         } else {
