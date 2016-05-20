@@ -27,6 +27,7 @@ public class Main extends HttpServlet {
     static String[] mappings = new String[] {
         "/loader.js", "/detectReload", "/purgeCache",
         "/layout", "/logout", "/redirect", "/canImpersonate",
+        "/admin/config-apps.json",
     };
     
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -40,6 +41,8 @@ public class Main extends HttpServlet {
             case "/logout":         logout        (request, response); break;
             case "/redirect":       redirect      (request, response); break;
             case "/canImpersonate": canImpersonate(request, response); break;
+
+            case "/admin/config-apps.json": show_config_apps(request, response); break;
         }
     }
     
@@ -75,6 +78,14 @@ public class Main extends HttpServlet {
     
     void redirect(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         computeBandeau.redirect(request, response);
+    }
+
+    void show_config_apps(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (get_CAS_userId(request) == null) {
+            bad_request(response, "you must authenticate first");
+        } else {
+            respond_json(response, objectFieldsToMap(conf, "LAYOUT", "APPS", "GROUPS"));
+        }
     }
     
     synchronized void initConf(HttpServletRequest request) {
