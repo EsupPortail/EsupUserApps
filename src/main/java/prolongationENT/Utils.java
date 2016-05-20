@@ -293,11 +293,22 @@ class Utils {
         o.addMapping(urls);
     }
 
+    private static java.lang.reflect.Field getField(Class<?> c, String fieldName) throws NoSuchFieldException {
+        while (true) {
+            try {
+                return c.getDeclaredField(fieldName);
+            } catch (NoSuchFieldException e) {
+                c = c.getSuperclass();
+                if (c == null) throw e;
+            }
+        }
+    }
+    
     static MapBuilder<Object> objectFieldsToMap(Object o, String... fieldNames) {
         MapBuilder<Object> map = new MapBuilder<>();
         for (String name : fieldNames) {
             try {
-                map.put(name, o.getClass().getDeclaredField(name).get(o));
+                map.put(name, getField(o.getClass(), name).get(o));
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 log().error(e);
             }
