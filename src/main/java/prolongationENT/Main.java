@@ -95,12 +95,12 @@ public class Main extends HttpServlet {
         return conf;
     }
 
-    static JsonObject getConf(ServletContext sc, String jsonFile) {
+    static String getConf(ServletContext sc, String jsonFile) {
         String s = file_get_contents(sc, "WEB-INF/" + jsonFile);
-        if (s == null) return new JsonObject(); // do not fail here, checks are done on required attrs
+        if (s == null) return "{}"; // do not fail here, checks are done on required attrs
         // allow trailing commas
         s = s.replaceAll(",(\\s*[\\]}])", "$1");
-        return new JsonParser().parse(s).getAsJsonObject();
+        return s;
     }
         
 }
