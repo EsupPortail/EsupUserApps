@@ -57,6 +57,7 @@ class App extends ACLs {
         if (app.serviceRegex != null) serviceRegex = app.serviceRegex;
         if (app.admins != null) admins = app.admins;
         if (app.cookies != null) cookies = app.cookies;
+        if (app.shibbolethSPPrefix != null) shibbolethSPPrefix = app.shibbolethSPPrefix;
     }
 
     App init() {
