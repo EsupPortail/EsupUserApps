@@ -3,6 +3,7 @@ package prolongationENT;
 import java.net.URL;
 import java.util.List;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import static prolongationENT.Utils.firstNonNull;
@@ -41,6 +42,7 @@ class App extends ACLs {
     String title;
     String description;
     String url;
+    Map<String,String> url_vars;
     String shibbolethSPPrefix;
     boolean hideFromMobile = false;
     boolean hashelp = false;
@@ -60,8 +62,10 @@ class App extends ACLs {
         if (app.shibbolethSPPrefix != null) shibbolethSPPrefix = app.shibbolethSPPrefix;
     }
 
-    App init() {
+    App init(Map<String,String> global_url_vars) {
         if (url == null) throw new RuntimeException("invalid config-apps.json: missing url for " + title);
+        if (url_vars != null) handle_urls_vars(url_vars);
+        if (global_url_vars != null) handle_urls_vars(global_url_vars);
 
         if (admins != null) {
             compute_default_cookies_path_and_serviceRegex();
@@ -79,5 +83,11 @@ class App extends ACLs {
         
         if (cookies.path == null) cookies.path = path;
         if (serviceRegex == null) serviceRegex = Pattern.quote(url.getProtocol() + "://" + url.getHost() + path) + ".*";
+    }
+
+    private void handle_urls_vars(Map<String,String> url_vars) {
+        for (Map.Entry<String, String> e : url_vars.entrySet()) {
+            url = url.replace("{" + e.getKey() + "}", e.getValue());
+        }
     }
 }

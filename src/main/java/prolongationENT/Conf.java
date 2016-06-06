@@ -19,6 +19,7 @@ static class Apps extends Conf.Auth {
     Map<String, App> APPS = new HashMap<>();
     Map<String, App> APPS_ATTRS;
     Map<String, List<String>> LAYOUT;
+    Map<String,String> url_vars;
     
     Conf.Apps init() {
         for (App app : APPS.values()) {
@@ -29,7 +30,7 @@ static class Apps extends Conf.Auth {
                     app.merge(baseApp);
                 }
             }
-            app.init();
+            app.init(url_vars);
         }
         return this;
     }
