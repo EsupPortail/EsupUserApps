@@ -167,7 +167,7 @@ pE.onAsyncLogout = function() {
     }
 };
 function installLogout() {
-    var logout_buttons = "#bandeau_ENT_Inner .portalPageBarLogout, #bandeau_ENT_Inner .portalPageBarAccountLogout";
+    var logout_buttons = pE.callPlugins('logout_buttons') || "#bandeau_ENT_Inner .portalPageBarLogout, #bandeau_ENT_Inner .portalPageBarAccountLogout";
     h.simpleEach(h.simpleQuerySelectorAll(logout_buttons),
                  function (elt) { 
                      elt['onclick'] = asyncLogout;
