@@ -202,6 +202,9 @@ var currentApp;
 function installBandeau() {
     h.mylog("installBandeau");
     
+    var html_elt = document.getElementsByTagName("html")[0];
+    html_elt.className += ' pE-' + CONF.theme;
+
     loadSpecificCss();
     
     if (pE.CSS) 
