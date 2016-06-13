@@ -12,6 +12,7 @@ class Export {
         String title;
         String description;
         String url;
+        Collection<String> tags;
         Boolean hashelp;
         
         public App(String fname, prolongationENT.App app, String url) {
@@ -22,6 +23,7 @@ class Export {
             description = firstNonNull(app.description, "");
             this.url = url;
             if (app.hashelp) hashelp = app.hashelp;
+            if (app.tags != null) tags = app.tags;
         }
     }
     

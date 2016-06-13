@@ -1,6 +1,7 @@
 package prolongationENT;
 
 import java.net.URL;
+import java.util.Collection;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
@@ -46,6 +47,7 @@ class App extends ACLs {
     String shibbolethSPPrefix;
     boolean hideFromMobile = false;
     boolean hashelp = false;
+    Collection<String> tags;
 
     List<String> inherit;
     String serviceRegex;
