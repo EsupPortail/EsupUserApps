@@ -119,6 +119,7 @@ interface helpers {
   simpleEachObject(o, fn: (k: string, v, o?) => void); 
   simpleFilter<T>(a: T[], fn: (e: T) => boolean): T[]; 
   simpleMap<T,U>(a: T[], fn: (e: T) => U): U[];
+  toJSON(o: any): string;
   escapeQuotes(s: string): string;
   template(s: string, map: {}): string;
   onIdOrBody_rec(id: string, f: () => void);

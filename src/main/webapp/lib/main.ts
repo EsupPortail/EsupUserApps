@@ -346,7 +346,7 @@ function mayUpdate() {
         if (window.sessionStorage) {
             h.mylog("caching bandeau in sessionStorage (" + pE.localStorage_prefix + " " + pE.localStorage_js_text_field + ")");
             var js_text =
-                "window.prolongation_ENT.main(\n" + JSON.stringify(DATA) + ",\n\n" + JSON.stringify(pE.PARAMS) + "\n\n, true);\n";
+                "window.prolongation_ENT.main(\n" + h.toJSON(DATA) + ",\n\n" + h.toJSON(pE.PARAMS) + "\n\n, true);\n";
             setSessionStorageCache(js_text);
         }
         if (PARAMS && PARAMS.is_old) {
