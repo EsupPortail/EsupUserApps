@@ -101,11 +101,8 @@ class TopAppsAgimus {
     }
     
     List<String> get(Ldap.Attrs attrs) {
-        StringBuilder sb = new StringBuilder();
-        encodeParams(sb.append("/"), attrs.get("eduPersonPrimaryAffiliation"));
-        encodeParams(sb.append("/"), attrs.get("supannEntiteAffectation"));
-        sb.append("/").append(conf.interval).append(",").append(endDate());
-        return get(sb.toString());
+        return get(encodeParams(attrs.get("eduPersonPrimaryAffiliation"),
+                                attrs.get("supannEntiteAffectation")));
     }
 
     List<String> get(String urlPath) {
@@ -135,6 +132,14 @@ class TopAppsAgimus {
                 r.add(bucket.key);
             }
         return r;
+    }
+
+    String encodeParams(List<String> affiliation, List<String> affectation) {
+        StringBuilder sb = new StringBuilder();
+        encodeParams(sb.append("/"), affiliation);
+        encodeParams(sb.append("/"), affectation);
+        sb.append("/").append(conf.interval).append(",").append(endDate());
+        return sb.toString();
     }
     
     StringBuilder encodeParams(StringBuilder sb, List<String> params) {
