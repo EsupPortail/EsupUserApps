@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -127,8 +128,11 @@ class TopAppsAgimus {
     List<String> simplifyResult(ElasticSearchResult result) {
         if (result == null || result.aggregations == null || result.aggregations.Services == null || result.aggregations.Services.buckets == null) return null;
         List<String> r = new ArrayList<>();
+        Set<String> seen = new HashSet<>();
         for (ElasticSearchResult.Bucket bucket : result.aggregations.Services.buckets)
-            if (conf.blacklist == null || !conf.blacklist.contains(bucket.key)) {
+            if (!seen.contains(bucket.key.toLowerCase()) &&
+                (conf.blacklist == null || !conf.blacklist.contains(bucket.key))) {
+                seen.add(bucket.key.toLowerCase());
                 r.add(bucket.key);
             }
         return r;
