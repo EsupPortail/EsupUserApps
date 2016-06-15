@@ -6,6 +6,7 @@
 
     <style>
       a { white-space: nowrap; }
+      img { width: 40px; height: 40px; }
     </style>
   </head>
 <body>
@@ -51,6 +52,11 @@ let grouper_url = 'https://grouper.univ-paris1.fr/grouper/grouperUi/app/UiV2Main
 
 let conf;
 
+ function simplifyFname(k) {
+   k = k.replace(/^C([A-Z])/, "$1").replace(/-(etu|ens|gest|pers|teacher|default)$/, '');
+   return k.toLowerCase();
+ }
+
  function format_groups(groups) {
    return (groups || []).map(group => {
      if (conf.GROUPS[group]) {
@@ -64,7 +70,9 @@ let conf;
 function format_app(folder, id) {
     let app = conf.APPS[id];
     let url = app.url.replace("{fname}", id);
-    let l = [folder, a(url, id), app.shortText, (app.text ? app.text + "<br>" : '') + (app.title || ''), app.description, format_groups(app.groups)];
+    let l = [folder, 
+             "<img src='../theme-paris1-2016/icon/" + simplifyFname(id) + ".svg' onerror='this.hidden = true'>",
+             a(url, id), app.shortText, (app.text ? app.text + "<br>" : '') + (app.title || ''), app.description, format_groups(app.groups)];
     return tr_td(l.map(s => s || ''));
  }
  
@@ -78,7 +86,7 @@ function format() {
         });
         return "<tbody>" + apps.join('') + "</tbody>";
     });
-    let titles = [ "Onglet", "fname", "Titre court", "Text / Title", "Description", "Groups" ];
+    let titles = [ "Onglet", "Icône", "fname", "Titre court", "Text / Title", "Description", "Groups" ];
     return "<table class='table table-striped table-condensed table-bordered'>" +
         tr_th(titles) + tbodies.join('') + "</table>";
 }
