@@ -59,6 +59,7 @@ class TopAppsAgimus {
         // using elasticsearch time units
         String cacheLifetime;
         String interval;
+        Integer minAnswers;
 
         // expected format "MM-dd". eg: "08-01" is first of august)
         // must be ordered. eg: ["08-01", "01-01"]
@@ -102,8 +103,12 @@ class TopAppsAgimus {
     }
     
     List<String> get(Ldap.Attrs attrs) {
-        return get(encodeParams(attrs.get("eduPersonPrimaryAffiliation"),
-                                attrs.get("supannEntiteAffectation")));
+        List<String> r = get(encodeParams(attrs.get("eduPersonPrimaryAffiliation"),
+                                          attrs.get("supannEntiteAffectation")));
+        if (conf.minAnswers != null && r != null && r.size() < conf.minAnswers) {
+            r.addAll(get(encodeParams(attrs.get("eduPersonPrimaryAffiliation"), null)));
+        }
+        return r;
     }
 
     List<String> get(String urlPath) {
