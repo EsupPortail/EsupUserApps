@@ -26,7 +26,7 @@ public class Main extends HttpServlet {
 
     static String[] mappings = new String[] {
         "/loader.js", "/detectReload", "/purgeCache",
-        "/layout", "/logout", "/redirect", "/canImpersonate",
+        "/layout", "/login", "/logout", "/redirect", "/canImpersonate",
         "/admin/config-apps.json",
     };
     
@@ -38,6 +38,7 @@ public class Main extends HttpServlet {
             case "/purgeCache":     purgeCache    (request, response); break;
 
             case "/layout":         layout        (request, response); break;       
+            case "/login":          login         (request, response); break;
             case "/logout":         logout        (request, response); break;
             case "/redirect":       redirect      (request, response); break;
             case "/canImpersonate": canImpersonate(request, response); break;
@@ -63,6 +64,10 @@ public class Main extends HttpServlet {
     
     void layout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         computeBandeau.layout(request, response);
+    }
+    
+    void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.sendRedirect(request.getParameter("target"));
     }
     
     void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -64,6 +64,8 @@ interface prolongation_ENT_args {
   no_titlebar: boolean;
   no_footer: boolean;
 
+  delegateAuth: boolean;
+    
   onNotLogged(pE: prolongation_ENT);
   onload(pE: prolongation_ENT): void;
 

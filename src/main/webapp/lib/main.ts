@@ -1,6 +1,7 @@
 pE.main = function (DATA, PARAMS, fromLocalStorage) {
 
 if (!DATA.user) {
+    pE.callPlugins('onNotLogged');
     if (args.onNotLogged)
         args.onNotLogged(pE);
     return;
