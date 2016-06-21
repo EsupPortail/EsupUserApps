@@ -10,7 +10,7 @@
   </head>
 <body>
 
-<script> window.prolongation_ENT_args = {}; </script>
+<script> window.prolongation_ENT_args = { delegateAuth: true }; </script>
 <script src="/ProlongationENT/loader.js" type="text/javascript"></script>
 
 <div id="list"></div>
@@ -24,7 +24,9 @@ function xhr(url, callback) {
     req.open("GET", url, true);
     req.onreadystatechange = function () {
         if (req.readyState != 4) return;
-        if (req.status != 200) {
+        if (req.status == 401) {
+           document.location = '/ProlongationENT/login?target=' + encodeURIComponent(document.location);
+        } else if (req.status != 200) {
             alert('HTTP error ' + req.status);
             return;
         } else {

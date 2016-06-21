@@ -87,7 +87,7 @@ public class Main extends HttpServlet {
 
     void show_config_apps(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (get_CAS_userId(request) == null) {
-            bad_request(response, "you must authenticate first");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "you must authenticate first");
         } else {
             respond_json(response, objectFieldsToMap(conf, "LAYOUT", "APPS", "GROUPS"));
         }
