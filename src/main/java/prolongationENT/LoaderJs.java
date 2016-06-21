@@ -68,6 +68,13 @@ public class LoaderJs {
                               "time_before_checking_browser_cache_is_up_to_date", "ent_logout_url");
         js_conf.put("theme", theme);
 
+        String plugins =
+            file_get_contents(request, "lib/plugins.ts") +
+            file_get_contents(request, "lib/" + theme + ".ts");
+        for (String plugin : conf.plugins) {
+            plugins += file_get_contents(request, "lib/plugin-" + plugin + ".ts");
+        }
+        
         return
             "(function () {\n" +
             "if (!window.prolongation_ENT) window.prolongation_ENT = {};\n" +
@@ -76,8 +83,7 @@ public class LoaderJs {
             (conf.disableCSSInlining ? "" : "pE.CSS = " + js_css + "\n\n") +
             "pE.TEMPLATES = " + templates + "\n\n" +
             helpers_js + main_js + "\n\n" +
-            file_get_contents(request, "lib/plugins.ts") +
-            file_get_contents(request, "lib/" + theme + ".ts") + ";" +
+            plugins + ";" +
             loader_js +
             "})()";
     }

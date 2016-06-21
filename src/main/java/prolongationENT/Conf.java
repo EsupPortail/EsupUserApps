@@ -1,5 +1,6 @@
 package prolongationENT;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -44,6 +45,7 @@ static class Main extends Conf.Apps {
     String _currentIdpId;
     String current_idpAuthnRequest_url;
     String theme = "theme-simple";
+    List<String> plugins = new ArrayList<>();
 
     static class Themes {
         static class Alternatives {
