@@ -216,6 +216,7 @@ body {
 #pE-account a {
   color: #00326E !important;
   font-weight: initial !important;
+  font-size: 13px !important;
 }
 #pE-account li {
     list-style: none;
