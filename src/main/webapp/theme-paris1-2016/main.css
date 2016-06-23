@@ -141,7 +141,7 @@ body {
 #pE-buttons {   
   width: 188px;
   height: 70px;
-  z-index: 100006;
+  z-index: 1;
   background: #fff;
   overflow: hidden;
   border-left: 2px solid transparent;
@@ -152,6 +152,7 @@ body {
 }
 #pE-buttons.pE-menu-is-open {
   height: auto;
+  z-index: 100006;
   background-clip: padding-box;
   border-color: #C89108;
   -moz-border-radius : 0 0 5px 5px;
