@@ -22,7 +22,7 @@ body {
 }
 
 #pE-header {
-    height: 75px;
+    height: 70px;
 }
 #pE-header a {
   text-decoration: none;
@@ -225,7 +225,7 @@ body {
     background: #fff;
 }
 #pE-account li.pE-above-buttons {
-    height: 70px;
+    height: 65px;
     padding: 0;
     opacity: 0.85;
 }
