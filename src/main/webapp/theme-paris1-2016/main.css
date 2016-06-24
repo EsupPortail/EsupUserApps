@@ -207,7 +207,7 @@ body {
     -webkit-border-bottom-right-radius : 5px;
     -webkit-border-top-left-radius: 0;
     -webkit-border-top-right-radius : 0;
-    font-size: 13px !important;
+    font-size: 11px !important;
 }
 
 #pE-account ul {
@@ -217,9 +217,10 @@ body {
 #pE-account a {
   color: #00326E !important;
   font-weight: initial !important;
-  font-size: 13px !important;
+  font-size: 11px !important;
 }
 #pE-account li {
+    margin: 0;
     list-style: none;
     padding: 0.5em;
     background: #fff;
@@ -252,6 +253,7 @@ li.pE-accountSeparator {
 #pE-account .pE-accountLogout a {
     color: #fff !important;
     text-transform: uppercase;
+    font-weight: bold !important;
 }
 
 .pE-accountLogout-icon {
