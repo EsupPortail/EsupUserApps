@@ -8,7 +8,7 @@
 	<rect x="116.272" y="-356.429" display="inline" fill="#FFFFFF" width="4471.75" height="5688"/>
 </g>
 <g id="fond">
-	<circle fill="#20558A" cx="593.722" cy="142.03" r="141.116"/>
+	<circle fill="#00326E" cx="593.722" cy="142.03" r="141.116"/>
 </g>
 <g id="A" display="none">
 	<g id="Calque_2" display="inline">
@@ -42,9 +42,9 @@
 			c9.114,0,12.586,8.028,12.586,11.935C655.434,178.805,647.188,181.626,642.848,181.626z"/>
 	</g>
 	
-		<line fill="#20558A" stroke="#20558A" stroke-width="2" stroke-miterlimit="10" x1="495.416" y1="69.509" x2="495.416" y2="209.174"/>
+		<line fill="#00326E" stroke="#00326E" stroke-width="2" stroke-miterlimit="10" x1="495.416" y1="69.509" x2="495.416" y2="209.174"/>
 	
-		<line fill="#20558A" stroke="#20558A" stroke-width="2" stroke-miterlimit="10" x1="696.436" y1="69.509" x2="696.436" y2="209.174"/>
+		<line fill="#00326E" stroke="#00326E" stroke-width="2" stroke-miterlimit="10" x1="696.436" y1="69.509" x2="696.436" y2="209.174"/>
 	<g>
 		<path fill="#FFFFFF" d="M534.499,140.884l-7,21.201h-9.001l22.901-67.404H551.9l23.001,67.404h-9.3l-7.201-21.201H534.499z
 			 M556.601,134.084L550,114.683c-1.5-4.4-2.5-8.4-3.5-12.301h-0.2c-1,4-2.1,8.101-3.4,12.201l-6.601,19.501H556.601z"/>
