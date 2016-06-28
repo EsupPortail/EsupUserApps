@@ -51,6 +51,10 @@
         var v = pE.DATA.userAttrs && pE.DATA.userAttrs[attrName];
         return v && v[0];
     }
+    
+    function themeUrl() {
+        return pE.CONF.prolongationENT_url + "/" + pE.CONF.theme;
+    }
 
     function computeLink(app) {
         // for uportal4 layout compatibility:
@@ -58,7 +62,7 @@
         
         var url = app.url;
         var a = "<a title='" + h.escapeQuotes(app.description) + "' href='" + url + "'>" +
-            "<img src='" + pE.CONF.prolongationENT_url + "/" + pE.CONF.theme + "/icon/" + simplifyFname(app.fname) + ".svg'><br>" +
+            "<img src='" + themeUrl() + "/icon/" + simplifyFname(app.fname) + ".svg'><br>" +
           h.escapeQuotes(app.shortText || app.text || app.title) + "</a>";
         return "<div class='pE-button'>" + a + "</div>";
     }
@@ -100,7 +104,7 @@
             appTitle: app.url ? "<a href='" + app.url + "'><span class='pE-title-app-short'>" + h.escapeQuotes(app.shortText || app.text || app.title) + "</span><span class='pE-title-app-long'>" + h.escapeQuotes(app.title) + "</span></a>" : "Application non autorisée",
             topApps: topApps,
             photoUrl: "https://userphoto-test.univ-paris1.fr/?uid=" + pE.DATA.user + (photo_version ? "&v=" + photo_version : ''),
-            themeUrl: pE.CONF.prolongationENT_url + "/" + pE.CONF.theme,
+            themeUrl: themeUrl(),
             logout_url: pE.CONF.ent_logout_url,
             userDetails: personAttr("displayName") || personAttr("mail"),
             accountAnchorClass: pE.validApps["CCompte-pers"] || pE.validApps["CCompte-etu"] ? '' : 'pE-hide',
@@ -110,7 +114,7 @@
     
     function computeFooter() {
         return h.template(pE.TEMPLATES.footer, {
-            themeUrl: pE.CONF.prolongationENT_url + "/" + pE.CONF.theme,
+            themeUrl: themeUrl(),
             helpUrl: (pE.validApps['gun-etu'] || { url: "https://ent.univ-paris1.fr/gun-pers-flipbook" }).url,
         });
     }
