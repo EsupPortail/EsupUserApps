@@ -175,18 +175,6 @@ function installLogout() {
                  });
 }
 
-pE.accountLink = function(text, link_spec) {
-    var a = document.createElement("a");
-    a.innerHTML = h.escapeQuotes(text);
-    if (link_spec.href) {
-        a.setAttribute('href', link_spec.href);
-    } else {
-        a.setAttribute('href', '#');
-        a.onclick = function () { simulateClickElt(find_DOM_elt(link_spec)); };
-    }
-    return a;
-}
-
 function installFooter() {
     var id = 'bandeau_ENT_Footer';
     var elt = document.getElementById(id);

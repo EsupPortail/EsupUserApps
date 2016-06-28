@@ -57,7 +57,6 @@ interface prolongation_ENT_args {
   logout: boolean;
   login: boolean;
   is_logged: boolean | { fn: (find: any) => boolean };
-  account_links: {};
 
   hide_menu: boolean;
   showSearch: boolean;
@@ -93,7 +92,6 @@ interface prolongation_ENT {
   helpers: helpers;
   localStorageSet(field: string, value: string);
   localStorageGet(field: string): string;
-  accountLink(text: string, link_spec: any): HTMLAnchorElement;
   callPlugins(event: string): any;
   plugins: plugin[];
   onAsyncLogout(): void;

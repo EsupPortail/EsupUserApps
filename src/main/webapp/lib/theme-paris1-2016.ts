@@ -1,23 +1,5 @@
 (function () {
-
-    function installAccountLinks(app) {
-        var appLinks_li = h.simpleQuerySelector('.portalPageBarAccountAppLinks');
-        if (app && app.title) {
-            appLinks_li['innerHTML'] = h.escapeQuotes(app.title);
-            h.toggleClass(appLinks_li, 'portalPageBarAccountSeparator');
-        }
-        h.simpleEachObject(args.account_links, function (text, link_spec) {
-            var sub_li = document.createElement("li");
-            sub_li.appendChild(pE.accountLink(text, link_spec));
-            h.insertAfter(appLinks_li, sub_li);
-        });
-    }
     
-    if (args.account_links) {
-        h.onReady(function() {
-            installAccountLinks(pE.currentApp);
-        });
-    }
     var menus = ['pE-buttons', 'pE-account'];
     function toggleMenu(id, id2) {
         var isOpen = h.toggleClass(document.getElementById(id), 'pE-menu-is-open');
@@ -146,7 +128,6 @@
             if (pE.currentApp.fname === "aleph") {
                 delete args.logout;
                 args.is_logged = { fn: function(find) { var e = find("span#meconnecter"); return e && e.innerHTML === "Consulter mon compte"; } };
-                args.account_links = { "Mon compte lecteur": { fn: function(find) { return find('#compte').parentNode; } } };
             }
             if (pE.currentApp.fname === "domino") {
                 args.extra_css = "https://esup-data.univ-paris1.fr/esup/canal/css/domino.css"; 
