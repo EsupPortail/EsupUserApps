@@ -111,11 +111,24 @@
             pagePersoClass: pE.validApps["page-perso"] ? '' : 'pE-hide',
         });
     }
+
+    function computeHelp(app) {
+        if (app && app.hashelp) {
+            var href = "http://esup-data.univ-paris1.fr/esup/aide/canal/" + app.fname + ".html";
+            var onclick = "window.open('','form_help','toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,scrollbars=yes,copyhistory=no,alwaysRaised,width=600,height=400')";
+            var inner = "<span>Aide " + (app.shortText || app.text || app.title) + "</span> <img src='" + themeUrl() + "/help.svg'>";
+            return "<a href='" + href + "' onclick=\"" + onclick + "\" target='form_help' title=\"Voir l'aide du canal\">" + inner + "</a>";
+        } else {
+            return '';
+        }
+    }
     
     function computeFooter() {
+        var app = pE.currentApp;
         return h.template(pE.TEMPLATES.footer, {
             themeUrl: themeUrl(),
             helpUrl: (pE.validApps['gun-etu'] || { url: "https://ent.univ-paris1.fr/gun-pers-flipbook" }).url,
+            appHelp: computeHelp(app),
         });
     }
 

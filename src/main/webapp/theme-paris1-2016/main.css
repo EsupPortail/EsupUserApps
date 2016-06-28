@@ -270,8 +270,11 @@ li.pE-accountSeparator {
 
 /* footer */
 #pE-footer-inner {
-    background-color: #00326E;
     clear: both;
+}
+#pE-footer-inner-ent {
+    background-color: #00326E;
+    height: 130px;
 }
 #pE-footer-inner .pE-footer-links {
     text-align: center;
@@ -324,6 +327,25 @@ li.pE-accountSeparator {
     bottom: 0;
     height: 130px;
     width: 100%;
+}
+
+#pE-footer-inner-app {
+    text-align: right;
+
+    font-size: 11px !important;
+    font-family: Verdana, Arial, sans-serif;
+
+    line-height: 1.7em;
+    text-transform: uppercase;
+    padding: 0 8px 5px 8px !important;
+}
+#pE-footer-inner-app a {
+    color: #000;
+    text-decoration: none;
+}
+#pE-footer-inner-app img {
+    height: 1.3em;
+    vertical-align: sub;
 }
 
 .pE-title-app-short {
