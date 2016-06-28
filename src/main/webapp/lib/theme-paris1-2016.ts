@@ -99,7 +99,7 @@
         return h.template(pE.TEMPLATES.header, {
             appTitle: app.url ? "<a href='" + app.url + "'><span class='pE-title-app-short'>" + h.escapeQuotes(app.shortText || app.text || app.title) + "</span><span class='pE-title-app-long'>" + h.escapeQuotes(app.title) + "</span></a>" : "Application non autorisée",
             topApps: topApps,
-            photoUrl: "https://photo-ldap.univ-paris1.fr/ldap.php?uid=" + pE.DATA.user + (photo_version ? "&v=" + photo_version : ''),
+            photoUrl: "https://userphoto-test.univ-paris1.fr/?uid=" + pE.DATA.user + (photo_version ? "&v=" + photo_version : ''),
             themeUrl: pE.CONF.prolongationENT_url + "/" + pE.CONF.theme,
             logout_url: pE.CONF.ent_logout_url,
             userDetails: personAttr("displayName") || personAttr("mail"),
