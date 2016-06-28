@@ -257,14 +257,6 @@ function installBandeau() {
             if (!args.no_footer) installFooter();
         });
         
-        if (pE.width_xs && document.body.scrollTop === 0) {
-            var bandeau = document.getElementById(bandeau_div_id());
-            
-            setTimeout(function() { 
-                h.mylog("scrolling to " + bandeau.clientHeight);
-                window.scrollTo(0, bandeau.clientHeight); 
-            }, 0);
-        }
         if (args.quirks && h.simpleContains(args.quirks, 'window-resize'))
             setTimeout(triggerWindowResize, 0);
         
