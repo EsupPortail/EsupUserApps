@@ -318,14 +318,14 @@ li.pE-accountSeparator {
     min-height: 100%;
 }
 .pE-sticky-footer body {
-    margin-bottom: 130px;
+    margin-bottom: 153px;
     position: initial;
 }
 .pE-sticky-footer #pE-footer-inner {
     position: absolute;
     left: 0;
     bottom: 0;
-    height: 130px;
+    height: 153px;
     width: 100%;
 }
 
@@ -338,6 +338,8 @@ li.pE-accountSeparator {
     line-height: 1.7em;
     text-transform: uppercase;
     padding: 0 8px 5px 8px !important;
+    box-sizing: border-box;
+    height: 23px;
 }
 #pE-footer-inner-app a {
     color: #000;
