@@ -11,6 +11,8 @@ var CONF = pE.CONF;
 pE.DATA = DATA;
 pE.PARAMS = PARAMS;
 
+pE.callPlugins('main');
+    
 function personAttr(attrName) {
     var v = DATA.userAttrs && DATA.userAttrs[attrName];
     return v && v[0];
