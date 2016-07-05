@@ -48,6 +48,7 @@ function computeLink(app) {
 
 function computeMenu(currentApp) {
     var li_list = h.simpleMap(DATA.layout.folders, function (tab) {
+        if (tab.title === "__hidden__") return '';
         var sub_li_list = h.simpleMap(tab.portlets, function(app) {
             return computeLink(app);
         });
