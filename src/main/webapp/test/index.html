@@ -1,7 +1,10 @@
 <script>
+ var layout_url = document.location.hash.replace(/^#/, '');
+ 
  window.prolongation_ENT_args = { 
-   current: 'portal-administration', 
-   delegateAuth: true,
+   current: 'portal-administration',
+   layout_url: layout_url,
+   delegateAuth: !layout_url,
  };
  
 </script>
