@@ -50,7 +50,7 @@ body {
   padding-top: 10px;
   border-bottom: 2px dotted #4072AE;
 }
-#pE-header .pE-title-ent, #pE-header .pE-title-app a {
+#pE-header .pE-title-ent, #pE-header .pE-title-app a span {
   font-size: 21.45px !important;
   font-family: Arial, sans-serif !important;
   font-weight: initial !important;
@@ -58,7 +58,7 @@ body {
 #pE-header .pE-title-ent {
   color: #C89108 !important;
 }
-#pE-header .pE-title-app, #pE-header .pE-title-app a {
+#pE-header .pE-title-app, #pE-header .pE-title-app a span {
   color: #00326E !important;
 }
 
@@ -214,7 +214,7 @@ body {
     margin: 0;
     padding: 0;
 }
-#pE-account a {
+#pE-account a, #pE-account a span {
   color: #00326E !important;
   font-weight: initial !important;
   font-size: 11px !important;
@@ -250,7 +250,7 @@ li.pE-accountSeparator {
     padding: 0.5em 0.5em 0.35em 0.5em;
     line-height: 1.7em !important;
 }
-#pE-account .pE-accountLogout a {
+#pE-account .pE-accountLogout a span {
     color: #fff !important;
     text-transform: uppercase;
     font-weight: bold !important;
