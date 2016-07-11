@@ -59,8 +59,8 @@ class Groups {
                 
             List<String> attrValues = person.get(attr);
             if (attrValues == null) {
-                log.warn("missing attribute " + attr);
-                return false;
+                //log.warn("missing attribute " + attr);
+                attrValues = Collections.singletonList("");
             }
             for (Pattern regex : attr_regexes.getValue()) {
                 boolean okOne = false;
