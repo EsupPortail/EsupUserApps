@@ -1,6 +1,7 @@
 package prolongationENT;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -187,21 +188,26 @@ class Utils {
         return c;
     }
 
-    static String file_get_contents(ServletContext sc, String file) {
+    static String file_get_contents_raw(ServletContext sc, String file) throws IOException {
+        InputStream in = sc.getResourceAsStream("/" + file);
+        if (in == null) throw new FileNotFoundException("error reading file " + file);
+        return IOUtils.toString(in, "UTF-8");
+    }
+
+    static String file_get_contents(ServletContext sc, String file, boolean mustExist) {
         try {
-            InputStream in = sc.getResourceAsStream("/" + file);
-            if (in == null) {
-                log().error("error reading file " + file);
-                return null;
-            }
-            return IOUtils.toString(in, "UTF-8");
+            return file_get_contents_raw(sc, file);
+        } catch (FileNotFoundException e) {
+            if (mustExist) throw new RuntimeException(e);
+            return null;
         } catch (IOException e) {
             log().error("error reading file " + file, e);
             return null;
         }
     }
+    
     static String file_get_contents(HttpServletRequest request, String file) {
-        return file_get_contents(request.getServletContext(), file);
+        return file_get_contents(request.getServletContext(), file, true);
     }
 
     static String file_get_contents(File file) throws IOException {

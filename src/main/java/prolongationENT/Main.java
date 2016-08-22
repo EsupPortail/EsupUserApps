@@ -102,17 +102,17 @@ public class Main extends HttpServlet {
 
     static Conf.Main getConf(ServletContext sc) {
         Gson gson = new Gson();
-        Conf.Main conf = gson.fromJson(getConf(sc, "config.json"), Conf.Main.class);
-        conf.merge(gson.fromJson(getConf(sc, "config-auth.json"), Conf.Auth.class));
-        conf.merge(gson.fromJson(getConf(sc, "config-apps.json"), Conf.Apps.class).init());
-        conf.merge(gson.fromJson(getConf(sc, "config-shibboleth.json"), Shibboleth.Conf.class));
-        conf.topApps = gson.fromJson(getConf(sc, "config-topApps.json"), TopAppsAgimus.GlobalConf.class).init();
+        Conf.Main conf = gson.fromJson(getConf(sc, "config.json", true), Conf.Main.class);
+        conf.merge(gson.fromJson(getConf(sc, "config-auth.json", true), Conf.Auth.class));
+        conf.merge(gson.fromJson(getConf(sc, "config-apps.json", true), Conf.Apps.class).init());
+        conf.merge(gson.fromJson(getConf(sc, "config-shibboleth.json", false), Shibboleth.Conf.class));
+        conf.topApps = gson.fromJson(getConf(sc, "config-topApps.json", false), TopAppsAgimus.GlobalConf.class).init();
         conf.init();
         return conf;
     }
 
-    static String getConf(ServletContext sc, String jsonFile) {
-        String s = file_get_contents(sc, "WEB-INF/" + jsonFile);
+    static String getConf(ServletContext sc, String jsonFile, boolean mustExist) {
+        String s = file_get_contents(sc, "WEB-INF/" + jsonFile, mustExist);
         if (s == null) return "{}"; // do not fail here, checks are done on required attrs
         // allow trailing commas
         s = s.replaceAll(",(\\s*[\\]}])", "$1");
