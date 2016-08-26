@@ -66,6 +66,20 @@ simpleQuerySelector: function (selector) {
         return h.simpleQuerySelectorAll(selector)[0];
 },
 
+eltMatches: function (elt, selector) {
+    var f = Element.prototype.matches || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
+    return f && f.call(elt, selector);
+},
+	
+eltClosest: function (elt, selector) {
+    if (Element.prototype.closest) return elt.closest(selector);
+
+    for (; elt && elt.nodeType === 1; elt = elt.parentNode) {
+	if (eltMatches(elt, selector)) return elt;
+    }
+    return null;    
+},
+    
 getCookie: function (name) {
     var m = document.cookie.match(new RegExp(name + '=([^;]+)'));
     return m && m[1];
