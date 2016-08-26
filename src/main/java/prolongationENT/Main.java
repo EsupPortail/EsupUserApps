@@ -26,7 +26,7 @@ public class Main extends HttpServlet {
 
     static String[] mappings = new String[] {
         "/loader.js", "/detectReload", "/purgeCache",
-        "/layout", "/login", "/logout", "/redirect", "/canImpersonate",
+        "/layout", "/login", "/logout", "/redirect", "/canImpersonate", "/log",
         "/admin/config-apps.json",
     };
     
@@ -42,6 +42,7 @@ public class Main extends HttpServlet {
             case "/logout":         logout        (request, response); break;
             case "/redirect":       redirect      (request, response); break;
             case "/canImpersonate": canImpersonate(request, response); break;
+            case "/log":            /* nothing to do */                break;
 
             case "/admin/config-apps.json": show_config_apps(request, response); break;
         }

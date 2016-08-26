@@ -54,7 +54,7 @@
                 classes.push('pE-button-forbidden');
             }
         }
-        var a = "<a title='" + h.escapeQuotes(app.description) + "' href='" + url + "'>" +
+        var a = "<a title='" + h.escapeQuotes(app.description) + "' href='" + url + "' data-fname='" + app.fname + "'>" +
             "<img src='" + themeUrl() + "/icon/" + simplifyFname(app.fname) + ".svg'><br>" +
           h.escapeQuotes(app.shortText || app.text || app.title) + "</a>";
         return "<div class='" + classes.join(' ') + "'>" + a + "</div>";
@@ -125,6 +125,26 @@
         });
     }
 
+    function server_log(params) {
+        var l = [];
+        h.simpleEachObject(params, function (k, v) {
+            l.push(k + "=" + encodeURIComponent(v));
+        });
+        h.loadScript(pE.CONF.prolongationENT_url + "/log?" + l.join("&"));
+    }
+
+    function log_button_click(event) {
+        var container = this;
+        function eltFname(elt) {
+            return elt && elt.getAttribute('data-fname');
+        }
+        var fname = eltFname(h.eltClosest(event.target, "[data-fname]"));
+        if (fname) {
+            var index = 1 + h.simpleMap(container.querySelectorAll("[data-fname]"), eltFname).indexOf(fname);
+            server_log({ user: pE.DATA.user, app: fname, index: index });
+        }
+    }
+    
     var plugin = {
         computeHeader: computeHeader,
         computeFooter: computeFooter,
@@ -155,6 +175,9 @@
 
             var open_menu = document.getElementById('pE-openMoreButtons');
             if (open_menu) open_menu.onclick = moreButtons_toggleMenu;
+
+            var buttons = document.getElementById('pE-buttons');
+            if (buttons) buttons.onmousedown = log_button_click;
 
             h.simpleEach(h.simpleQuerySelectorAll('#pE-header .pE-button img'), function (elt) {
                 elt['onerror'] = function () {
