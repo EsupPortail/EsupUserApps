@@ -38,15 +38,26 @@
         return pE.CONF.prolongationENT_url + "/" + pE.CONF.theme;
     }
 
+    function relogUrl(app) {
+        return app.url.replace(/^(https?:\/\/[^\/]*).*/, "$1") + "/ProlongationENT/redirect?relog&impersonate&id=" + app.fname;
+    }
+    
     function computeLink(app) {
         // for uportal4 layout compatibility:
         if (!app.url.match(/^http/)) app.url = pE.CONF.uportal_base_url + app.url.replace(/\/detached\//, "/max/");
         
         var url = app.url;
+        var classes = ['pE-button'];
+        if (pE.DATA.canImpersonate) {
+            url = relogUrl(app);
+            if (!h.simpleContains(pE.DATA.canImpersonate, app.fname)) {
+                classes.push('pE-button-forbidden');
+            }
+        }
         var a = "<a title='" + h.escapeQuotes(app.description) + "' href='" + url + "'>" +
             "<img src='" + themeUrl() + "/icon/" + simplifyFname(app.fname) + ".svg'><br>" +
           h.escapeQuotes(app.shortText || app.text || app.title) + "</a>";
-        return "<div class='pE-button'>" + a + "</div>";
+        return "<div class='" + classes.join(' ') + "'>" + a + "</div>";
     }
 
     // in our Agimus, we simplify the fnames, we must handle this
@@ -74,7 +85,7 @@
     function computeHeader() {
         var app = pE.currentApp;
         var appLinks = computeMenu(app);
-        var topApps = appLinks.slice(0, 12).join("<!--\n-->");
+        var topApps = appLinks.slice(0, pE.DATA.canImpersonate ? 99 : 12).join("<!--\n-->");
 
         var html_elt = document.getElementsByTagName("html")[0];
         if (!args.no_footer) h.toggleClass(html_elt, 'pE-sticky-footer');

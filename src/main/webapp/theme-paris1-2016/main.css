@@ -93,6 +93,10 @@ body {
   display: inline-block;
   text-align: center;
 }
+#pE-header .pE-button-forbidden {
+  opacity: 0.7;
+}
+
 #pE-header .pE-button:hover {
     filter: brightness(1.25);
     -webkit-filter: brightness(1.25);
