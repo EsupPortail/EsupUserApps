@@ -88,7 +88,7 @@
         var topApps = appLinks.slice(0, pE.DATA.canImpersonate ? 99 : 12).join("<!--\n-->");
 
         var html_elt = document.getElementsByTagName("html")[0];
-        if (!args.no_footer) h.toggleClass(html_elt, 'pE-sticky-footer');
+        if (!args.no_footer && !args.no_sticky_footer) h.toggleClass(html_elt, 'pE-sticky-footer');
 
         // NB: to simplify, do not use browser cache for the photo if impersonated
         var photo_version = !pE.DATA.realUserId && personAttr('modifyTimestamp');
