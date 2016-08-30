@@ -378,3 +378,10 @@ li.pE-accountSeparator {
         text-align: center;
      }
 }
+
+@media print {
+    #bandeau_ENT, #bandeau_ENT_Footer { display: none; }
+    .pE-sticky-footer body {
+        margin-bottom: 0;
+    }
+}
