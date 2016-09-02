@@ -5,6 +5,7 @@ interface app {
   title: string;
   description: string;
   url: string;
+  position: number;
   hashelp: boolean;
 }
 interface menuEntry {

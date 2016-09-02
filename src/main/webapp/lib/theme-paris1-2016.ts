@@ -69,16 +69,30 @@
     function computeMenu(currentApp) {
         // we must normalize
         var validApps = {};
+        var positionedApps = [];
         h.simpleEachObject(pE.validApps, function (k, app) { 
             validApps[simplifyFname(k)] = app;
+            if (app.position) positionedApps[app.position] = k;
         });
+
         var list = [];
-        h.simpleEach(pE.DATA.topApps, function (fname) {
+        var pos = 1;
+        function mayAddPositionedApp() {
+            var fname = positionedApps[pos];
+            if (fname) addFname(fname);
+        }
+        function addFname(fname) {
             fname = simplifyFname(fname);
             var app = validApps[fname];
             delete validApps[fname];
-            if (app) list.push(computeLink(app));
-        });
+            if (app) {
+                list.push(computeLink(app));
+                pos++;
+                mayAddPositionedApp();
+            }
+        }
+        mayAddPositionedApp();
+        h.simpleEach(pE.DATA.topApps, addFname);
         return list;
     }
  

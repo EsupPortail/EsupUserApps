@@ -43,6 +43,7 @@ class App extends ACLs {
     String title;
     String description;
     String url;
+    Integer position;
     Map<String,String> url_vars;
     String shibbolethSPPrefix;
     boolean hideFromMobile = false;

@@ -12,6 +12,7 @@ class Export {
         String title;
         String description;
         String url;
+        Integer position;
         Collection<String> tags;
         Boolean hashelp;
         
@@ -24,6 +25,7 @@ class Export {
             this.url = url;
             if (app.hashelp) hashelp = app.hashelp;
             if (app.tags != null) tags = app.tags;
+            if (app.position != null) position = app.position;
         }
     }
     
