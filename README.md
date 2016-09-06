@@ -21,6 +21,8 @@ Then configure ```layout_url``` in config.json:
    "layout_url": "https://ent.univ.fr/layout.jsp",
 ```
 
+:warning: Versions 4.0 4.1 4.2 of uportals have a [bug](https://issues.jasig.org/browse/UP-4364), apply [those commits](https://github.com/Jasig/uPortal/pull/506) before using layout.json.
+
 ### reverse proxy caching
 
 It is recommanded to use apache (or nginx or ...) to cache loader.js since it is a single point of failure.
