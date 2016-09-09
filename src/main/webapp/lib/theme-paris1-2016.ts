@@ -96,6 +96,7 @@
         return h.template(pE.TEMPLATES.header, {
             appTitle: app.url ? "<a href='" + app.url + "'><span class='pE-title-app-short'>" + h.escapeQuotes(app.shortText || app.text || app.title) + "</span><span class='pE-title-app-long'>" + h.escapeQuotes(app.title) + "</span></a>" : "Application non autorisée",
             topApps: topApps,
+            accueilUrl: (pE.validApps["caccueil"] || pE.validApps["accueil-federation"] || {}).url,
             photoUrl: "https://userphoto-test.univ-paris1.fr/?uid=" + pE.DATA.user + (photo_version ? "&v=" + photo_version : ''),
             themeUrl: themeUrl(),
             logout_url: pE.CONF.ent_logout_url,
