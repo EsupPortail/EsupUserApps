@@ -138,7 +138,7 @@ public class ComputeBandeau {
         App app = conf.APPS.get(appId);
         if (app == null) { bad_request(response, "invalid appId " + appId); return; }
         
-        String location = get_url(app, appId, conf.current_idpAuthnRequest_url);
+        String location = get_url(app, appId, null, conf.current_idpAuthnRequest_url);
 
         // Below rely on /ProlongationENT/redirect proxied in applications.
         // Example for Apache:
@@ -248,11 +248,12 @@ public class ComputeBandeau {
     
     Map<String, Export.App> userChannels(Ldap.Attrs person) {
         Map<String, Export.App> rslt = new HashMap<>();
+        String idpId = getFirst(person, "Shib-Identity-Provider");
         String idpAuthnRequest_url = firstNonNull(getFirst(person, "SingleSignOnService-url"), conf.current_idpAuthnRequest_url);
         
         for (String fname : computeApps.computeValidApps(person, false)) {
             App app = conf.APPS.get(fname);
-            rslt.put(fname, new Export.App(fname, app, get_url(app, fname, idpAuthnRequest_url)));
+            rslt.put(fname, new Export.App(fname, app, get_url(app, fname, idpId, idpAuthnRequest_url)));
         }
         return rslt;
     }
@@ -279,9 +280,11 @@ public class ComputeBandeau {
         return url;
     }
 
-    String get_url(App app, String appId, String idpAuthnRequest_url) {
+    String get_url(App app, String appId, String idpId, String idpAuthnRequest_url) {
         String url = app.url;
         url = url.replace("{fname}", appId);
+        url = url.replace("{idpId_ifShib}", firstNonNull(idpId, ""));
+        url = url.replace("{idpId}", firstNonNull(idpId, conf.current_idpId));
         url = url_maybe_adapt_idp(idpAuthnRequest_url, url, app.shibbolethSPPrefix);
         return url;
     }

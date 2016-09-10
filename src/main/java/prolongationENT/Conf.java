@@ -42,7 +42,7 @@ static class Main extends Conf.Apps {
     String cas_base_url;
     String uportal_base_url;
     String layout_url;
-    String _currentIdpId;
+    String current_idpId;
     String current_idpAuthnRequest_url;
     String theme = "theme-simple";
     List<String> plugins = new ArrayList<>();
