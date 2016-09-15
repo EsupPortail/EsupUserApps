@@ -341,13 +341,15 @@ li.pE-accountSeparator {
 
     line-height: 1.7em;
     text-transform: uppercase;
-    padding: 0 8px 5px 8px !important;
+    padding: 0 0 5px 8px !important;
     box-sizing: border-box;
     height: 23px;
 }
 #pE-footer-inner-app a {
     color: #000;
     text-decoration: none;
+    vertical-align: top;
+    margin-right: 8px;
 }
 #pE-footer-inner-app img {
     height: 1.3em;
@@ -384,4 +386,22 @@ li.pE-accountSeparator {
     .pE-sticky-footer body {
         margin-bottom: 0;
     }
+}
+
+#pE-tchat {
+    border: 0;
+    width: 150px;
+    height: 30px;
+    margin-top: -7px;
+}
+#pE-tchat.fixed-tchat {
+    bottom: 0px;
+    right: 0px;
+    position: fixed;
+}
+#pE-tchat.big-tchat {
+    width: 270px;
+    height: 400px;
+    margin-top: -380px;
+    transition: 0.2s;
 }
