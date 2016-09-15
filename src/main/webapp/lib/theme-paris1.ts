@@ -59,7 +59,7 @@
                 args.is_logged = { fn: function(find) { var e = find("span#meconnecter"); return e && e.innerHTML === "Consulter mon compte"; } };
             }
             if (pE.currentApp.fname === "domino") {
-                args.extra_css = "https://esup-data.univ-paris1.fr/esup/canal/css/domino.css"; 
+                args.extra_css = "https://ent.univ-paris1.fr/assets/canal/css/domino.css"; 
             }
             if (pE.currentApp.fname === "HyperPlanning-ens") {
                 if (pE.currentApp.title)
