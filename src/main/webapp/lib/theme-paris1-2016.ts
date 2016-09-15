@@ -122,7 +122,7 @@
 
     function computeHelp(app) {
         if (app && app.hashelp) {
-            var href = "http://esup-data.univ-paris1.fr/esup/aide/canal/" + app.fname + ".html";
+            var href = "https://ent.univ-paris1.fr/assets/aide/canal/" + app.fname + ".html";
             var onclick = "window.open('','form_help','toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,scrollbars=yes,copyhistory=no,alwaysRaised,width=600,height=400')";
             var inner = "<span>Aide " + (app.shortText || app.text || app.title) + "</span> <img src='" + themeUrl() + "/help.svg'>";
             return "<a href='" + href + "' onclick=\"" + onclick + "\" target='form_help' title=\"Voir l'aide du canal\">" + inner + "</a>";
