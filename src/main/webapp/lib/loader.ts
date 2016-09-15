@@ -28,4 +28,4 @@ function loader() {
 
     loadBandeauJs([]);
 }
-loader();
+if (args) loader();
