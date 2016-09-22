@@ -20,7 +20,7 @@ function loader() {
             else throw (new Error("invalid return value '" + val + "'"));
         }
     } catch (err) {
-        h.mylog("load_bandeau_ENT: " + err.message);
+        h.mylog(err);
         try {
             sessionStorage.setItem(storageName, '');
         } catch (err) { }
