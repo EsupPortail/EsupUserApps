@@ -11,11 +11,11 @@ package prolongationENT;
 //
 //  RewriteEngine On
 //  # add "||" to the endDate if needed
-//  RewriteRule ^/topApps/([",\w]*)/([",\w]*)/(\w+),([\d-]+)$ /topApps/$1/$2/$3,$4||
+//  RewriteRule ^/topApps/([",\w]*)/([^/]*)/(\w+),([\d-]+)$ /topApps/$1/$2/$3,$4||
 //  # the real rewriting
 //  RewriteRule ^/topApps/(NONE)?/(NONE)?/(\w+),([\w|-]+)$     http://localhost:9200/logstash-ent-pro-*/_search?source={query:{bool:{filter:{exists:{field:"external_people_domain.raw"}},filter:{range:{"@timestamp":{"gte":"$4-$3","lte":"$4"}}}}},aggs:{Services:{terms:{field:"service.raw",size:25,order:{Sessions:"desc"}},aggs:{Sessions:{cardinality:{field:"appli_session_id.raw"}}}}},size:0} [P]
 //  RewriteRule ^/topApps/([",\w]*)/(NONE)?/(\w+),([\w|-]+)$   http://localhost:9200/logstash-ent-pro-*/_search?source={query:{bool:{filter:[{terms:{"eduPersonAffiliation.raw":[$1]}},{range:{"@timestamp":{"gte":"$4-$3","lte":"$4"}}}]}},aggs:{Services:{terms:{field:"service.raw",size:25,order:{Sessions:"desc"}},aggs:{Sessions:{cardinality:{field:"appli_session_id.raw"}}}}},size:0} [P]
-//  RewriteRule ^/topApps/([",\w]*)/([",\w]*)/(\w+),([\w|-]+)$ http://localhost:9200/logstash-ent-pro-*/_search?source={query:{bool:{filter:[{terms:{"eduPersonAffiliation.raw":[$1]}},{terms:{"supannEntiteAffectation.raw":[$2]}},{range:{"@timestamp":{"gte":"$4-$3","lte":"$4"}}}]}},aggs:{Services:{terms:{field:"service.raw",size:25,order:{Sessions:"desc"}},aggs:{Sessions:{cardinality:{field:"appli_session_id.raw"}}}}},size:0} [P]
+//  RewriteRule ^/topApps/([",\w]*)/([^/]*)/(\w+),([\w|-]+)$ http://localhost:9200/logstash-ent-pro-*/_search?source={query:{bool:{filter:[{terms:{"eduPersonAffiliation.raw":[$1]}},{terms:{"supannEntiteAffectation.raw":[$2]}},{range:{"@timestamp":{"gte":"$4-$3","lte":"$4"}}}]}},aggs:{Services:{terms:{field:"service.raw",size:25,order:{Sessions:"desc"}},aggs:{Sessions:{cardinality:{field:"appli_session_id.raw"}}}}},size:0} [P]
 //
 //  <LocationMatch ^/topApps/.*/1y,([\d-]+)$ >
 //      Header set Cache-Control "max-age=300"
