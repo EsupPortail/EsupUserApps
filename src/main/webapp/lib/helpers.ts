@@ -35,6 +35,10 @@ toggleClass: function (elt, classToToggle) {
     }
 },
 
+prependChild: function (e, newNode) {
+    e.insertBefore(newNode, e.firstChild);
+},
+
 insertAfter: function (e, newNode) {
     e.parentNode.insertBefore(newNode, e.nextSibling);
 },
@@ -188,7 +192,7 @@ set_div_innerHTML: function(div_id, content) {
     if (!elt) {
         elt = document.createElement("div");
         elt.setAttribute("id", div_id);
-        document.body.insertBefore(elt, document.body.firstChild);
+        h.prependChild(document.body, elt);
     }
     elt.innerHTML = content;
 },
