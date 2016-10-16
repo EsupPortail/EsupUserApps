@@ -209,7 +209,7 @@ loadScript: function(url, params) {
 var loadBandeauJs = function(params) {
     if (pE.wanted_uid)
         params.push("uid=" + encodeURIComponent(pE.wanted_uid));
-    params.push("app=" + (args.currentAppIds ? args.currentAppIds : [args.current]).join(","));
+    params.push("app=" + (args.currentAppIds || [args.current]).join(","));
 
     var angle = window.orientation || '';
     var res = (angle == 90 || angle == -90) && navigator.userAgent.match(/Android.*Chrome/) ? screen.height + 'x' + screen.width : screen.width + 'x' + screen.height;

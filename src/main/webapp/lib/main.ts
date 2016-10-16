@@ -33,7 +33,7 @@ function computeValidApps() {
 }
 
 function computeBestCurrentAppId() {
-    var ids = args.current ? [args.current] : args.currentAppIds;
+    var ids = args.currentAppIds || [args.current];
     if (!ids) return;
     // multi ids for this app, hopefully only one id is allowed for this user...
     // this is useful for apps appearing with different titles based on user affiliation
