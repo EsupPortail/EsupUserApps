@@ -206,19 +206,4 @@ loadScript: function(url, params) {
 
 };
 
-var loadBandeauJs = function(params) {
-    if (pE.wanted_uid)
-        params.push("uid=" + encodeURIComponent(pE.wanted_uid));
-    params.push("app=" + (args.currentAppIds || [args.current]).join(","));
-
-    var angle = window.orientation || '';
-    var res = (angle == 90 || angle == -90) && navigator.userAgent.match(/Android.*Chrome/) ? screen.height + 'x' + screen.width : screen.width + 'x' + screen.height;
-    res += ',' + (window.devicePixelRatio || 1).toFixed(2) + ',' + angle;
-    
-    params.push("res=" + res);
-    if (pE.PARAMS) params.push('if_none_match=' + pE.PARAMS.hash); // pE.PARAMS is null when called from loader.ts
-    if (pE.loadTime) params.push("time=" + pE.loadTime);
-    params.push("callback=window.prolongation_ENT.main");
-    h.loadScript(args.layout_url || pE.CONF.layout_url, params);
-};
 pE.helpers = h;
