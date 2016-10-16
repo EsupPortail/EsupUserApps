@@ -155,7 +155,7 @@
     var plugin = {
         computeHeader: computeHeader,
         computeFooter: computeFooter,
-        logout_buttons: function () { return ".pE-accountLogout" },
+        logout_buttons: function () { return ".pE-accountLogout"; },
         
         post_compute_currentApp: function () {      
             if (window['cssToLoadIfInsideIframe']) {

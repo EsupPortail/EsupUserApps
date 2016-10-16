@@ -140,7 +140,7 @@ escapeQuotes: function(s) {
 
 template: function(s, map) {
     // ES6-like template
-    return s.replace(/\${\s*([^{}]*?)\s*}/g, function (_m, e) { return map[e] });
+    return s.replace(/\${\s*([^{}]*?)\s*}/g, function (_m, e) { return map[e]; });
 },
 
 onIdOrBody: function(id, f) {
@@ -157,7 +157,7 @@ onReady: function (f) {
     } else if (document.addEventListener) {
         document.addEventListener('DOMContentLoaded', f);
     } else 
-        setTimeout(function () { h.onReady(f) }, 9);
+        setTimeout(function () { h.onReady(f); }, 9);
 },
 
 set_div_innerHTML: function(div_id, content) {

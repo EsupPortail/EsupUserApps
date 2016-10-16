@@ -56,14 +56,6 @@ function loadSpecificCss() {
     }
 }
 
-function unloadSpecificCss() {
-    if (args.extra_css) {
-        var v = args.extra_css;
-        if (typeof v === "string")
-            h.unloadCSS(v);
-    }
-}
-
 function find_DOM_elt(elt_spec) {
     if (typeof elt_spec === "string") {
         return h.simpleQuerySelector(elt_spec);
