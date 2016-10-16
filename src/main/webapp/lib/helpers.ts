@@ -122,10 +122,10 @@ simpleMap: function(a, fn) {
 
 toJSON: function (o) {
     // workaround old prototype.js messing with JSON.stringify. Needed for nuxeo 5.8
-    var _array_tojson = Array.prototype.toJSON;
-    if (_array_tojson) delete Array.prototype.toJSON;
+    var _array_tojson = Array.prototype['toJSON'];
+    if (_array_tojson) delete Array.prototype['toJSON'];
     var s = JSON.stringify(o);
-    if (_array_tojson) Array.prototype.toJSON = _array_tojson;
+    if (_array_tojson) Array.prototype['toJSON'] = _array_tojson;
     return s;
 },
 
