@@ -154,27 +154,11 @@ template: function(s, map) {
     return s.replace(/\${\s*([^{}]*?)\s*}/g, function (_m, e) { return map[e] });
 },
 
-onIdOrBody_rec: function(id, f) {
-    if (id && document.getElementById(id) || document.body)
-        f();
-    else
-        setTimeout(function () { h.onIdOrBody_rec(id, f) }, 9);
-},
-
 onIdOrBody: function(id, f) {
     if (id && document.getElementById(id) || document.body) {
         f();
-    } else if (document.addEventListener) {
-        document.addEventListener('DOMContentLoaded', f);
-    } else 
-        h.onIdOrBody_rec(id, f);
-},
-
-onReady_rec: function(f) {
-    if (document['attachEvent'] ? document.readyState === "complete" : document.readyState !== "loading")
-        f();
-    else
-        setTimeout(function () { h.onReady_rec(f) }, 9);
+    } else
+        h.onReady(f);
 },
 
 onReady: function (f) {
@@ -184,7 +168,7 @@ onReady: function (f) {
     } else if (document.addEventListener) {
         document.addEventListener('DOMContentLoaded', f);
     } else 
-        h.onReady_rec(f);
+        setTimeout(function () { h.onReady(f) }, 9);
 },
 
 set_div_innerHTML: function(div_id, content) {

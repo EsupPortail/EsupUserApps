@@ -122,9 +122,7 @@ interface helpers {
   toJSON(o: any): string;
   escapeQuotes(s: string): string;
   template(s: string, map: {}): string;
-  onIdOrBody_rec(id: string, f: () => void);
   onIdOrBody(id: string, f: () => void);
-  onReady_rec(f: () => void);
   onReady(f: () => void);
   set_div_innerHTML(div_id: string, content: string);
   loadCSS(url: string, media: string);
