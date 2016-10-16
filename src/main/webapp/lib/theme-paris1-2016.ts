@@ -191,7 +191,7 @@
 
             h.simpleEach(h.simpleQuerySelectorAll('#pE-header .pE-button img'), function (elt) {
                 elt['onerror'] = function () {
-                    var src = this.src.replace(/[^\/]*\.png/, "default.png");
+                    var src = this.src.replace(/[^\/]*\.svg/, "default.svg");
                     if (src !== this.src) this.src = src;
                     console.log(this, this.src);
                 };
