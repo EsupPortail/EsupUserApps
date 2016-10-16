@@ -76,10 +76,10 @@ eltMatches: function (elt, selector) {
 },
 	
 eltClosest: function (elt, selector) {
-    if (Element.prototype.closest) return elt.closest(selector);
+    if (Element.prototype['closest']) return elt.closest(selector);
 
-    for (; elt && elt.nodeType === 1; elt = elt.parentNode) {
-	if (eltMatches(elt, selector)) return elt;
+    for (; elt && elt.nodeType === 1; elt = elt.parentElement) {
+	if (h.eltMatches(elt, selector)) return elt;
     }
     return null;    
 },
