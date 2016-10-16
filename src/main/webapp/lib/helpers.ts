@@ -95,7 +95,7 @@ removeCookie: function (name, domain, path) {
 simpleContains: function(a, val) {
     var len = a.length;
     for(var i = 0; i < len; i++) {
-        if(a[i] == val) return true;
+        if(a[i] === val) return true;
     }
     return false;
 },

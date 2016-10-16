@@ -1,6 +1,6 @@
 function loader() {
     if (pE.maybe_loaded) return; 
-    if (parent != window) return; // never in iframe
+    if (parent !== window) return; // never in iframe
 
     pE.maybe_loaded = true;
     
