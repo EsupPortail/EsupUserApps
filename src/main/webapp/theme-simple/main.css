@@ -24,10 +24,6 @@
     color: #fff !important;
 }
 
-#bandeau_ENT_Inner img {
-    border: 0;
-}
-
 /* Portal Page Bar */
 .portalPageBarLinks {position:absolute; right: 0; top: 0; z-index: 3; padding:0;  }
 /* for IE7 IE8, force the width: force the width and make it auto for browsers handling :not selector (all browsers except IE lt 9) */ 

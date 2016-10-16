@@ -54,7 +54,7 @@ function computeTitlebar(app) {
 
 function computeHelp(app) {
     if (app && app.hashelp) {
-        var href = "https://ent.univ-paris1.fr/assets/aide/canal/" + app.fname + ".html";
+        var href = "https://ent.univ.fr/assets/aide/canal/" + app.fname + ".html";
         var onclick = "window.open('','form_help','toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,scrollbars=yes,copyhistory=no,alwaysRaised,width=600,height=400')";
         var a = "<a href='"+  href + "' onclick=\"" + onclick + "\" target='form_help' title=\"Voir l'aide du canal\"><span>Aide</span></a>";
         return "<div class='bandeau_ENT_Help'>" + a + "</div>";
