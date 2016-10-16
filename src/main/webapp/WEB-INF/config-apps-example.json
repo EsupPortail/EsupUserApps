@@ -48,10 +48,10 @@
     
     "GROUPS": {
         "Etablissement": {
-            "uid": ".+",
+            "uid": { "$ne": null },
         },
         "Personnels": {
-            "eduPersonAffiliation": "teacher|staff|employee|researcher|emeritus",
+            "eduPersonAffiliation": { "$in": [ "teacher","staff","employee","researcher","emeritus" ] },
         },
         "Anciens": {
             "eduPersonAffiliation": "alum",
@@ -60,7 +60,7 @@
             "eduPersonAffiliation": "student",
         },
         "EtudiantsMembre": {
-            "eduPersonAffiliation": [ "student", "member" ],
+            "eduPersonAffiliation": { "$in": [ "student" ], "$eq": "member" },
         },
     },
 }
