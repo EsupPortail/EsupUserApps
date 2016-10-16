@@ -110,7 +110,7 @@ interface helpers {
   removeClass(elt: Element, classToToggle: string); 
   toggleClass(elt: Element, classToToggle: string); 
   insertAfter(e: Element, newNode: Element);
-  simpleQuerySelectorAll(selector: string): Element[];
+  simpleQuerySelectorAll(selector: string): NodeListOf<Element> | any[];
   simpleQuerySelector(selector: string): Element;
   getCookie(name: string): string;
   removeCookie(name: string, domain: string, path: string);

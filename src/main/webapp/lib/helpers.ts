@@ -44,30 +44,19 @@ insertAfter: function (e, newNode) {
 },
 
 simpleQuerySelectorAll: function (selector) {
-    if (document.querySelectorAll) 
         try {
             return document.querySelectorAll(selector);
         } catch (err) {
             return [];
         }
-
-    // IE
-    window['__qsaels'] = [];
-    var style = h.addCSS(selector + "{x:expression(window.__qsaels.push(this))}");
-    window.scrollBy(0, 0); // force evaluation
-    h.head().removeChild(style);
-    return window['__qsaels'];
 },
 
 simpleQuerySelector: function (selector) {
-    if (document.querySelector) 
         try {
             return document.querySelector(selector);
         } catch (err) {
             return null;
         }
-    else
-        return h.simpleQuerySelectorAll(selector)[0];
 },
 
 eltMatches: function (elt, selector) {
