@@ -8,5 +8,6 @@
         return m && m[1];
     }
     var theme = getCookie(cookieName);
+    // deprecated: does not work anymore in chrome. Would need async
     document.write("<script src='" + loader_js_url + "?" + (theme ? "theme=" + theme : "v=" + jsHash) + "'></script>");
 })();
