@@ -62,6 +62,7 @@ interface prolongation_ENT_args {
   hide_menu: boolean;
   no_titlebar: boolean;
   no_footer: boolean;
+  no_sticky_footer: boolean;
 
   delegateAuth: boolean;
     
@@ -101,8 +102,11 @@ interface prolongation_ENT {
 }
 
 interface plugin {
-  post_compute_currentApp();
-  post_header_add();
+  post_compute_currentApp?();
+  post_header_add?();
+  computeHeader?(): string;
+  computeFooter?(): string;
+  logout_buttons?(): string;
 }
 interface helpers {
   mylog(string);
@@ -110,16 +114,19 @@ interface helpers {
   now(): number;
   removeClass(elt: Element, classToToggle: string); 
   toggleClass(elt: Element, classToToggle: string); 
+  prependChild(e: Element, newNode: Element);
   insertAfter(e: Element, newNode: Element);
+  eltMatches(e: Element, selector: string): boolean;
+  eltClosest(e: Element, selector: string): Element;
   simpleQuerySelectorAll(selector: string): NodeListOf<Element> | any[];
   simpleQuerySelector(selector: string): Element;
   getCookie(name: string): string;
   removeCookie(name: string, domain: string, path: string);
   simpleContains<T>(a: T[], val: T): boolean; 
-  simpleEach<T>(a: T[], val: (e: T) => void);
+  simpleEach<T>(a: ArrayLike<T>, val: (e: T) => void);
   simpleEachObject(o, fn: (k: string, v, o?) => void); 
-  simpleFilter<T>(a: T[], fn: (e: T) => boolean): T[]; 
-  simpleMap<T,U>(a: T[], fn: (e: T) => U): U[];
+  simpleFilter<T>(a: ArrayLike<T>, fn: (e: T) => boolean): T[]; 
+  simpleMap<T,U>(a: ArrayLike<T>, fn: (e: T) => U): U[];
   toJSON(o: any): string;
   escapeQuotes(s: string): string;
   template(s: string, map: {}): string;
