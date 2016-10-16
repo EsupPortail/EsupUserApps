@@ -128,7 +128,7 @@ interface helpers {
   loadCSS(url: string, media: string);
   unloadCSS(url: string);
   addCSS(css: string);
-  loadScript(url: string);
+  loadScript(url: string, params?: string[]);
 }
 
 interface Window {

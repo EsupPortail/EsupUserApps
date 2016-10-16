@@ -146,7 +146,7 @@
         h.simpleEachObject(params, function (k, v) {
             l.push(k + "=" + encodeURIComponent(v));
         });
-        h.loadScript(pE.CONF.prolongationENT_url + "/log?" + l.join("&"));
+        h.loadScript(pE.CONF.prolongationENT_url + "/log", l);
     }
 
     function log_button_click(event) {

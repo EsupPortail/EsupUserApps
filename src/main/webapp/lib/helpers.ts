@@ -195,10 +195,10 @@ addCSS: function(css) {
     return elt;
 },
 
-loadScript: function(url) {
+loadScript: function(url, params) {
     var elt = document.createElement("script");
     elt.setAttribute("type", "text/javascript");
-    elt.setAttribute("src", url);
+    elt.setAttribute("src", url + (params && params.length ? "?" + params.join('&') : ''));
     elt.setAttribute("async", "async");
     elt.setAttribute("charset", "utf-8"); // workaround IE ignoring Content-Type
     h.head().appendChild(elt);
@@ -219,6 +219,6 @@ var loadBandeauJs = function(params) {
     if (pE.PARAMS) params.push('if_none_match=' + pE.PARAMS.hash); // pE.PARAMS is null when called from loader.ts
     if (pE.loadTime) params.push("time=" + pE.loadTime);
     params.push("callback=window.prolongation_ENT.main");
-    h.loadScript((args.layout_url || pE.CONF.layout_url) + (params.length ? "?" + params.join('&') : ''));
+    h.loadScript(args.layout_url || pE.CONF.layout_url, params);
 };
 pE.helpers = h;

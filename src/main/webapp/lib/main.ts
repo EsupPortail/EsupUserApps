@@ -159,7 +159,7 @@ function simulateClickElt(elt) {
 function asyncLogout() {
     removeSessionStorageCache();
     if (CONF.cas_impersonate) h.removeCookie(CONF.cas_impersonate.cookie_name, CONF.cas_impersonate.cookie_domain, '/');
-    h.loadScript(CONF.prolongationENT_url + '/logout?callback=' + 'window.prolongation_ENT.onAsyncLogout');
+    h.loadScript(CONF.prolongationENT_url + '/logout', [ 'callback=window.prolongation_ENT.onAsyncLogout' ]);
     return false;
 }
 pE.onAsyncLogout = function() {
