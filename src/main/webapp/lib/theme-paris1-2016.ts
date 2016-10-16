@@ -98,8 +98,11 @@
         // NB: to simplify, do not use browser cache for the photo if impersonated
         var photo_version = !pE.DATA.realUserId && pE.personAttr('modifyTimestamp');
 
+        var appTitle = app.url ? "<a href='" + app.url + "'><span class='pE-title-app-short'>" + 
+           h.escapeQuotes(app.shortText || app.text || app.title) + "</span><span class='pE-title-app-long'>" +
+           h.escapeQuotes(app.title) + "</span></a>" : "Application non autorisée";
         return h.template(pE.TEMPLATES.header, {
-            appTitle: app.url ? "<a href='" + app.url + "'><span class='pE-title-app-short'>" + h.escapeQuotes(app.shortText || app.text || app.title) + "</span><span class='pE-title-app-long'>" + h.escapeQuotes(app.title) + "</span></a>" : "Application non autorisée",
+            appTitle: appTitle,
             topApps: topApps,
             accueilUrl: (pE.validApps["caccueil"] || pE.validApps["accueil-federation"] || {}).url,
             photoUrl: "https://userphoto-test.univ-paris1.fr/?uid=" + pE.DATA.user + (photo_version ? "&v=" + photo_version : ''),
