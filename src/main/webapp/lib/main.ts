@@ -13,54 +13,14 @@ pE.PARAMS = PARAMS;
 
 pE.callPlugins('main');
     
-function personAttr(attrName) {
+pE.personAttr = function(attrName) {
     var v = DATA.userAttrs && DATA.userAttrs[attrName];
     return v && v[0];
-}
- 
-function computeHeader() {
-    var login = personAttr('supannAliasLogin') || DATA.user;
-    return h.template(pE.TEMPLATES.header, {
-        logout_url: CONF.ent_logout_url,
-        userName: personAttr("displayName") || personAttr("mail") || DATA.user,
-        userDetails: personAttr("displayName") ? personAttr("mail") + " (" + login + ")" : login,
-    });
-}
+};
 
-function relogUrl(app) {
+pE.relogUrl = function(app) {
     return app.url.replace(/^(https?:\/\/[^\/]*).*/, "$1") + "/ProlongationENT/redirect?relog&impersonate&id=" + app.fname;
-}
-function computeLink(app) {
-    // for uportal4 layout compatibility:
-    if (!app.url.match(/^http/)) app.url = CONF.uportal_base_url + app.url.replace(/\/detached\//, "/max/");
-    
-    var url = app.url;
-    var classes = '';
-    if (DATA.canImpersonate) {
-        url = relogUrl(app);
-        if (!h.simpleContains(DATA.canImpersonate, app.fname)) {
-            classes = "class='bandeau_ENT_Menu_Entry__Forbidden'";
-        }
-    }
-    var a = "<a title='" + h.escapeQuotes(app.description) + "' href='" + url + "'>" + h.escapeQuotes(app.text || app.title) + "</a>";
-    return "<li " + classes + ">" + a + "</li>";
-}
-
-function computeMenu(currentApp) {
-    var li_list = h.simpleMap(DATA.layout.folders, function (tab) {
-        if (tab.title === "__hidden__") return '';
-        var sub_li_list = h.simpleMap(tab.portlets, function(app) {
-            return computeLink(app);
-        });
-        
-        var className = h.simpleContains(tab.portlets, currentApp) ? "activeTab" : "inactiveTab";
-        return "<li class='" + className + "' onclick=''><span>" + h.escapeQuotes(tab.title) + "</span><ul>" + sub_li_list.join("\n") + "</ul></li>";
-    });
-    
-    var toggleMenuSpacer = "<div class='toggleMenuSpacer'></div>\n";
-    
-    return "<ul class='bandeau_ENT_Menu'>\n" + toggleMenuSpacer + li_list.join("\n") + "\n</ul>";
-}
+};
 
 function computeValidApps() {
     var m = {};
@@ -84,23 +44,6 @@ function computeBestCurrentAppId() {
     return pE.validApps[ids[0]];
 }
 
-function computeHelp(app) {
-    if (app && app.hashelp) {
-        var href = "https://ent.univ-paris1.fr/assets/aide/canal/" + app.fname + ".html";
-        var onclick = "window.open('','form_help','toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes,scrollbars=yes,copyhistory=no,alwaysRaised,width=600,height=400')";
-        var a = "<a href='"+  href + "' onclick=\"" + onclick + "\" target='form_help' title=\"Voir l'aide du canal\"><span>Aide</span></a>";
-        return "<div class='bandeau_ENT_Help'>" + a + "</div>";
-    } else {
-        return '';
-    }
-}
-
-function computeTitlebar(app) {
-    if (app && app.title && !args.no_titlebar)
-        return "<div class='bandeau_ENT_Titlebar'><a href='" + app.url + "'>" + h.escapeQuotes(app.title) + "</a></div>";
-    else
-        return '';
-}
 function bandeau_div_id() {
     return args.div_id || (args.div_is_uid && DATA.user) || 'bandeau_ENT';
 }
@@ -171,7 +114,7 @@ pE.onAsyncLogout = function() {
     }
 };
 function installLogout() {
-    var logout_buttons = pE.callPlugins('logout_buttons') || "#bandeau_ENT_Inner .portalPageBarLogout, #bandeau_ENT_Inner .portalPageBarAccountLogout";
+    var logout_buttons = pE.callPlugins('logout_buttons');
     h.simpleEach(h.simpleQuerySelectorAll(logout_buttons),
                  function (elt) { 
                      elt['onclick'] = asyncLogout;
@@ -203,34 +146,8 @@ function installBandeau() {
         h.addCSS(pE.CSS.base);
     else
         h.loadCSS(CONF.prolongationENT_url + "/" + CONF.theme + "/main.css", null);
-    
-    var widthForNiceMenu = 800;
-    // testing min-width is not enough: in case of a non-mobile comptabile page, the width will be big.
-    // also testing min-device-width will help
-    var conditionForNiceMenu = '(min-width: ' + widthForNiceMenu + 'px) and (min-device-width: ' + widthForNiceMenu + 'px)';
-    pE.width_xs = window.matchMedia ? !window.matchMedia(conditionForNiceMenu).matches : screen.width < widthForNiceMenu;
-    if (!pE.width_xs) {
-        // on IE7&IE8, we do want to include the desktop CSS
-        // but since media queries fail, we need to give them a simpler media
-        var handleMediaQuery = "getElementsByClassName" in document; // not having getElementsByClassName is a good sign of not having media queries... (IE7 and IE8)
-        var condition = handleMediaQuery ? conditionForNiceMenu : 'screen';
-        
-        if (pE.CSS) 
-            h.addCSS("@media " + condition + " { \n" + pE.CSS.desktop + "}\n");
-        else
-            h.loadCSS(CONF.prolongationENT_url + "/" + CONF.theme + "/desktop.css", condition);
-    }
 
     var bandeau_html = pE.callPlugins("computeHeader");
-    if (!bandeau_html) {
-        var header = computeHeader();
-        var menu = computeMenu(currentApp);
-        var help = computeHelp(currentApp);
-        var titlebar = computeTitlebar(currentApp);
-        var clear = "<p class='bandeau_ENT_Menu_Clear'></p>";
-        var menu_ = "<div class='bandeau_ENT_Menu_'>" + menu + clear + "</div>";
-        bandeau_html = "\n\n<div id='bandeau_ENT_Inner' class='menuOpen'>" + header + menu_ + titlebar + help + "</div>" + "\n\n";
-    }
     h.onIdOrBody(bandeau_div_id(), function () {
         h.set_div_innerHTML(bandeau_div_id(), bandeau_html);
         
@@ -263,7 +180,7 @@ function detectImpersonationPbs() {
     if (want != pE.wanted_uid && (pE.wanted_uid || h.simpleContains(DATA.canImpersonate, currentApp.fname))) {
         var msg = "Vous êtes encore identifié sous l'utilisateur " + DATA.user + ". Acceptez vous de perdre la session actuelle ?";
         if (window.confirm(msg)) {
-            document.location.href = relogUrl(currentApp);
+            document.location.href = pE.relogUrl(currentApp);
         }
     }
 }

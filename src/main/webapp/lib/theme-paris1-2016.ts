@@ -29,19 +29,10 @@
         return toggleMenu('pE-account', 'pE-photo');
     }
     
-    function personAttr(attrName) {
-        var v = pE.DATA.userAttrs && pE.DATA.userAttrs[attrName];
-        return v && v[0];
-    }
-    
     function themeUrl() {
         return pE.CONF.prolongationENT_url + "/" + pE.CONF.theme;
     }
 
-    function relogUrl(app) {
-        return app.url.replace(/^(https?:\/\/[^\/]*).*/, "$1") + "/ProlongationENT/redirect?relog&impersonate&id=" + app.fname;
-    }
-    
     function computeLink(app) {
         // for uportal4 layout compatibility:
         if (!app.url.match(/^http/)) app.url = pE.CONF.uportal_base_url + app.url.replace(/\/detached\//, "/max/");
@@ -49,7 +40,7 @@
         var url = app.url;
         var classes = ['pE-button'];
         if (pE.DATA.canImpersonate) {
-            url = relogUrl(app);
+            url = pE.relogUrl(app);
             if (!h.simpleContains(pE.DATA.canImpersonate, app.fname)) {
                 classes.push('pE-button-forbidden');
             }
@@ -105,7 +96,7 @@
         if (!args.no_footer && !args.no_sticky_footer) h.toggleClass(html_elt, 'pE-sticky-footer');
 
         // NB: to simplify, do not use browser cache for the photo if impersonated
-        var photo_version = !pE.DATA.realUserId && personAttr('modifyTimestamp');
+        var photo_version = !pE.DATA.realUserId && pE.personAttr('modifyTimestamp');
 
         return h.template(pE.TEMPLATES.header, {
             appTitle: app.url ? "<a href='" + app.url + "'><span class='pE-title-app-short'>" + h.escapeQuotes(app.shortText || app.text || app.title) + "</span><span class='pE-title-app-long'>" + h.escapeQuotes(app.title) + "</span></a>" : "Application non autorisée",
@@ -114,7 +105,7 @@
             photoUrl: "https://userphoto-test.univ-paris1.fr/?uid=" + pE.DATA.user + (photo_version ? "&v=" + photo_version : ''),
             themeUrl: themeUrl(),
             logout_url: pE.CONF.ent_logout_url,
-            userDetails: personAttr("displayName") || personAttr("mail"),
+            userDetails: pE.personAttr("displayName") || pE.personAttr("mail"),
             accountAnchorClass: pE.validApps["CCompte-pers"] || pE.validApps["CCompte-etu"] ? '' : 'pE-hide',
             pagePersoClass: pE.validApps["page-perso"] ? '' : 'pE-hide',
         });

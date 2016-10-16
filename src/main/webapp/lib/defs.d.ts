@@ -78,7 +78,6 @@ interface prolongation_ENT {
   localStorage_prefix: string;
   localStorage_js_text_field: string;
   loadTime: number;
-  width_xs: boolean;
   
   maybe_loaded: boolean;
   
@@ -92,6 +91,8 @@ interface prolongation_ENT {
   helpers: helpers;
   localStorageSet(field: string, value: string);
   localStorageGet(field: string): string;
+  personAttr(attr: string): string;  
+  relogUrl(app: app): string;
   callPlugins(event: string): any;
   plugins: plugin[];
   onAsyncLogout(): void;
