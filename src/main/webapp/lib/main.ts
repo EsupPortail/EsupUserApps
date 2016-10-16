@@ -234,11 +234,6 @@ function installBandeau() {
     h.onIdOrBody(bandeau_div_id(), function () {
         h.set_div_innerHTML(bandeau_div_id(), bandeau_html);
         
-        if (!args.showSearch) {
-            var searchElt = document.getElementById("portalPageBarSearch");
-            if (searchElt) searchElt.innerHTML = '';
-        }
-        
         pE.callPlugins('post_header_add');
         
         if (CONF.cas_impersonate && !args.uid) detectImpersonationPbs();

@@ -36,55 +36,6 @@
 
 
 /*********************************************************************************/
-#portalPageBarSearch {
-    display: block;
-    float: left;
-    height: 30px;
-}
-
-#portalPageBarSearch span {
-    display: inline-block;
-    padding: 1px 6px;
-    line-height: 29px;
-    font-size: 13px; /* enforce it */
-}
-
-#portalPageBarSearch span {
-    padding-top: 6px;
-}
-#portalPageBarSearch input {
-    font-size: 13px; /* enforce it */
-    border: #213885 solid 1px;
-    outline: 0;
-    margin: 0;
-}
-#portalPageBarSearch input.text {
-    width: 10em;
-    border-right: 0;
-    text-indent: 2px;
-    height: 16px;
-    padding: 1px 0 !important;
-}
-#portalPageBarSearch input.text:focus {
-    width: 10em;
-}
-#portalPageBarSearch input.text::-ms-clear {
-    display: none;
-}
-#portalPageBarSearch input.search {
-    background-color: #fff;
-    background-image: url(Loupe.svg);
-    background-repeat: no-repeat;
-    background-size: 15px auto;
-    background-position: 0 2px;
-    height: 20px;
-    width: 17px;
-    cursor: pointer;
-    float: right;
-    border-left: 0;
-    padding: 0 !important;
-}
-
 .portalPageBarLogout {
     display: inline-block;
     margin: 5px 5px 0 0;
@@ -264,10 +215,6 @@ body {
     font-size: 26px;
 }
 @media screen and (max-width: 450px) {
-    #portalPageBarSearch input.text {
-        width: 4em;
-    }
-
     .bandeau_ENT_portalLogo {
         text-align: left !important;
     }

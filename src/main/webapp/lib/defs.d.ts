@@ -60,7 +60,6 @@ interface prolongation_ENT_args {
   is_logged: boolean | { fn: (find: any) => boolean };
 
   hide_menu: boolean;
-  showSearch: boolean;
   no_titlebar: boolean;
   no_footer: boolean;
 
