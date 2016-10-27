@@ -151,6 +151,10 @@ class Shibboleth {
 
     static String[] getShibHeader(HttpServletRequest request, String name) {
         String value = request.getHeader(name);
+
+        // handle apps with attributePrefix="AJP_" in shibboleth2.xml, cf https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPJavaInstall
+        if (value == null) value = request.getHeader("AJP_" + name);
+        
         if (isEmpty(value)) return null;
         
         // https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPAttributeAccess :
