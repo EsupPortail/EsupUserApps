@@ -1,21 +1,10 @@
 // NB: not pure json, comments & some trailing commas are allowed :)
 {
-    "theme": "theme-simple",
-    "plugins": ["delegateAuth", "uportal-v4-3-dlm-layout"],
     "cas_base_url": "https://cas.univ.fr/cas",
-    "uportal_base_url": "https://ent.univ.fr",
     "prolongationENT_url": "http://localhost:8082/ProlongationENT",
 
-    // needed when you use an external layout web service:
-    //"layout_url": "https://ent.univ.fr/layout.jsp",
-
     "visit_max_inactive": 1800, // 30 min
-    "time_before_checking_browser_cache_is_up_to_date": 60,
 
-    // disabling localStorage will cause late appearing of the prolongationENT => blinks in the browser
-    "disableLocalStorage": false,
     // do disable server cache in production, 
     "disableServerCache": false,
-    // to debug theme CSS in browser, it's easier to load directly the CSS
-    "disableCSSInlining": false,
 }

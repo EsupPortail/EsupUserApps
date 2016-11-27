@@ -19,21 +19,19 @@ import static prolongationENT.Utils.*;
 @SuppressWarnings("serial")
 public class Main extends HttpServlet {           
     Conf.Main conf = null;
-    LoaderJs loaderJs;
     ComputeBandeau computeBandeau;
     
     org.apache.commons.logging.Log log = LogFactory.getLog(Main.class);
 
     static String[] mappings = new String[] {
-        "/loader.js", "/detectReload", "/purgeCache",
-        "/layout", "/login", "/logout", "/redirect", "/canImpersonate", "/log",
+        "/detectReload", "/purgeCache",
+        "/layout", "/login", "/logout", "/redirect", "/canImpersonate",
         "/admin/config-apps.json",
     };
     
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (conf == null || conf.disableServerCache) initConf(request);
         switch (request.getServletPath()) {
-            case "/loader.js":      loader_js     (request, response); break;
             case "/detectReload":   detectReload  (request, response); break;
             case "/purgeCache":     purgeCache    (request, response); break;
 
@@ -42,14 +40,9 @@ public class Main extends HttpServlet {
             case "/logout":         logout        (request, response); break;
             case "/redirect":       redirect      (request, response); break;
             case "/canImpersonate": canImpersonate(request, response); break;
-            case "/log":            /* nothing to do */                break;
 
             case "/admin/config-apps.json": show_config_apps(request, response); break;
         }
-    }
-    
-    void loader_js(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        loaderJs.loader_js(request, response);
     }
     
     void detectReload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -97,7 +90,6 @@ public class Main extends HttpServlet {
     synchronized void initConf(HttpServletRequest request) {
         ServletContext sc = request.getServletContext();
         conf = getConf(sc);
-        loaderJs = new LoaderJs(request, conf);
         computeBandeau = new ComputeBandeau(conf);
     }   
 
