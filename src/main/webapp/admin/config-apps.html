@@ -73,7 +73,7 @@ function format_app(folder, id) {
     let url = app.url.replace("{fname}", id);
     let tags = app.tags ? `<p class="tags">Tags : ${app.tags.join(", ")}</p>` : '';
     let l = [folder, 
-             "<img src='../theme-paris1-2016/icon/" + simplifyFname(id) + ".svg' onerror='this.hidden = true'>",
+             "<img src='/ProlongationENT/theme-paris1-2016/icon/" + simplifyFname(id) + ".svg' onerror='this.hidden = true'>",
              a(url, id), app.shortText, (app.text ? app.text + "<br>" : '') + (app.title || ''),
              (app.description || '&nbsp;') + tags, format_groups(app.groups)];
     return tr_td(l.map(s => s || ''));
