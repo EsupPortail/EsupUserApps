@@ -27,7 +27,7 @@ function xhr(url, callback) {
     req.onreadystatechange = function () {
         if (req.readyState != 4) return;
         if (req.status == 401) {
-           document.location = '/ProlongationENT/login?target=' + encodeURIComponent(document.location);
+           document.location = '/EsupUserApps/login?target=' + encodeURIComponent(document.location);
         } else if (req.status != 200) {
             alert('HTTP error ' + req.status);
             return;

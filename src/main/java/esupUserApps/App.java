@@ -1,4 +1,4 @@
-package prolongationENT;
+package esupUserApps;
 
 import java.net.URL;
 import java.util.Collection;
@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static prolongationENT.Utils.firstNonNull;
+import static esupUserApps.Utils.firstNonNull;
 
 class App extends ACLs {
     

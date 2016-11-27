@@ -1,35 +1,35 @@
-ProlongationENT
+EsupUserApps
 ===========
 
 
 Shibboleth
 -------------------
 
-For shibbolethized applications, the simpler is to integrate CAS-isified ProlongationENT.
-Your users will get ProlongationENT, whereas other users will have nothing.
+For shibbolethized applications, the simpler is to integrate CAS-isified EsupUserApps.
+Your users will get EsupUserApps, whereas other users will have nothing.
 
-You can also use shibbolethized ProlongationENT:
+You can also use shibbolethized EsupUserApps:
 * configure ```config-shibboleth.json```, create a new random key for ```proxyKeys```
 * in the apache of your application, do:
 
 ```apache
 SSLProxyEngine on
-<Location /ProlongationENT>
-  ProxyPass https://ent.univ.fr/ProlongationENT
+<Location /EsupUserApps>
+  ProxyPass https://ent.univ.fr/EsupUserApps
 </Location>
-<Location /ProlongationENT/layout> 
+<Location /EsupUserApps/layout> 
   AuthType shibboleth
   ShibRequireSession Off
   require shibboleth
   ShibUseHeaders On
-  RequestHeader set ProlongationENT-Proxy-Key XXXrandomXXX
+  RequestHeader set EsupUserApps-Proxy-Key XXXrandomXXX
 </Location>
 ```
 
 * in the application:
 
 ```html
-<script> window.prolongation_ENT_args = { current: 'xxx', layout_url: '/ProlongationENT/layout' } </script>
+<script> window.prolongation_ENT_args = { current: 'xxx', layout_url: '/EsupUserApps/layout' } </script>
 <script src="https://ent.univ.fr/ProlongationENT/loader.js"></script>
 ```
 

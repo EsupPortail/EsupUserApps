@@ -1,4 +1,4 @@
-package prolongationENT;
+package esupUserApps;
 
 import java.io.IOException;
 
@@ -14,7 +14,7 @@ import com.google.gson.JsonParser;
 
 import org.apache.commons.logging.LogFactory;
 
-import static prolongationENT.Utils.*;
+import static esupUserApps.Utils.*;
 
 @SuppressWarnings("serial")
 public class Main extends HttpServlet {           

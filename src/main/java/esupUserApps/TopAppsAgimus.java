@@ -1,4 +1,4 @@
-package prolongationENT;
+package esupUserApps;
 
 
 // This module expects a wrapper in front of elasticsearch.
@@ -37,7 +37,7 @@ import com.google.gson.Gson;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import static prolongationENT.Utils.*;
+import static esupUserApps.Utils.*;
 
 class TopAppsAgimus {
     

@@ -2,7 +2,7 @@
 {
     "ldap": { 
         "url": "ldap://ldap ldap://ldap2",
-        "bindDN": "cn=prolongation-ent,ou=admin,dc=univ,dc=fr",
+        "bindDN": "cn=esupUserApps,ou=admin,dc=univ,dc=fr",
         "bindPasswd": "xxx",
         "peopleDN": "ou=people,dc=univ,dc=fr"
     }

@@ -1,4 +1,4 @@
-package prolongationENT;
+package esupUserApps;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -21,7 +21,7 @@ import javax.naming.directory.SearchResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import static prolongationENT.Utils.asMap;
+import static esupUserApps.Utils.asMap;
     
 class Ldap {
     @SuppressWarnings("serial")

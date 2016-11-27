@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <web-app>   
-    <display-name>ProlongationENT</display-name>
+    <display-name>EsupUserApps</display-name>
 
     <context-param>
         <!-- the default log4j.properties does not make use of the webapp root feature -->
@@ -11,7 +11,7 @@
 
     <listener>
       <listener-class>
-        prolongationENT.WebXml
+        esupUserApps.WebXml
       </listener-class>
     </listener>
 

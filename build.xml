@@ -147,7 +147,7 @@
     <taskdef classpathref="jetty.plugin.classpath" resource="tasks.properties" loaderref="jetty.loader" />
 
     <jetty tempDirectory="tmp/jetty-temp" jettyPort="${jetty.port}">
-      <webApp name="myApp" warfile="src/main/webapp" contextpath="/ProlongationENT">
+      <webApp name="myApp" warfile="src/main/webapp" contextpath="/EsupUserApps">
         <lib dir="${build.dir}/WEB-INF/lib" includes="*.jar" />
         <classes dir="${build.classes}" includes="*.class" />
       </webApp>

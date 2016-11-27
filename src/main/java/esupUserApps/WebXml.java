@@ -1,4 +1,4 @@
-package prolongationENT;
+package esupUserApps;
 
 import javax.servlet.*;
 
@@ -6,7 +6,7 @@ import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.authentication.AuthenticationFilter;
 import org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter;
 
-import static prolongationENT.Utils.*;
+import static esupUserApps.Utils.*;
 
 public class WebXml implements ServletContextListener {
         
@@ -24,15 +24,15 @@ public class WebXml implements ServletContextListener {
 
         addFilter(sc, "CAS Authentication", AuthenticationFilter.class,
                   asMap("casServerLoginUrl", conf.cas_login_url)
-                   .add("serverName", url2host(conf.prolongationENT_url)),
+                   .add("serverName", url2host(conf.EsupUserApps_url)),
                   "/login");
 
         addFilter(sc, "CAS Validate", Cas20ProxyReceivingTicketValidationFilter.class,
                   asMap("casServerUrlPrefix", conf.cas_base_url)
-                   .add("serverName", url2host(conf.prolongationENT_url))
+                   .add("serverName", url2host(conf.EsupUserApps_url))
                    .add("redirectAfterValidation", "false"), 
                   "/layout", "/login");
     
-        addServlet(sc, "ProlongationENT", Main.class, null, Main.mappings);
+        addServlet(sc, "EsupUserApps", Main.class, null, Main.mappings);
     }
 }

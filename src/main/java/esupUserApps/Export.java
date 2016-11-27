@@ -1,8 +1,8 @@
-package prolongationENT;
+package esupUserApps;
 
 import java.util.Collection;
 
-import static prolongationENT.Utils.firstNonNull;
+import static esupUserApps.Utils.firstNonNull;
 
 class Export {
     static class App {
@@ -16,7 +16,7 @@ class Export {
         Collection<String> tags;
         Boolean hashelp;
         
-        public App(String fname, prolongationENT.App app, String url) {
+        public App(String fname, esupUserApps.App app, String url) {
             this.fname = fname;
             text = app.text;
             shortText = app.shortText;

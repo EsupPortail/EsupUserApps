@@ -1,4 +1,4 @@
-package prolongationENT;
+package esupUserApps;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +40,7 @@ static class Apps extends Conf.Auth {
 static class Main extends Conf.Apps {
     Set<String> admins = new HashSet<>();
     String cas_base_url;
-    String prolongationENT_url;
+    String EsupUserApps_url;
     String current_idpId;
     String current_idpAuthnRequest_url;
 

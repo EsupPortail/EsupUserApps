@@ -1,4 +1,4 @@
-package prolongationENT;
+package esupUserApps;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import static prolongationENT.Ldap.getFirst;
+import static esupUserApps.Ldap.getFirst;
 
 class ComputeApps {
     Conf.Main conf;

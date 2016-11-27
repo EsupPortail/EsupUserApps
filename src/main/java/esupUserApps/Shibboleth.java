@@ -1,4 +1,4 @@
-package prolongationENT;
+package esupUserApps;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +26,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import static prolongationENT.Utils.*;
+import static esupUserApps.Utils.*;
 
 class Shibboleth {
     static class Conf {

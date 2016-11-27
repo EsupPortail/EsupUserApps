@@ -1,4 +1,4 @@
-package prolongationENT;
+package esupUserApps;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,8 +14,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.LogFactory;
 
-import static prolongationENT.Utils.*;
-import static prolongationENT.Ldap.getFirst;
+import static esupUserApps.Utils.*;
+import static esupUserApps.Ldap.getFirst;
 
 public class ComputeBandeau {           
     Conf.Main conf = null;
@@ -140,9 +140,9 @@ public class ComputeBandeau {
         
         String location = get_url(app, appId, null, conf.current_idpAuthnRequest_url);
 
-        // Below rely on /ProlongationENT/redirect proxied in applications.
+        // Below rely on /EsupUserApps/redirect proxied in applications.
         // Example for Apache:
-        //   ProxyPass /ProlongationENT https://ent.univ.fr/ProlongationENT
+        //   ProxyPass /EsupUserApps https://ent.univ.fr/EsupUserApps
         if (hasParameter(request, "relog")) {
             removeCookies(request, response, app.cookies);
         }
@@ -157,7 +157,7 @@ public class ComputeBandeau {
     void needAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
             if (request.getParameter("auth_checked") == null) {
                 cleanupSession(request);
-                String final_url = conf.prolongationENT_url + "/layout?auth_checked"
+                String final_url = conf.EsupUserApps_url + "/layout?auth_checked"
                     + (request.getQueryString() != null ? "&" + request.getQueryString() : "");
                 response.sendRedirect(via_CAS(conf.cas_login_url, final_url) + "&gateway=true");
             } else {
@@ -273,7 +273,7 @@ public class ComputeBandeau {
             String realUrl = url;
             url = via_idpAuthnRequest_url(idpAuthnRequest_url, url, shibbolethSPPrefix);
             
-            // HACK for test ProlongationENT: handle apps using production federation
+            // HACK for test EsupUserApps: handle apps using production federation
             if (!realUrl.contains("test")) url = url.replace("idp-test", "idp");
             //debug_msg("personalized shib url is now " + url);
         }
@@ -302,7 +302,7 @@ public class ComputeBandeau {
     }
 
     boolean hasValidProxyKey(HttpServletRequest request) {
-        String key = request.getHeader("ProlongationENT-Proxy-Key");
+        String key = request.getHeader("EsupUserApps-Proxy-Key");
         return key != null && conf.shibboleth != null &&
             conf.shibboleth.proxyKeys.contains(key);
     }
