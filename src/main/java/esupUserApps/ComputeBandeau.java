@@ -39,7 +39,7 @@ public class ComputeBandeau {
     }
     
     void layout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (hasValidProxyKey(request)) {
+        if (hasValidBearerToken(request)) {
             proxied_layout(request, response);
         }  else if (request.getParameter("noCache") != null) {
             needAuthentication(request, response);
@@ -301,10 +301,11 @@ public class ComputeBandeau {
         return conf.cas_impersonate != null ? getCookie(request, conf.cas_impersonate.cookie_name) : null;
     }
 
-    boolean hasValidProxyKey(HttpServletRequest request) {
-        String key = request.getHeader("EsupUserApps-Proxy-Key");
-        return key != null && conf.shibboleth != null &&
-            conf.shibboleth.proxyKeys.contains(key);
+    boolean hasValidBearerToken(HttpServletRequest request) {
+        String auth = request.getHeader("Authorization");
+        String token = auth != null ? removePrefixOrNull(auth, "Bearer ") : null;
+        return token != null && conf.shibboleth != null &&
+            conf.shibboleth.bearerTokens.contains(token);
     }
     
     /* ******************************************************************************** */

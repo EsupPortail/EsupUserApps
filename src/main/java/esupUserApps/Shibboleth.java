@@ -32,7 +32,7 @@ class Shibboleth {
     static class Conf {
         String federation_metadata_url = "https://federation.renater.fr/renater/idps-renater-metadata.xml";
         String federation_metadata_cru_url = "https://federation.renater.fr/idp/profile/Metadata/SAML";
-        Set<String> proxyKeys;
+        Set<String> bearerTokens;
         Map<String,String> header_map;
     }
     Conf conf;
