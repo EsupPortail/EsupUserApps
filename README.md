@@ -1,6 +1,7 @@
 EsupUserApps
 ===========
 
+Generate layout.json similar to uPortal's
 
 Shibboleth
 -------------------
@@ -42,7 +43,7 @@ Technical details
 
 #### ```/purgeCache```
 
-The configuration files and ```/loader.js``` are computed on startup (or webapp reload). If you modify a file, call ```/purgeCache``` to take changes into account (when debugging, you can use config option ```disableServerCache```)
+The configuration files are loaded on startup (or webapp reload). If you modify a file, call ```/purgeCache``` to take changes into account (when debugging, you can use config option ```disableServerCache```)
 
 #### ```/layout```
 
