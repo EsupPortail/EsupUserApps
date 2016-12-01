@@ -18,8 +18,8 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static esupUserApps.Utils.asMap;
     
@@ -32,7 +32,7 @@ class Ldap {
     }
     LdapConf ldapConf;
     DirContext dirContext;
-    Log log = LogFactory.getLog(Ldap.class);
+    Logger log = LoggerFactory.getLogger(Ldap.class);
 
     Ldap(LdapConf ldapConf) {
         this.ldapConf = ldapConf;

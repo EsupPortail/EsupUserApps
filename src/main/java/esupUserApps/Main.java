@@ -12,7 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import static esupUserApps.Utils.*;
 
@@ -21,7 +21,7 @@ public class Main extends HttpServlet {
     Conf.Main conf = null;
     ComputeBandeau computeBandeau;
     
-    org.apache.commons.logging.Log log = LogFactory.getLog(Main.class);
+    org.slf4j.Logger log = LoggerFactory.getLogger(Main.class);
 
     static String[] mappings = new String[] {
         "/detectReload", "/purgeCache",

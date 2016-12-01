@@ -34,14 +34,14 @@ import java.util.Set;
 
 import com.google.gson.Gson;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static esupUserApps.Utils.*;
 
 class TopAppsAgimus {
     
-    Log log = LogFactory.getLog(TopAppsAgimus.class);
+    Logger log = LoggerFactory.getLogger(TopAppsAgimus.class);
 
     SimpleDateFormat dateFormat_MMdd = new SimpleDateFormat("MM-dd");
     SimpleDateFormat dateFormat_yyyy = new SimpleDateFormat("yyyy");
@@ -135,7 +135,7 @@ class TopAppsAgimus {
             String url = conf.elasticSearchWrapperUrl + urlPath;
             return simplifyResult(new Gson().fromJson(new InputStreamReader(urlGET(url)), ElasticSearchResult.class));
         } catch (IOException e) {
-            log.error(e);
+            log.error("error accessing " + urlPath, e);
             return null;
         }
     }

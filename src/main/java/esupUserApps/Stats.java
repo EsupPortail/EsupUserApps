@@ -7,7 +7,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 
 class Stats {           
@@ -18,7 +18,7 @@ class Stats {
     static String global_visit_nb_attr = "global_visit_nb";
     static String app_visit_nb_attr_prefix = "app_visit_nb_";
 
-    org.apache.commons.logging.Log log = LogFactory.getLog(Stats.class);
+    org.slf4j.Logger log = LoggerFactory.getLogger(Stats.class);
     
     Stats(Conf.Main conf) {
         this.conf = conf;

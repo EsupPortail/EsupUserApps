@@ -9,14 +9,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // the syntax of GROUPS is a subset of mongodb query, cf https://docs.mongodb.com/manual/reference/operator/query/
 class Groups {   
     Map<String, Query> GROUPS;
     Set<String> needed_ldap_attributes;
-    Log log = LogFactory.getLog(Ldap.class);
+    Logger log = LoggerFactory.getLogger(Ldap.class);
 
     Groups(Map<String, Map<String, Object>> GROUPS) {
         needed_ldap_attributes = new HashSet<>();

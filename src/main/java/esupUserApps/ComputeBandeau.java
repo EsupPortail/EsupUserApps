@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 
 import static esupUserApps.Utils.*;
 import static esupUserApps.Ldap.getFirst;
@@ -26,7 +26,7 @@ public class ComputeBandeau {
     static String prev_host_attr = "prev_host";
     static String prev_time_attr = "prev_time";    
 
-    org.apache.commons.logging.Log log = LogFactory.getLog(ComputeBandeau.class);
+    org.slf4j.Logger log = LoggerFactory.getLogger(ComputeBandeau.class);
 
     public ComputeBandeau(Conf.Main conf) {
         this.conf = conf;

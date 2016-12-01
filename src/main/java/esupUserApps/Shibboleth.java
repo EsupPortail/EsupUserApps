@@ -18,8 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.Attributes;
@@ -40,7 +40,7 @@ class Shibboleth {
     Map<String,String> SSO_urls;
     static Date lastUpdate;
     
-    Log log = LogFactory.getLog(Shibboleth.class);
+    Logger log = LoggerFactory.getLogger(Shibboleth.class);
   
     Shibboleth(Conf conf, ServletContext sc) {
         this.conf = conf;
@@ -112,7 +112,7 @@ class Shibboleth {
             SSO_urls = m;
             Files.write(SSO_urls_backing_file.toPath(), new Gson().toJson(SSO_urls).getBytes());
         } catch (IOException e) {
-            log.error(e);
+            log.error("retrieve_SSO_urls failed", e);
         }
     }
     
@@ -144,7 +144,7 @@ class Shibboleth {
             SAXParserFactory.newInstance().newSAXParser().parse(in, handler);
             return m;
         } catch (javax.xml.parsers.ParserConfigurationException | SAXException | IOException e) {
-            log.error(e);
+            log.error("retrieve_SSO_urls failed", e);
             return null;
         }
     }

@@ -7,8 +7,8 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static esupUserApps.Ldap.getFirst;
 
@@ -17,7 +17,7 @@ class ComputeApps {
     Groups groups;
     Ldap ldap;
     Shibboleth shibboleth;
-    Log log = LogFactory.getLog(ComputeApps.class);
+    Logger log = LoggerFactory.getLogger(ComputeApps.class);
     
     ComputeApps(Conf.Main conf) {
         this.conf = conf;

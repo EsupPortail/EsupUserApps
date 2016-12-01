@@ -31,8 +31,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jasig.cas.client.util.AbstractCasFilter;
 import org.jasig.cas.client.validation.Assertion;
 
@@ -101,12 +101,12 @@ class Utils {
         return null;
     }
 
-    private static Log log() {
+    private static Logger log() {
         return log(Utils.class);
     }
     
-    static Log log(Class<?> clazz) {
-        return LogFactory.getLog(clazz);
+    static Logger log(Class<?> clazz) {
+        return LoggerFactory.getLogger(clazz);
     }
     
     static String removePrefixOrNull(String s, String prefix) {
@@ -121,7 +121,7 @@ class Utils {
         try {
             return new URL(url);
         } catch (java.net.MalformedURLException e) {
-            log().error(e, e);
+            log().error("invalid URL " + url, e);
             return null;
         }
     }
@@ -255,7 +255,7 @@ class Utils {
         try {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, msg);
         } catch (IOException e) {
-            log().error(e);
+            log().error("internal error", e);
         }
     }
 
@@ -316,7 +316,7 @@ class Utils {
             try {
                 map.put(name, getField(o.getClass(), name).get(o));
             } catch (NoSuchFieldException | IllegalAccessException e) {
-                log().error(e);
+                log().error("error accessing field " + name, e);
             }
         }
         return map;
