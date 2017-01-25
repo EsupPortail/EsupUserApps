@@ -3,6 +3,10 @@ EsupUserApps
 
 Generate layout.json similar to uPortal's
 
+Requirements: LDAP, CAS (or similar : Shibboleth...)
+
+Optional: Agimus
+
 Shibboleth
 -------------------
 
