@@ -3,9 +3,25 @@ EsupUserApps
 
 Generate layout.json similar to uPortal's
 
-Requirements: LDAP, CAS (or similar : Shibboleth...)
+* [Introduction](https://github.com/EsupPortail/ProlongationENT#introduction) (from ProlongationENT)
+* [Configuration](#configuration)
+* [Shibboleth](#shibboleth)
+* [Technical details](#technical-details)
+
+Required: LDAP, CAS (or similar : Shibboleth...)
 
 Optional: Agimus
+
+
+Configuration
+-------------------
+
+* create ```src/main/webapp/WEB-INF/config.json``` similar to ```config-example.json```
+* create ```src/main/webapp/WEB-INF/config-auth.json``` similar to ```config-auth-example.json```
+* create ```src/main/webapp/WEB-INF/config-apps.json``` similar to ```config-apps-example.json```
+* deploy using ```mvn package``` (or modify ```build.properties``` and use ```ant deploy```)
+* test using ```https://ent.univ.fr/EsupUserApps/layout``` (if you get "Unauthorized", retry after logging into CAS)
+
 
 Shibboleth
 -------------------
