@@ -38,7 +38,7 @@ mvn jetty:run
 
 Testez http://localhost:8080/layout
 
-- si vous avez l'erreur `{ error: "Unauthorized" }`, vous devez préalablement vous être autentifié sur votre CAS
+- si vous avez l'erreur `{ error: "Unauthorized" }`, autentifiez vous sur votre CAS, et recommencez.
 - conseil, utilisez l'extension [JSONView](https://jsonview.com/) (disponible pour Firefox & Chromium) pour voir le JSON avec mise en forme.
 
 
