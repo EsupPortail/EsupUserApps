@@ -3,6 +3,7 @@
 Prérequis
 ---------
 
+* Git, Java, Maven
 * serveur LDAP
 * serveur CAS
 
