@@ -32,6 +32,7 @@
         "MonDossierWeb": {
             "title": "Mon dossier étudiant",
             "description": "Consultation du dossier étudiant apogée",
+            "url": "https://ent.univ.fr/exams/",
             "groups": [
                 "Etudiants",
                 "Anciens",

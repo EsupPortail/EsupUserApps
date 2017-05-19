@@ -5,6 +5,9 @@
 
     "visit_max_inactive": 1800, // 30 min
 
+    "wanted_user_attributes": [],
+    "current_idpId": "https://idp.univ.fr",
+    
     // do disable server cache in production, 
     "disableServerCache": false,
 }
