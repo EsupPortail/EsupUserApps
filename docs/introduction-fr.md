@@ -52,6 +52,7 @@ cp config-example.json config.json
 ```
 Modifiez `config.json`, par exemple :
 ```js
+     "prolongationENT_url": "http://localhost:8081",
      //"layout_url": "https://ent.univ.fr/layout.jsp",
      "esupUserApps_url": "http://localhost:8080",
 ```
