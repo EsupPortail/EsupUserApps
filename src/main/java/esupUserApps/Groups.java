@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 class Groups {   
     Map<String, Query> GROUPS;
     Set<String> needed_ldap_attributes;
-    Logger log = LoggerFactory.getLogger(Ldap.class);
+    Logger log = LoggerFactory.getLogger(Groups.class);
 
     Groups(Map<String, Map<String, Object>> GROUPS) {
         needed_ldap_attributes = new HashSet<>();
