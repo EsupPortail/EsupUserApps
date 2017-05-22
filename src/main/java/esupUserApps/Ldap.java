@@ -73,6 +73,8 @@ class Ldap {
                     r.put(attr, Collections.list((NamingEnumeration<String>) vals.getAll()));
             }
             return r;
+        } catch (javax.naming.NameNotFoundException e) {
+            throw new RuntimeException("invalid dn " + dn);
         } catch (NamingException e) {
             return null;
         }
