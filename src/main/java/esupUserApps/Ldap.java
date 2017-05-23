@@ -65,8 +65,8 @@ class Ldap {
     Attrs searchOne(String dn, String filter, Collection<String> wanted_attributes) {
         try {
             Attributes attrs = searchOne(dn, filter, wanted_attributes.toArray(new String[0]));
-            if (attrs == null) return null;
             Attrs r = new Attrs();
+            if (attrs == null) return r;
             for (String attr : wanted_attributes) {
                 Attribute vals = attrs.get(attr.toLowerCase());
                 if (vals != null)
@@ -76,6 +76,7 @@ class Ldap {
         } catch (javax.naming.NameNotFoundException e) {
             throw new RuntimeException("invalid dn " + dn);
         } catch (NamingException e) {
+            log.error("", e);
             return null;
         }
     }
