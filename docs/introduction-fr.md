@@ -64,6 +64,15 @@ mvn jetty:run -Djetty.port=8081
 
 Testez http://localhost:8081/test/
 
+![](test-theme-simple.png)
+
+Vous pouvez aussi tester le thème `theme-paris1-2016` :
+- modifiez `config.json`
+- redémarrez la ProlongationENT ou utilisez http://localhost:8081/purgeCache (ou `disableServerCache`)
+- testez http://localhost:8081/test/
+
+![](test-theme-paris1-2016.png)
+
 
 Ajouter la ProlongationENT sur une application
 ----------------------------------------------
