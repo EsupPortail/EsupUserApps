@@ -2,7 +2,10 @@
 {
     "EsupUserApps_url": "http://localhost:8080",
     "cas_base_url": "https://cru.renater.fr/cas",
-    "current_idpId": "urn:mace:cru.fr:federation:sac", //usually "https://idp.univ.fr"   
+    
+    // to create urls forcing idpId (bypassing WAYF/Discovery)
+    "current_idpId": "urn:mace:cru.fr:federation:sac", //usually "https://idp.univ.fr"
+    "current_idpAuthnRequest_url": "https://cru.renater.fr/idp/profile/Shibboleth/SSO",
 
     "visit_max_inactive": 1800, // 30 min
 
