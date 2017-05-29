@@ -58,17 +58,20 @@
             "groups": [ "Tous" ],
         },
         "renater-foodle": {
+            "shortText": "Réunions",
             "title": "Planification et organisation de réunions",
             "description": "Planification et organisation de réunions - Foodle",
             "url": "https://groupes.renater.fr/simplesamlphp/module.php/core/as_login.php?AuthId=default-sp&ReturnTo=https://groupes.renater.fr/reunion/&saml:idp={idpId}",
             "groups": [ "Tous" ],
         },
         "esup-sympa": {
+            "shortText": "Listes",
             "title": "Listes de diffusion ESUP",
             "url": "https://listes.esup-portail.org/sympa/sso_login/federation_cru/Shibboleth.sso/wayf?entityID={idpId}",
             "groups": [ "Tous" ],
         },
         "esup-wiki": {
+            "shortText": "Wiki",
             "title": "Espace de travail ESUP",
             "description": "Wiki confluence",
             "shibbolethSPPrefix": "/",
