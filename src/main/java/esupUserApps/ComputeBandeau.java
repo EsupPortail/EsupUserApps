@@ -79,6 +79,11 @@ public class ComputeBandeau {
     }
                 
     void layout(HttpServletRequest request, HttpServletResponse response, String userId, String realUserId, Ldap.Attrs attrs) throws IOException {
+        if (attrs == null) {
+            log.error("unknown user " + userId);
+            // try to go on anyway...
+            attrs = new Ldap.Attrs();
+        }
         Map<String,Export.App> userChannels = userChannels(attrs);
         List<Export.Layout> userLayout = userLayout(conf.LAYOUT, userChannels);
 
