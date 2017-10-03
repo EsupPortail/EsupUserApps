@@ -37,6 +37,7 @@ class ComputeApps {
         if (shibboleth == null) shibboleth = new Shibboleth(conf.shibboleth, request.getServletContext());
 
         Ldap.Attrs attrs = shibboleth.getUserInfo(request, compute_wanted_attributes());
+        attrs.remove("uid"); // "uid" is no good information in a federation. We do not ask for it, but sometimes IDP gives it.        
         String eppn = getFirst(attrs, "eduPersonPrincipalName");
         if (eppn != null) {
             ldap.mergeAttrs(attrs, ldap.getLdapPeopleInfo("eduPersonPrincipalName", eppn, compute_wanted_attributes()));
