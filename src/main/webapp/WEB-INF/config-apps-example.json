@@ -39,6 +39,7 @@
             "title": "Mon dossier étudiant",
             "description": "Consultation du dossier étudiant apogée",
             "url": "https://ent.univ.fr/exams/",
+            "tags": [ "notes" ],
             "groups": [
                 "Etudiants",
                 "Anciens",
@@ -80,7 +81,14 @@
         },
         
     },
-    
+
+    // groups not defined below have an implicit definition: 
+    //   "foo": { "memberOf": "foo" }
+    // so if you mostly use LDAP groups, you do not to define anything below :)
+    //
+    // the syntax of GROUPS is a subset of mongodb query
+    // cf https://docs.mongodb.com/manual/reference/operator/query/
+    // operators implemented: $regex, $eq, $ne, $in, $nin, $and, $or
     "GROUPS": {
         "Tous": {
         },
