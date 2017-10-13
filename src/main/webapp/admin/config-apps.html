@@ -2,12 +2,73 @@
 <html>
   <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
     <style>
-      a { white-space: nowrap; }
       img { width: 40px; height: 40px; }
-      .tags { font-size: 60%; }
+      .tags:not(.header) { font-size: 80%; }
+      #list {
+        display: grid;
+        grid-template-columns: repeat(8, auto);
+        border-top: 1px solid #ddd;
+      }
+      .cell { 
+          padding: 5px;
+          background: #fff; /* easiest way to clip overflowing boxes */
+          border-color: #ddd;
+          border-style: solid;
+          border-width: 0 1px 1px 0;
+      } 
+      .header {
+          font-weight: bold;
+          border-bottom: 2px solid #ddd;
+      }
+
+      /* stripes. ugly */
+      .cell:nth-child(16n+1), 
+      .cell:nth-child(16n+2), 
+      .cell:nth-child(16n+3), 
+      .cell:nth-child(16n+4), 
+      .cell:nth-child(16n+5), 
+      .cell:nth-child(16n+6), 
+      .cell:nth-child(16n+7),
+      .cell:nth-child(16n+8) {
+          background: #f9f9f9;
+      }
+
+      @media screen and (max-width: 960px) {
+
+        .folder:not(.header) {
+            font-size: 80%;
+        }
+
+        #list { 
+            grid-auto-flow: dense; /* needed to avoid "stairs" effect when putting cells on same column */
+        }
+        .icon,
+        .folder { 
+            grid-column: 1 / 2; grid-row: span 1; max-width: 50px;
+        } 
+        .fname,
+        .shortText {
+            grid-column: 2 / 3; grid-row: span 1; max-width: 10rem;
+        } 
+        .text_title,
+        .description {
+            grid-column: 3 / 4; grid-row: span 1;
+        } 
+        .groups { 
+            grid-column: 4 / 5; grid-row: span 2; max-width: 15rem;
+        }
+        .tags {
+            grid-column: 5 / 5; grid-row: span 2; max-width: 10rem;
+        } 
+
+        .icon,
+        .fname,
+        .text_title { border-bottom-style: dashed; border-width: 0 1px 1px 0; }
+      }
     </style>
   </head>
 <body>
@@ -38,11 +99,11 @@ function xhr(url, callback) {
     req.send(null);
 }
 
-function tr_th(l) {
-    return "<tr>" + l.map(e => `<th>${e}</th>`).join('') + "</tr>";
-}
-function tr_td(l) {
-    return "<tr>" + l.map(e => `<td>${e}</td>`).join('') + "</tr>";
+const ordered_fields = [ 'icon', 'folder', 'fname', 'shortText', 'text_title', 'description', 'groups', 'tags' ]
+function row(vals, extra_class) {
+    return ordered_fields.map(field => 
+      `<div class="cell ${extra_class} ${field}">${vals[field] || ''}</div>`
+    ).join('');
 }
 
 function a(url, text) {
@@ -63,7 +124,7 @@ let conf;
      if (conf.GROUPS[group]) {
        return group;
      } else {
-       return a(grouper_url + group.replace(/\./g, ":"), group);
+       return a(grouper_url + group.replace(/\./g, ":"), group.replace(/\./g, ".&shy;"));
      }
    }).join('<br>');
  }
@@ -71,12 +132,14 @@ let conf;
 function format_app(folder, id) {
     let app = conf.APPS[id];
     let url = app.url.replace("{fname}", id);
-    let tags = app.tags ? `<p class="tags">Tags : ${app.tags.join(", ")}</p>` : '';
-    let l = [folder, 
-             "<img src='/ProlongationENT/theme-paris1-2016/icon/" + simplifyFname(id) + ".svg' onerror='this.hidden = true'>",
-             a(url, id), app.shortText, (app.text ? app.text + "<br>" : '') + (app.title || ''),
-             (app.description || '&nbsp;') + tags, format_groups(app.groups)];
-    return tr_td(l.map(s => s || ''));
+    let tags = app.tags ? `<p class="tags">${app.tags.join(", ")}</p>` : '';
+    let vals = { icon: "<img src='/ProlongationENT/theme-paris1-2016/icon/" + simplifyFname(id) + ".svg' onerror='this.hidden = true'>",
+             folder,
+             fname: a(url, id), 
+             shortText: app.shortText, 
+             text_title: (app.text ? app.text + "<br>" : '') + (app.title || ''),
+             description: (app.description || '&nbsp;') , tags , groups: format_groups(app.groups) };
+    return row(vals, '');
  }
  
 function format() {
@@ -87,11 +150,11 @@ function format() {
             folderText = '-';
             return s;
         });
-        return "<tbody>" + apps.join('') + "</tbody>";
+        return apps.join('');
     });
-    let titles = [ "Onglet", "Icône", "fname", "Titre court", "Text / Title", "Description", "Groups" ];
-    return "<table class='table table-striped table-condensed table-bordered'>" +
-        tr_th(titles) + tbodies.join('') + "</table>";
+    let titles = { icon: "Icône", folder: "Onglet" , fname: "fname" , shortText: "Titre court", 
+                   text_title: "Text / Title" , description: "Description" , tags: "Tags" , groups: "Groups" };
+    return row(titles, 'header') + tbodies.join('');
 }
  
  xhr("config-apps.json", function (d) {
