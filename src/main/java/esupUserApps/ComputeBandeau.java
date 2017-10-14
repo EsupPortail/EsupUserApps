@@ -92,7 +92,7 @@ public class ComputeBandeau {
             attrs = new Ldap.Attrs();
         }
         Set<String> validApps = computeApps.computeValidApps(attrs, false);
-        String current_fname_hint = current_fname_hint(request, validApps);
+        String current_fname_hint = current_fname_hint(request, validApps, userId);
         Map<String, Export.App> userChannels = exportApps(attrs, validApps, Collections.singleton(current_fname_hint));
         List<Export.Layout> userLayout = userLayout(conf.LAYOUT, userChannels);
 
@@ -248,11 +248,12 @@ public class ComputeBandeau {
         return user;
     }
     
-    String current_fname_hint(HttpServletRequest request, Set<String> userChannels) {
+    String current_fname_hint(HttpServletRequest request, Set<String> userChannels, String userId) {
         String app = request.getParameter("app");
         if (app == null) return null;
         String[] app_ = app.split(",");
         List<String> apps = intersect(app_, userChannels);
+        if (apps.isEmpty()) log.warn(userId + " is not allowed to access application " + app);
         return apps.isEmpty() ? app_[0] : apps.get(0);        
     }
     
