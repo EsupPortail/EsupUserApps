@@ -24,6 +24,17 @@
           font-weight: bold;
           border-bottom: 2px solid #ddd;
       }
+      .cell a[data-def]:focus::after {
+          content: attr(data-def);
+          display: block;
+          position: absolute;
+          background: #00326E;
+          z-index: 1;
+          color: #fff;
+          padding: 1rem;
+          font-family: monospace;
+          white-space: pre;
+      }
 
       /* stripes. ugly */
       .cell:nth-child(16n+1), 
@@ -122,7 +133,7 @@ let conf;
  function format_groups(groups) {
    return (groups || []).map(group => {
      if (conf.GROUPS[group]) {
-       return group;
+       return `<a tabindex='0' data-def='${JSON.stringify(conf.GROUPS[group], undefined, 2)}'>${group}</a>`;
      } else {
        return a(grouper_url + group.replace(/\./g, ":"), group.replace(/\./g, ".&shy;"));
      }
