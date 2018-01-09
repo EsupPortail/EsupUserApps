@@ -1,7 +1,5 @@
 package esupUserApps;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +8,6 @@ import com.google.gson.reflect.TypeToken;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-import static esupUserApps.Utils.*;
 
 public class GroupsTest {
     Map<String, Map<String, Object>> parseGroups(String json) {
