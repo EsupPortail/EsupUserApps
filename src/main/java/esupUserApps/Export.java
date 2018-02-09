@@ -16,6 +16,7 @@ class Export {
         Collection<String> tags;
         Boolean hashelp;
         Boolean hide;
+        Boolean forbidden;
         
         public App(String fname, esupUserApps.App app, String url) {
             this.fname = fname;

@@ -3,6 +3,7 @@ package esupUserApps;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
@@ -88,7 +89,7 @@ public class ComputeBandeau {
         }
         Set<String> validApps = computeApps.computeValidApps(attrs, false);
         String current_fname_hint = current_fname_hint(request, validApps);
-        Map<String, Export.App> userChannels = userChannels(attrs, validApps);
+        Map<String, Export.App> userChannels = exportApps(attrs, validApps, Collections.singleton(current_fname_hint));
         List<Export.Layout> userLayout = userLayout(conf.LAYOUT, userChannels);
 
         stats.log(request, realUserId, current_fname_hint);
@@ -263,14 +264,23 @@ public class ComputeBandeau {
         return rslt;  
     }
     
-    private Map<String, Export.App> userChannels(Ldap.Attrs person, Set<String> fnames) {
+    private Map<String, Export.App> exportApps(Ldap.Attrs person, Set<String> fnames, Set<String> forbidden_fnames) {
         Map<String, Export.App> rslt = new HashMap<>();
         String idpId = getFirst(person, "Shib-Identity-Provider");
-        String idpAuthnRequest_url = firstNonNull(getFirst(person, "SingleSignOnService-url"), conf.current_idpAuthnRequest_url);
+        String idpAuthnRequest_url = firstNonNull(getFirst(person, "SingleSignOnService-url"),
+                conf.current_idpAuthnRequest_url);
         
+        for (String fname : forbidden_fnames) {
+            App app = conf.APPS.get(fname);
+            if (app == null) continue;
+            Export.App export_app = new Export.App(fname, app, get_url(app, fname, idpId, idpAuthnRequest_url));
+            export_app.forbidden = true;
+            rslt.put(fname, export_app);
+        }
         for (String fname : fnames) {
             App app = conf.APPS.get(fname);
-            rslt.put(fname, new Export.App(fname, app, get_url(app, fname, idpId, idpAuthnRequest_url)));
+            Export.App export_app = new Export.App(fname, app, get_url(app, fname, idpId, idpAuthnRequest_url));            
+            rslt.put(fname, export_app);
         }
         return rslt;
     }
