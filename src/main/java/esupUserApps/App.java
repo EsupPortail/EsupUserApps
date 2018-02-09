@@ -48,6 +48,7 @@ class App extends ACLs {
     String shibbolethSPPrefix;
     boolean hideFromMobile = false;
     boolean hashelp = false;
+    boolean hide = false;
     Collection<String> tags;
 
     List<String> inherit;

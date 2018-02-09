@@ -15,6 +15,7 @@ class Export {
         Integer position;
         Collection<String> tags;
         Boolean hashelp;
+        Boolean hide;
         
         public App(String fname, esupUserApps.App app, String url) {
             this.fname = fname;
@@ -24,6 +25,7 @@ class Export {
             description = firstNonNull(app.description, "");
             this.url = url;
             if (app.hashelp) hashelp = app.hashelp;
+            if (app.hide) hide = app.hide;
             if (app.tags != null) tags = app.tags;
             if (app.position != null) position = app.position;
         }
