@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -84,7 +86,8 @@ public class ComputeBandeau {
             // try to go on anyway...
             attrs = new Ldap.Attrs();
         }
-        Map<String,Export.App> userChannels = userChannels(attrs);
+        Set<String> validApps = computeApps.computeValidApps(attrs, false);
+        Map<String, Export.App> userChannels = userChannels(attrs, validApps);
         List<Export.Layout> userLayout = userLayout(conf.LAYOUT, userChannels);
 
         stats.log(request, realUserId, userChannels.keySet());
@@ -251,12 +254,12 @@ public class ComputeBandeau {
         return rslt;  
     }
     
-    Map<String, Export.App> userChannels(Ldap.Attrs person) {
+    private Map<String, Export.App> userChannels(Ldap.Attrs person, Set<String> fnames) {
         Map<String, Export.App> rslt = new HashMap<>();
         String idpId = getFirst(person, "Shib-Identity-Provider");
         String idpAuthnRequest_url = firstNonNull(getFirst(person, "SingleSignOnService-url"), conf.current_idpAuthnRequest_url);
         
-        for (String fname : computeApps.computeValidApps(person, false)) {
+        for (String fname : fnames) {
             App app = conf.APPS.get(fname);
             rslt.put(fname, new Export.App(fname, app, get_url(app, fname, idpId, idpAuthnRequest_url)));
         }
