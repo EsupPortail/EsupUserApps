@@ -87,10 +87,11 @@ public class ComputeBandeau {
             attrs = new Ldap.Attrs();
         }
         Set<String> validApps = computeApps.computeValidApps(attrs, false);
+        String current_fname_hint = current_fname_hint(request, validApps);
         Map<String, Export.App> userChannels = userChannels(attrs, validApps);
         List<Export.Layout> userLayout = userLayout(conf.LAYOUT, userChannels);
 
-        stats.log(request, realUserId, userChannels.keySet());
+        stats.log(request, realUserId, current_fname_hint);
         
         boolean is_old =
             !conf.isCasSingleSignOutWorking &&
@@ -239,6 +240,14 @@ public class ComputeBandeau {
         return user;
     }
     
+    String current_fname_hint(HttpServletRequest request, Set<String> userChannels) {
+        String app = request.getParameter("app");
+        if (app == null) return null;
+        String[] app_ = app.split(",");
+        List<String> apps = intersect(app_, userChannels);
+        return apps.isEmpty() ? app_[0] : apps.get(0);        
+    }
+    
     List<Export.Layout> userLayout(Map<String, List<String>> layout, Map<String, Export.App> userChannels) {
         List<Export.Layout> rslt = new ArrayList<>();
         for (Map.Entry<String, List<String>> e : layout.entrySet()) {
@@ -327,5 +336,12 @@ public class ComputeBandeau {
         return asMap(k, v);
     }
         
-}
+    private List<String> intersect(String[] l1, Set<String> l2) {
+        List<String> r = new ArrayList<>();
+        for (String e : l1)
+            if (l2.contains(e))
+                r.add(e);
+        return r;            
+    }
 
+}

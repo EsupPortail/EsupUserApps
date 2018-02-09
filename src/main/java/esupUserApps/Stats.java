@@ -1,8 +1,5 @@
 package esupUserApps;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -24,13 +21,9 @@ class Stats {
         this.conf = conf;
     }
     
-    void log(HttpServletRequest request, String userId, Set<String> userChannels) {
+    void log(HttpServletRequest request, String userId, String app) {
         HttpSession session = request.getSession();
-        String app = request.getParameter("app");
         if (app == null) return;
-        String[] app_ = app.split(",");
-        List<String> apps = intersect(app_, userChannels);
-        app = apps.isEmpty() ? app_[0] : apps.get(0);
         
         log.info(
                  "[" + new java.util.Date() + "] " +
@@ -85,14 +78,6 @@ class Stats {
             session.setAttribute(attr, nb);
         }
         return nb;
-    }
-
-    List<String> intersect(String[] l1, Set<String> l2) {
-        List<String> r = new ArrayList<>();
-        for (String e : l1)
-            if (l2.contains(e))
-                r.add(e);
-        return r;            
     }
 
 }
