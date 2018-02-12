@@ -2,7 +2,7 @@
 {
     "bearerTokens": ["randomXXXXXX"],
 
-    "federation_metadata_url": "https://federation.renater.fr/renater/idps-renater-metadata.xml",
+    "federation_metadata_url": "https://metadata.federation.renater.fr/renater/main/main-idps-renater-metadata.xml",
     "federation_metadata_cru_url": "https://federation.renater.fr/idp/profile/Metadata/SAML",
 
     "header_map": {
