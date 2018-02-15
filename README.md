@@ -85,4 +85,4 @@ Redirects to an application using its code (aka fname). Not really useful anymor
 
 #### ```/canImpersonate```
 
-To be used as the ```CAN_IMPERSONATE_URL``` in https://github.com/prigaux/impersonate-cas-apache-wrapper.
+To be used as the ```CAN_IMPERSONATE_URL```, cf [impersonate documentation](docs/impersonate.md).
