@@ -21,9 +21,22 @@
 
  function onBandeauLoad(pE) {
     if (!pE.DATA.realUserId) return alert("impersonate not allowed");
+
+    var h = pE.helpers;
+
+    function computeLink(app) {
+        var url = pE.relogUrl(app);
+        var a = "<a href='" + url + "'>" + h.escapeQuotes(app.text || app.title || app.fname) + "</a>";
+        return "<li>" + a + "</li>";
+    }
+    var lis = pE.DATA.canImpersonate.map(computeLink).join("\n");
+    var ul = "Vous pouvez accéder aux applications suivantes : <ul>" + (lis || '<i>aucune</i>') + "</ul>";
+    h.onReady(function () {
+        document.getElementById("apps").innerHTML = ul;
+    });
  }
 
- var pE_args = window.prolongation_ENT_args = { current: "bandeau-ent-assistance" };
+ var pE_args = window.prolongation_ENT_args = { current: "impersonate", delegateAuth: true };
  var m;
  if (document.location.hash) {
     pE_args.uid = document.location.hash.replace(/^#/, '')
@@ -57,5 +70,6 @@ Pour voir les onglets d'un autre utilisateur :
 <p>
   <button onclick="restoreRealUser()">Revenir à votre utilisateur</button>
 
+  <div id="apps"></div>
 </body>
 </html>

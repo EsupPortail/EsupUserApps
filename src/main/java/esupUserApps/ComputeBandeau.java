@@ -104,7 +104,7 @@ public class ComputeBandeau {
              .add("layout", asMap("folders", userLayout));
         if (!realUserId.equals(userId)) js_data.put("realUserId", realUserId);
         if (getCookieCasImpersonate(request) != null) {
-            js_data.put("canImpersonate", computeApps.computeValidApps(realUserId, true));
+            js_data.put("canImpersonate", exportApps(attrs, computeApps.computeValidApps(realUserId, true)).values());
         }
         if (topApps != null) {
             js_data.put("topApps", hasParameter(request, "latestTopApps") ? topApps_latest.get(attrs) : topApps.get(attrs));
@@ -262,6 +262,10 @@ public class ComputeBandeau {
                 rslt.add(new Export.Layout(e.getKey(), l));
         }
         return rslt;  
+    }
+
+    private Map<String, Export.App> exportApps(Ldap.Attrs person, Set<String> fnames) {
+        return exportApps(person, fnames, new java.util.HashSet<String>());
     }
     
     private Map<String, Export.App> exportApps(Ldap.Attrs person, Set<String> fnames, Set<String> forbidden_fnames) {
