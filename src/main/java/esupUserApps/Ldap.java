@@ -29,6 +29,7 @@ class Ldap {
 
     static class LdapConf {
         String url, bindDN, bindPasswd, peopleDN;
+        Integer readTimeout_ms = 30 * 1000;
     }
     LdapConf ldapConf;
     DirContext dirContext;
@@ -44,7 +45,8 @@ class Ldap {
              .add(Context.PROVIDER_URL, ldapConf.url)
              .add(Context.SECURITY_AUTHENTICATION, "simple")
              .add(Context.SECURITY_PRINCIPAL, ldapConf.bindDN)
-             .add(Context.SECURITY_CREDENTIALS, ldapConf.bindPasswd);
+             .add(Context.SECURITY_CREDENTIALS, ldapConf.bindPasswd)
+             .add("com.sun.jndi.ldap.read.timeout", "" + ldapConf.readTimeout_ms);
 
         try {
             return new InitialDirContext(new Hashtable<>(env));
