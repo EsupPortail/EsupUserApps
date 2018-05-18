@@ -97,8 +97,8 @@ class Ldap {
     private Attributes searchOne(String dn, String filter, String[] wanted_attributes) throws NamingException {
         try {
             return searchOneRaw(dn, filter, wanted_attributes);
-        } catch (CommunicationException e) {
-            // retry, maybe a new LDAP connection will work
+        } catch (NamingException e) {
+            log.info("LDAP error. Will retry once with a new LDAP connection", e.toString());
             dirContext = null;
             return searchOneRaw(dn, filter, wanted_attributes);
         }
