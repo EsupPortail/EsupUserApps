@@ -99,7 +99,7 @@ class Ldap {
             return searchOneRaw(dn, filter, wanted_attributes);
         } catch (NamingException e) {
             log.info("LDAP error. Will retry once with a new LDAP connection", e.toString());
-            dirContext = null;
+            dirContext = null; // NB: no need to explictly close previous dirContext, it will closed on garbage collection
             return searchOneRaw(dn, filter, wanted_attributes);
         }
     }
