@@ -40,7 +40,7 @@ class Stats {
 
     String getRemoteAddr(HttpServletRequest request) {
         String addr = request.getHeader("X-Forwarded-For");
-        return addr != null ? addr : request.getRemoteAddr();
+        return addr != null ? addr.replaceFirst(" *,.*", "") : request.getRemoteAddr();
     }
 
     boolean isNewVisit(HttpSession session, String app) {
