@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.gson.Gson;
@@ -52,6 +53,7 @@ class TopAppsAgimus {
     static class CommonConf {
         String elasticSearchWrapperUrl;
         Set<String> blacklist;
+        Map<String,String> rename;
     }
     
     static class GlobalConf extends CommonConf {
@@ -78,6 +80,7 @@ class TopAppsAgimus {
         void merge(CommonConf conf) {
             if (elasticSearchWrapperUrl == null) elasticSearchWrapperUrl = conf.elasticSearchWrapperUrl;
             if (blacklist == null) blacklist = conf.blacklist;
+            if (rename == null) rename = conf.rename;
         }
     }
     
@@ -144,12 +147,18 @@ class TopAppsAgimus {
         if (result == null || result.aggregations == null || result.aggregations.Services == null || result.aggregations.Services.buckets == null) return null;
         List<String> r = new ArrayList<>();
         Set<String> seen = new HashSet<>();
-        for (ElasticSearchResult.Bucket bucket : result.aggregations.Services.buckets)
-            if (!seen.contains(bucket.key.toLowerCase()) &&
-                (conf.blacklist == null || !conf.blacklist.contains(bucket.key))) {
-                seen.add(bucket.key.toLowerCase());
-                r.add(bucket.key);
+        for (ElasticSearchResult.Bucket bucket : result.aggregations.Services.buckets) {
+            String key = bucket.key;
+            if (conf.rename != null) {
+                String newKey = conf.rename.get(key);
+                if (newKey != null) key = newKey;
             }
+            if (!seen.contains(key.toLowerCase()) &&
+                (conf.blacklist == null || !conf.blacklist.contains(key))) {
+                seen.add(key.toLowerCase());
+                r.add(key);
+            }
+        }
         return r;
     }
 
