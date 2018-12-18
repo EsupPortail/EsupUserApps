@@ -2,6 +2,7 @@ package esupUserApps;
 
 import java.net.URL;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
@@ -44,6 +45,8 @@ class App extends ACLs {
     String description;
     String url;
     Integer position;
+    Date startDate;
+    Date endDate;
     Map<String,String> url_vars;
     String shibbolethSPPrefix;
     boolean hideFromMobile = false;

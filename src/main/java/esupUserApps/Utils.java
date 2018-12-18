@@ -150,7 +150,7 @@ class Utils {
     }
   
     static String json_encode(Object o) {
-        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        Gson gson = new GsonBuilder().disableHtmlEscaping().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
         return gson.toJson(o);
     }
 

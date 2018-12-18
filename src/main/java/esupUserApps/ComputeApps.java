@@ -1,5 +1,6 @@
 package esupUserApps;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -69,7 +70,7 @@ class ComputeApps {
                         found = true;
                 }
             }
-            if (found) r.add(appId);
+            if (found && validDates(app_)) r.add(appId);
         }
         return r;
     }
@@ -93,6 +94,11 @@ class ComputeApps {
         r.add("memberOf"); // hard code memberOf
         r.addAll(conf.wanted_user_attributes);
         return r;
+    }
+
+    private boolean validDates(App app) {
+        return (app.startDate == null || app.startDate.before(new Date())) &&
+               (app.endDate == null || app.endDate.after(new Date()));
     }
     
 }

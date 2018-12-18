@@ -1,6 +1,7 @@
 package esupUserApps;
 
 import java.util.Collection;
+import java.util.Date;
 
 import static esupUserApps.Utils.firstNonNull;
 
@@ -13,6 +14,7 @@ class Export {
         String description;
         String url;
         Integer position;
+        Date startDate;
         Collection<String> tags;
         Boolean hashelp;
         Boolean hide;
@@ -25,6 +27,7 @@ class Export {
             title = app.title;
             description = firstNonNull(app.description, "");
             this.url = url;
+            if (app.startDate != null) startDate = app.startDate;
             if (app.hashelp) hashelp = app.hashelp;
             if (app.hide) hide = app.hide;
             if (app.tags != null) tags = app.tags;
