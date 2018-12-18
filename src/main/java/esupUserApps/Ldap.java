@@ -29,6 +29,7 @@ class Ldap {
 
     static class LdapConf {
         String url, bindDN, bindPasswd, peopleDN;
+        Integer connectTimeout_ms = 5 * 1000;
         Integer readTimeout_ms = 30 * 1000;
     }
     LdapConf ldapConf;
@@ -46,6 +47,7 @@ class Ldap {
              .add(Context.SECURITY_AUTHENTICATION, "simple")
              .add(Context.SECURITY_PRINCIPAL, ldapConf.bindDN)
              .add(Context.SECURITY_CREDENTIALS, ldapConf.bindPasswd)
+             .add("com.sun.jndi.ldap.connect.timeout", "" + ldapConf.connectTimeout_ms)
              .add("com.sun.jndi.ldap.read.timeout", "" + ldapConf.readTimeout_ms);
 
         try {
