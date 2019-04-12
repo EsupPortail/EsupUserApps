@@ -119,7 +119,8 @@ class TopAppsAgimus {
         List<String> r = get(encodeParams(attrs.get("eduPersonPrimaryAffiliation"),
                                           attrs.get("supannEntiteAffectation")));
         if (conf.minAnswers != null && r != null && r.size() < conf.minAnswers) {
-            r.addAll(get(encodeParams(attrs.get("eduPersonPrimaryAffiliation"), null)));
+            List<String> r_ = get(encodeParams(attrs.get("eduPersonPrimaryAffiliation"), null));
+            if (r_ != null) r.addAll(r_);
         }
         return r;
     }
