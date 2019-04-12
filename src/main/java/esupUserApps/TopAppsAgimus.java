@@ -13,8 +13,8 @@ package esupUserApps;
 //  # add "||" to the endDate if needed
 //  RewriteRule ^/topApps/([",\w-]*)/([^/]*)/(\w+),([\d-]+)$ /topApps/$1/$2/$3,$4||
 //  # the real rewriting
-//  RewriteRule ^/topApps/(NONE)?/(NONE)?/(\w+),([\w|-]+)$     http://localhost:9200/logstash-ent-pro-*/_search?source={query:{bool:{filter:{exists:{field:"external_people_domain.raw"}},filter:{range:{"@timestamp":{"gte":"$4-$3","lte":"$4"}}}}},aggs:{Services:{terms:{field:"service.raw",size:25,order:{Sessions:"desc"}},aggs:{Sessions:{cardinality:{field:"appli_session_id.raw"}}}}},size:0} [P]
-//  RewriteRule ^/topApps/([",\w-]*)/(NONE)?/(\w+),([\w|-]+)$   http://localhost:9200/logstash-ent-pro-*/_search?source={query:{bool:{filter:[{terms:{"eduPersonAffiliation.raw":[$1]}},{range:{"@timestamp":{"gte":"$4-$3","lte":"$4"}}}]}},aggs:{Services:{terms:{field:"service.raw",size:25,order:{Sessions:"desc"}},aggs:{Sessions:{cardinality:{field:"appli_session_id.raw"}}}}},size:0} [P]
+//  RewriteRule ^/topApps/NONE/NONE/(\w+),([\w|-]+)$     http://localhost:9200/logstash-ent-pro-*/_search?source={query:{bool:{filter:{exists:{field:"external_people_domain.raw"}},filter:{range:{"@timestamp":{"gte":"$2-$1","lte":"$2"}}}}},aggs:{Services:{terms:{field:"service.raw",size:25,order:{Sessions:"desc"}},aggs:{Sessions:{cardinality:{field:"appli_session_id.raw"}}}}},size:0} [P]
+//  RewriteRule ^/topApps/([",\w-]*)/NONE/(\w+),([\w|-]+)$   http://localhost:9200/logstash-ent-pro-*/_search?source={query:{bool:{filter:[{terms:{"eduPersonAffiliation.raw":[$1]}},{range:{"@timestamp":{"gte":"$3-$2","lte":"$3"}}}]}},aggs:{Services:{terms:{field:"service.raw",size:25,order:{Sessions:"desc"}},aggs:{Sessions:{cardinality:{field:"appli_session_id.raw"}}}}},size:0} [P]
 //  RewriteRule ^/topApps/([",\w-]*)/([^/]*)/(\w+),([\w|-]+)$ http://localhost:9200/logstash-ent-pro-*/_search?source={query:{bool:{filter:[{terms:{"eduPersonAffiliation.raw":[$1]}},{terms:{"supannEntiteAffectation.raw":[$2]}},{range:{"@timestamp":{"gte":"$4-$3","lte":"$4"}}}]}},aggs:{Services:{terms:{field:"service.raw",size:25,order:{Sessions:"desc"}},aggs:{Sessions:{cardinality:{field:"appli_session_id.raw"}}}}},size:0} [P]
 //
 //  <LocationMatch ^/topApps/.*/1y,([\d-]+)$ >
@@ -173,7 +173,10 @@ class TopAppsAgimus {
     }
     
     StringBuilder encodeParams(StringBuilder sb, List<String> params) {
-        if (params == null) return sb;
+        if (params == null || params.isEmpty()) {
+            sb.append("NONE");
+            return sb;
+        }
         boolean beginning = true;
         for (String param : params) {
             if (!beginning) sb.append(",");
