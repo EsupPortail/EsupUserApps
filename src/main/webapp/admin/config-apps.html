@@ -126,7 +126,7 @@ let grouper_url = 'https://grouper.univ-paris1.fr/grouper/grouperUi/app/UiV2Main
 let conf;
 
  function simplifyFname(k) {
-   k = k.replace(/^C([A-Z])/, "$1").replace(/-(etu|ens|gest|pers|teacher|default)$/, '');
+   k = k.replace(/^C([A-Z][a-z])/, "$1").replace(/-(etu|ens|gest|pers|teacher|default)$/, '');
    return k.toLowerCase();
  }
 
