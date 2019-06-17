@@ -55,6 +55,7 @@ static class Main extends Conf.Apps {
     Shibboleth.Conf shibboleth;
 
     TopAppsAgimus.GlobalConf topApps;
+    FavoritesRestdb.Conf favorites;
     
     boolean isCasSingleSignOutWorking;
     boolean disableServerCache;

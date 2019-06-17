@@ -82,6 +82,9 @@ class Utils {
         void put(String key, V value) {
             map.put(key, new CacheEntry<>(value));
         }
+        void remove(String key) {
+            map.remove(key);
+        }
     }
 
     static boolean isEmpty(String s) {

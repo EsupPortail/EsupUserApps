@@ -22,7 +22,7 @@ public class Main extends HttpServlet {
     org.slf4j.Logger log = LoggerFactory.getLogger(Main.class);
 
     static String[] mappings = new String[] {
-        "/detectReload", "/purgeCache",
+        "/detectReload", "/purgeCache", "/purgeUserCache",
         "/layout", "/login", "/logout", "/redirect", "/canImpersonate",
         "/admin/config-apps.json",
     };
@@ -32,6 +32,7 @@ public class Main extends HttpServlet {
         switch (request.getServletPath()) {
             case "/detectReload":   detectReload  (request, response); break;
             case "/purgeCache":     purgeCache    (request, response); break;
+            case "/purgeUserCache": purgeUserCache(request, response); break;
 
             case "/layout":         layout        (request, response); break;       
             case "/login":          login         (request, response); break;
@@ -53,6 +54,15 @@ public class Main extends HttpServlet {
         initConf(request);
     }
 
+    void purgeUserCache(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String userId = get_CAS_userId(request);
+        if (userId == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "you must authenticate first");
+        } else {
+            log.warn("purging cache " + userId);
+            computeBandeau.purgeUserCache(userId);
+        }
+    }
     
     void layout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         computeBandeau.layout(request, response);

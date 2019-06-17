@@ -25,6 +25,7 @@ public class ComputeBandeau {
     ComputeApps computeApps;
     Stats stats;
     TopAppsAgimus topApps, topApps_latest;
+    FavoritesRestdb favorites;
 
     static String prev_host_attr = "prev_host";
     static String prev_time_attr = "prev_time";    
@@ -38,6 +39,9 @@ public class ComputeBandeau {
         if (conf.topApps.stable != null) {
             topApps        = new TopAppsAgimus(conf.topApps.stable);
             topApps_latest = new TopAppsAgimus(conf.topApps.latest);
+        }
+        if (conf.favorites != null) {
+            favorites = new FavoritesRestdb(conf.favorites);
         }
     }
     
@@ -108,6 +112,9 @@ public class ComputeBandeau {
         }
         if (topApps != null) {
             js_data.put("topApps", hasParameter(request, "latestTopApps") ? topApps_latest.get(attrs) : topApps.get(attrs));
+        }
+        if (favorites != null) {
+            js_data.put("favorites", favorites.get(userId));
         }
 
         String callback = request.getParameter("callback");
@@ -326,6 +333,10 @@ public class ComputeBandeau {
             session.removeAttribute(prev_time_attr);
             session.removeAttribute(prev_host_attr);
         }
+    }
+
+    void purgeUserCache(String userId) {
+        favorites.purgeUserCache(userId);
     }
     
     String getCookieCasImpersonate(HttpServletRequest request) {
