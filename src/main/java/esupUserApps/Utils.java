@@ -325,4 +325,23 @@ class Utils {
     static Long delta_ms(Date d1, Date d2) {
         return d1 == null || d2 == null ? null : d2.getTime() - d1.getTime();
     }
+
+    static int toSeconds(String timeWithUnit) {
+        if ("".equals(timeWithUnit))
+            throw new RuntimeException("invalid time with unit");
+
+        int lastChar = timeWithUnit.length() - 1;
+        int nb = Integer.parseInt(timeWithUnit.substring(0, lastChar));
+        switch (timeWithUnit.charAt(lastChar)) {
+        case 's': return nb;
+        case 'm': return nb * 60;
+        case 'h': return nb * 60 * 60;
+        case 'd': return nb * 60 * 60 * 24;
+        case 'w': return nb * 60 * 60 * 24 * 7;
+        case 'M': return nb * 60 * 60 * 24 * 30;
+        case 'y': return nb * 60 * 60 * 24 * 365;
+        }
+        throw new RuntimeException("invalid time with unit " + timeWithUnit);
+    }
+
 }
