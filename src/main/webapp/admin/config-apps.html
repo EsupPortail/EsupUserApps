@@ -144,7 +144,7 @@ function format_app(folder, id) {
     let app = conf.APPS[id];
     let url = app.url.replace("{fname}", id);
     let tags = app.tags ? `<p class="tags">${app.tags.join(", ")}</p>` : '';
-    let vals = { icon: "<img src='/ProlongationENT/theme-paris1-2016/icon/" + simplifyFname(id) + ".svg' onerror='this.hidden = true'>",
+    let vals = { icon: "<img src='/ProlongationENT/theme-paris1-2016/icon/" + id + ".svg' onerror='this.hidden = true'>",
              folder,
              fname: a(url, id), 
              shortText: app.shortText, 
