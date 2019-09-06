@@ -58,6 +58,9 @@ class ComputeApps {
             if (app == null) continue;
             Boolean found = false;
 
+            if (user.equals("*")) {
+                found = true;
+            }
             if (app.users != null) {
                 if (app.users.contains(user))
                     found = true;
