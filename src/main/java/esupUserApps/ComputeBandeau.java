@@ -91,7 +91,7 @@ public class ComputeBandeau {
             // try to go on anyway...
             attrs = new Ldap.Attrs();
         }
-        Set<String> validApps = computeApps.computeValidApps(attrs, false);
+        Set<String> validApps = computeApps.computeValidApps(userId, attrs, false);
         String current_fname_hint = current_fname_hint(request, validApps, userId);
         Map<String, Export.App> userChannels = exportApps(attrs, validApps, Collections.singleton(current_fname_hint));
         List<Export.Layout> userLayout = userLayout(conf.LAYOUT, userChannels);

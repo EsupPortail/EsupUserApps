@@ -27,7 +27,7 @@ class ComputeApps {
     }
 
     Set<String> computeValidApps(String uid, boolean wantImpersonate) {
-        return computeValidApps(getLdapPeopleInfo(uid), wantImpersonate);
+        return computeValidApps(uid, getLdapPeopleInfo(uid), wantImpersonate);
     }
 
     Ldap.Attrs getLdapPeopleInfo(String uid) {
@@ -46,10 +46,9 @@ class ComputeApps {
         return attrs;
     }
     
-    Set<String> computeValidApps(Ldap.Attrs person, boolean wantImpersonate) {
+    Set<String> computeValidApps(String user, Ldap.Attrs person, boolean wantImpersonate) {
         if (person == null) return new HashSet<>();
 
-        String user = getFirst(person, "uid");
         Map<String, Boolean> groupsCache = new HashMap<>();
 
         Set<String> r = new HashSet<>();
