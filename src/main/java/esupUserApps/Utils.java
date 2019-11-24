@@ -25,7 +25,6 @@ import javax.servlet.http.HttpSession;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -162,7 +161,7 @@ class Utils {
             //System.out.println("computing digest of " + file);
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] digest = md.digest(s.getBytes());
-            return (new HexBinaryAdapter()).marshal(digest);
+            return java.util.Base64.getEncoder().encodeToString(digest);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
