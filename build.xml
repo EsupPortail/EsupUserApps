@@ -39,9 +39,10 @@
   <property name="jetty-version" value="8.1.9.v20130131" />
 
   <target name="download-jars" depends="prepare" if="need-download-jars">
+    <artifact:remoteRepository id="https_central" url="https://repo.maven.apache.org/maven2" />
     <artifact:pom id="mypom" file="pom.xml" />
-    <artifact:dependencies filesetId="runtime.jar.fileset" useScope="runtime" pomRefId="mypom" />
-    <artifact:dependencies filesetId="compile.jar.fileset" useScope="compile" pomRefId="mypom" />
+    <artifact:dependencies filesetId="runtime.jar.fileset" useScope="runtime" pomRefId="mypom"><remoteRepository refid="https_central"/></artifact:dependencies>
+    <artifact:dependencies filesetId="compile.jar.fileset" useScope="compile" pomRefId="mypom"><remoteRepository refid="https_central"/></artifact:dependencies>
 
     <mkdir dir="${build.dir}/WEB-INF/lib" />
     <copy todir="${build.dir}/WEB-INF/lib">
@@ -126,7 +127,9 @@
   </target>
 
   <target name="download-ant-extra" if="need-download-ant-extra">
+    <artifact:remoteRepository id="https_central" url="https://repo.maven.apache.org/maven2" />
     <artifact:dependencies filesetId="ant-extra.fileset">
+      <remoteRepository refid="https_central" />
       <dependency groupId="org.mortbay.jetty" artifactId="jetty-ant" version="${jetty-version}" />
       <dependency groupId="org.hibernate" artifactId="hibernate-tools" version="3.2.4.GA" />
     </artifact:dependencies>
