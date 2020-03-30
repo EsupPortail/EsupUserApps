@@ -23,7 +23,7 @@ public class Main extends HttpServlet {
 
     static String[] mappings = new String[] {
         "/detectReload", "/purgeCache", "/purgeUserCache",
-        "/layout", "/login", "/logout", "/redirect", "/canImpersonate",
+        "/layout", "/login", "/logout", "/redirect", "/canImpersonate", "/canAccess",
         "/admin/config-apps.json",
     };
     
@@ -38,6 +38,7 @@ public class Main extends HttpServlet {
             case "/login":          login         (request, response); break;
             case "/logout":         logout        (request, response); break;
             case "/redirect":       redirect      (request, response); break;
+            case "/canAccess":      canAccess     (request, response); break;
             case "/canImpersonate": canImpersonate(request, response); break;
 
             case "/admin/config-apps.json": show_config_apps(request, response); break;
@@ -83,6 +84,10 @@ public class Main extends HttpServlet {
         computeBandeau.canImpersonate(request, response);
     }
     
+    void canAccess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        computeBandeau.canAccess(request, response);
+    }
+
     void redirect(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         computeBandeau.redirect(request, response);
     }

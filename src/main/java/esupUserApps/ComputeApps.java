@@ -91,6 +91,10 @@ class ComputeApps {
         return appIds;
     }
   
+    Set<String> canAccess(String uid) {
+        return computeValidApps(uid, false);
+    }
+
     private Set<String> compute_wanted_attributes() {
         Set<String> r = groups.needed_ldap_attributes();
         r.add("memberOf"); // hard code memberOf

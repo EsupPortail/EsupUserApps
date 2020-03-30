@@ -151,6 +151,21 @@ public class ComputeBandeau {
         }
     }
     
+    void canAccess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (!is_trusted_ip(request)) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+        String uid = request.getParameter("uid");
+        String app = request.getParameter("app");
+        Collection<String> appIds = computeApps.canAccess(uid);
+        if (app == null || appIds.contains(app)) {
+            respond_json(response, appIds);
+        } else {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        }
+    }
+
     void redirect(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String appId = request.getParameter("id");
