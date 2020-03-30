@@ -137,6 +137,10 @@ public class ComputeBandeau {
     }
 
     void canImpersonate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (!is_trusted_ip(request)) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
         String uid = request.getParameter("uid");
         String service = request.getParameter("service");
         Collection<String> appIds = computeApps.canImpersonate(uid, service);
@@ -193,6 +197,10 @@ public class ComputeBandeau {
         for (String name : toRemove.names()) {
             response.addCookie(newCookie(name, null, toRemove.path()));
         }
+    }
+
+    boolean is_trusted_ip(HttpServletRequest request) {
+        return conf.trusted_ips.contains(request.getRemoteAddr());
     }
         
     static long time_before_forcing_CAS_authentication_again(boolean different_referrer) {

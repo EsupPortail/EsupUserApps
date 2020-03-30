@@ -38,6 +38,7 @@ static class Apps extends Conf.Auth {
 
 static class Main extends Conf.Apps {
     Set<String> admins = new HashSet<>();
+    Set<String> trusted_ips = new HashSet<>();
     String cas_base_url;
     String EsupUserApps_url;
     String current_idpId;
