@@ -41,6 +41,7 @@ static class Main extends Conf.Apps {
     Set<String> trusted_ips = Collections.emptySet();
     String cas_base_url;
     String EsupUserApps_url;
+    List<String> EsupUserApps_vhost_aliases = Collections.emptyList();
     String current_idpId;
     String current_idpAuthnRequest_url;
 
