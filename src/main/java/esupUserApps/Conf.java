@@ -1,7 +1,7 @@
 package esupUserApps;
 
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,8 +37,8 @@ static class Apps extends Conf.Auth {
 }
 
 static class Main extends Conf.Apps {
-    Set<String> admins = new HashSet<>();
-    Set<String> trusted_ips = new HashSet<>();
+    Set<String> admins = Collections.emptySet();
+    Set<String> trusted_ips = Collections.emptySet();
     String cas_base_url;
     String EsupUserApps_url;
     String current_idpId;
