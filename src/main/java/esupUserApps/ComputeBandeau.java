@@ -46,6 +46,8 @@ public class ComputeBandeau {
     }
     
     void layout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setHeader("Cache-Control", "private, no-cache"); // be safe (in case someone forces a default cache)
+
         if (hasValidBearerToken(request)) {
             proxied_layout(request, response);
         }  else if (request.getParameter("noCache") != null) {
