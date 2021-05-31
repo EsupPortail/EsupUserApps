@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
-import javax.naming.CommunicationException;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
