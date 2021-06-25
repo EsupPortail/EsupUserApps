@@ -55,6 +55,7 @@ static class Main extends Conf.Apps {
     Cas_impersonate cas_impersonate;
 
     Shibboleth.Conf shibboleth;
+    ProxyApp.Conf proxyApp;
 
     TopAppsAgimus.GlobalConf topApps;
     FavoritesRestdb.Conf favorites;

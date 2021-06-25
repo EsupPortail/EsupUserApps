@@ -1,0 +1,8 @@
+{
+    "apps": {
+        "userphoto": { 
+            "url": "https://userphoto.univ.fr/trusted/?uid={query.uid}&penpal={userAttrs.uid}&v={userAttrs.modifyTimestamp}",
+            "requestTimeout": "2s",
+        },
+    },
+}

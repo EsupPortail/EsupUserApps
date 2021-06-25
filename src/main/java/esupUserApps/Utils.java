@@ -366,4 +366,7 @@ class Utils {
             shib_conf.bearerTokens.contains(token);
     }
 
+    public static <T> T throwRuntimeException(String msg) {
+        throw new RuntimeException(msg);
+    }    
 }

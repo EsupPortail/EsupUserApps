@@ -18,12 +18,13 @@ import static esupUserApps.Utils.*;
 public class Main extends HttpServlet {           
     Conf.Main conf = null;
     ComputeBandeau computeBandeau;
+    ProxyApp proxyApp;
     
     org.slf4j.Logger log = LoggerFactory.getLogger(Main.class);
 
     static String[] mappings = new String[] {
         "/detectReload", "/purgeCache", "/purgeUserCache",
-        "/layout", "/login", "/logout", "/redirect", "/canImpersonate", "/canAccess",
+        "/layout", "/login", "/logout", "/redirect", "/proxyApp", "/canImpersonate", "/canAccess",
         "/admin/config-apps.json",
     };
     
@@ -40,6 +41,8 @@ public class Main extends HttpServlet {
             case "/redirect":       redirect      (request, response); break;
             case "/canAccess":      canAccess     (request, response); break;
             case "/canImpersonate": canImpersonate(request, response); break;
+
+            case "/proxyApp":       proxyApp     (request, response); break;
 
             case "/admin/config-apps.json": show_config_apps(request, response); break;
         }
@@ -92,6 +95,10 @@ public class Main extends HttpServlet {
         computeBandeau.redirect(request, response);
     }
 
+    void proxyApp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        proxyApp.doGet(request, response);
+    }
+
     void show_config_apps(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (get_CAS_userId(request) == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "you must authenticate first");
@@ -104,6 +111,7 @@ public class Main extends HttpServlet {
         ServletContext sc = request.getServletContext();
         conf = getConf(sc);
         computeBandeau = new ComputeBandeau(conf);
+        proxyApp = new ProxyApp(conf);
     }   
 
     static Conf.Main getConf(ServletContext sc) {
@@ -113,6 +121,7 @@ public class Main extends HttpServlet {
         conf.merge(gson.fromJson(getConf(sc, "config-apps.json", true), Conf.Apps.class).init());
         conf.merge(gson.fromJson(getConf(sc, "config-shibboleth.json", false), Shibboleth.Conf.class));
         conf.topApps = gson.fromJson(getConf(sc, "config-topApps.json", false), TopAppsAgimus.GlobalConf.class).init();
+        conf.proxyApp = gson.fromJson(getConf(sc, "config-proxyApp.json", false), ProxyApp.Conf.class);
         conf.init();
         return conf;
     }
