@@ -355,4 +355,11 @@ class Utils {
         throw new RuntimeException("invalid time with unit " + timeWithUnit);
     }
 
+    static boolean hasValidBearerToken(HttpServletRequest request, Shibboleth.Conf shib_conf) {
+        String auth = request.getHeader("Authorization");
+        String token = auth != null ? removePrefixOrNull(auth, "Bearer ") : null;
+        return token != null && shib_conf != null &&
+            shib_conf.bearerTokens.contains(token);
+    }
+
 }

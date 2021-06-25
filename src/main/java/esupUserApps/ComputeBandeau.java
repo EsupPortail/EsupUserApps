@@ -48,7 +48,7 @@ public class ComputeBandeau {
     void layout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setHeader("Cache-Control", "private, no-cache"); // be safe (in case someone forces a default cache)
 
-        if (hasValidBearerToken(request)) {
+        if (hasValidBearerToken(request, conf.shibboleth)) {
             proxied_layout(request, response);
         }  else if (request.getParameter("noCache") != null) {
             needAuthentication(request, response);
@@ -369,13 +369,6 @@ public class ComputeBandeau {
         return conf.cas_impersonate != null ? getCookie(request, conf.cas_impersonate.cookie_name) : null;
     }
 
-    boolean hasValidBearerToken(HttpServletRequest request) {
-        String auth = request.getHeader("Authorization");
-        String token = auth != null ? removePrefixOrNull(auth, "Bearer ") : null;
-        return token != null && conf.shibboleth != null &&
-            conf.shibboleth.bearerTokens.contains(token);
-    }
-    
     /* ******************************************************************************** */
     /* simple helper functions */
     /* ******************************************************************************** */   
