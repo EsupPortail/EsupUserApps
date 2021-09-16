@@ -59,6 +59,7 @@ class App extends ACLs {
     ACLs admins;
     Cookies cookies = new Cookies();
     
+    String showIfCurrentAppIs; // especially useful for "alerts" pseudo-apps which must appear only on a specific app
 
     void merge(App app) {
         if (app.url != null) url = app.url;

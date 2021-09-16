@@ -317,6 +317,9 @@ public class ComputeBandeau {
         }
         for (String fname : fnames) {
             App app = conf.APPS.get(fname);
+            if (app.showIfCurrentAppIs != null) {
+                if (!forced_fnames.contains(app.showIfCurrentAppIs)) continue; // especially useful for "alerts" pseudo-apps which must appear only on a specific app
+            }
             Export.App export_app = new Export.App(fname, app, get_url(app, fname, idpId, idpAuthnRequest_url));            
             rslt.put(fname, export_app);
         }
