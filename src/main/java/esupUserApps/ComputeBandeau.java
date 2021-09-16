@@ -95,7 +95,7 @@ public class ComputeBandeau {
         }
         Set<String> validApps = computeApps.computeValidApps(userId, attrs, false);
         String current_fname_hint = current_fname_hint(request, validApps, userId);
-        Map<String, Export.App> userChannels = exportApps(attrs, validApps, Collections.singleton(current_fname_hint));
+        Map<String, Export.App> userChannels = exportApps(attrs, validApps, toImmutableSet(current_fname_hint));
         List<Export.Layout> userLayout = userLayout(conf.LAYOUT, userChannels);
 
         stats.log(request, realUserId, current_fname_hint);
@@ -389,4 +389,7 @@ public class ComputeBandeau {
         return r;            
     }
 
+    private <T> Set<String> toImmutableSet(String s) {
+        return s == null ? Collections.emptySet() : Collections.singleton(s);
+    }
 }
