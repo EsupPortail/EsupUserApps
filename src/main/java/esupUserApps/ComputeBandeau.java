@@ -301,13 +301,14 @@ public class ComputeBandeau {
         return exportApps(person, fnames, new java.util.HashSet<String>());
     }
     
-    private Map<String, Export.App> exportApps(Ldap.Attrs person, Set<String> fnames, Set<String> forbidden_fnames) {
+    private Map<String, Export.App> exportApps(Ldap.Attrs person, Set<String> fnames, Set<String> forced_fnames) {
         Map<String, Export.App> rslt = new HashMap<>();
         String idpId = getFirst(person, "Shib-Identity-Provider");
         String idpAuthnRequest_url = firstNonNull(getFirst(person, "SingleSignOnService-url"),
                 conf.current_idpAuthnRequest_url);
         
-        for (String fname : forbidden_fnames) {
+        for (String fname : forced_fnames) {
+            if (fnames.contains((fname))) continue; // this fname is allowed, no need to handle it differently
             App app = conf.APPS.get(fname);
             if (app == null) continue;
             Export.App export_app = new Export.App(fname, app, get_url(app, fname, idpId, idpAuthnRequest_url));
