@@ -73,7 +73,7 @@ class Groups {
         boolean test(String v) { return p == null ? v == null : p.equals(v); } // https://docs.mongodb.com/manual/tutorial/query-for-null-fields/
     }
     static class TesterRegex extends Tester<Pattern> {
-        TesterRegex(String p) { this.p = Pattern.compile(p); }
+        TesterRegex(String p) { this.p = Pattern.compile(p, Pattern.DOTALL | Pattern.MULTILINE); }
         boolean test(String v) { return v != null && p.matcher(v).matches(); }
     }
     static class TesterIn extends Tester<Set<String>> {
