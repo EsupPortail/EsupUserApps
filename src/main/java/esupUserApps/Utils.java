@@ -115,6 +115,10 @@ class Utils {
         return s.startsWith(prefix) ? s.substring(prefix.length()) : null;
     }
 
+    static String removeSuffixOrNull(String s, String suffix) {
+        return s.endsWith(suffix) ? s.substring(0, s.length() - suffix.length()) : null;
+    }
+
     static String via_CAS(String cas_login_url, String href) {
         return cas_login_url + "?service="  + urlencode(href);
     }

@@ -1,6 +1,7 @@
 package esupUserApps;
 
 
+import java.util.Collections;
 import java.util.List;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -90,14 +91,20 @@ class Groups {
         boolean test(Map<String, List<String>> doc);
     }
     static class QueryAttr implements Query {
+        enum Mapper { Joinln }
+        Mapper mapper;
         String attr;
         List<Tester<?>> l;
-        QueryAttr(String attr, List<Tester<?>> l) {
-            this.attr = attr; this.l = l;
+        QueryAttr(String attr, Mapper mapper, List<Tester<?>> l) {
+            this.attr = attr; this.mapper = mapper; this.l = l;
         }
         public boolean test(Map<String, List<String>> doc) {
+            List<String> doc_l = doc.get(attr);
+            if (mapper == Mapper.Joinln) {
+                doc_l = Collections.singletonList(doc_l == null ? "" : String.join("\n", doc_l));
+            }
             for (Tester<?> t : l) {
-                if (!t.test(doc.get(attr))) return false;
+                if (!t.test(doc_l)) return false;
             }
             return true;
         }
@@ -139,13 +146,29 @@ class Groups {
             } else if (key.equals("$or")) {
                 r.add(new QueryOr(prepareQueryList(query.get(key), attrs)));
             } else {
-                attrs.add(key);
-                r.add(new QueryAttr(key, prepareTesters(query.get(key))));
+                QueryAttr qA = prepareQueryAttr(key, query.get(key));
+                attrs.add(qA.attr);
+                r.add(qA);
             }
         }
         return r.size() == 1
             ? r.get(0) // small optimisation for exactly one test
             : new QueryAnd(r);
+    }
+
+    private static QueryAttr prepareQueryAttr(String key, Object tester) {
+        String attr = key;
+        QueryAttr.Mapper mapper = null;
+        if (key.contains("(")) {
+            String attr_to_join = Utils.removeSuffixOrNull(key, ".joinln()");
+            if (attr_to_join != null) {
+                attr = attr_to_join;
+                mapper = QueryAttr.Mapper.Joinln;
+            } else {
+                throw new RuntimeException("invalid attribute " + key + ". Only allowed extension is xxx.joinln()");
+            }
+        }
+        return new QueryAttr(attr, mapper, prepareTesters(tester));
     }
 
     @SuppressWarnings("unchecked")
