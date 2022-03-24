@@ -140,11 +140,11 @@ let conf;
    }).join('<br>');
  }
 
-function format_app(folder, id) {
+function format_app(folder, real_folder, id) {
     let app = conf.APPS[id];
     let url = app.url.replace("{fname}", id);
     let tags = app.tags ? `<p class="tags">${app.tags.join(", ")}</p>` : '';
-    let vals = { icon: "<img src='/ProlongationENT/theme-paris1-2016/icon/" + id + ".svg' onerror='this.hidden = true'>",
+    let vals = { icon: real_folder === '__hidden__' ? 'non utile' : "<img src='/ProlongationENT/theme-paris1-2016/icon/" + id + ".svg' onerror='this.hidden = true'>",
              folder,
              fname: a(url, id), 
              shortText: app.shortText, 
@@ -157,7 +157,7 @@ function format() {
     let tbodies = Object.keys(conf.LAYOUT).map(folder => {
         let folderText = folder;
         let apps = conf.LAYOUT[folder].map(appId => {
-            let s = format_app(folderText, appId);
+            let s = format_app(folderText, folder, appId);
             folderText = '-';
             return s;
         });
