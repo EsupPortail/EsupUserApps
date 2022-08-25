@@ -137,7 +137,7 @@ let conf;
      } else {
        return a(grouper_url + group.replace(/\./g, ":"), group.replace(/\./g, ".&shy;"));
      }
-   }).join('<br>');
+   }).join('<br>') || '<i style="color: red">aucun</i>';
  }
 
 function format_app(folder, real_folder, id) {
