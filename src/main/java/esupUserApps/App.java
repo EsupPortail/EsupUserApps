@@ -52,6 +52,7 @@ class App extends ACLs {
     boolean hideFromMobile = false;
     boolean hashelp = false;
     boolean hide = false;
+    boolean openInNewTab = false;
     Collection<String> tags;
 
     List<String> inherit;

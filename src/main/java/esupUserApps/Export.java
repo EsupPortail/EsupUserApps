@@ -18,6 +18,7 @@ class Export {
         Collection<String> tags;
         Boolean hashelp;
         Boolean hide;
+        Boolean openInNewTab;
         Boolean forbidden;
         
         public App(String fname, esupUserApps.App app, String url) {
@@ -30,6 +31,7 @@ class Export {
             if (app.startDate != null) startDate = app.startDate;
             if (app.hashelp) hashelp = app.hashelp;
             if (app.hide) hide = app.hide;
+            if (app.openInNewTab) openInNewTab = app.openInNewTab;
             if (app.tags != null) tags = app.tags;
             if (app.position != null) position = app.position;
         }
