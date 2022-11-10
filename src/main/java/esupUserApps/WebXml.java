@@ -20,6 +20,9 @@ public class WebXml implements ServletContextListener {
     }
 
     private void configure(ServletContext sc) {
+        // force sane value (avoid ;jessionid in urls)
+        sc.setSessionTrackingModes(java.util.EnumSet.of(SessionTrackingMode.COOKIE));
+
         Conf.Main conf = Main.getConf(sc);
 
         List<String> serverNames = new LinkedList<String>();
