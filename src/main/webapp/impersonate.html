@@ -19,6 +19,17 @@
    setCasCookie('');
  };
 
+ const compare_strings = (a, b) => (
+    a < b ? -1 : a > b ? 1 : 0
+ )
+ const compare_fields = (fields) => (a, b) => {
+    for (const field of fields) {
+        const cmp = compare_strings(a[field], b[field])
+        if (cmp) return cmp
+    }
+    return 0
+ }
+
  function onBandeauLoad(pE) {
     if (!pE.DATA.realUserId) return alert("impersonate not allowed");
 
@@ -29,7 +40,9 @@
         var a = "<a href='" + url + "'>" + h.escapeQuotes(app.text || app.title || app.fname) + "</a>";
         return "<li>" + a + "</li>";
     }
-    var lis = pE.DATA.canImpersonate.map(computeLink).join("\n");
+    var apps = pE.DATA.canImpersonate
+    apps.sort(compare_fields(['text', 'title', 'fname']))
+    var lis = apps.map(computeLink).join("\n");
     var ul = "Vous pouvez accéder aux applications suivantes : <ul>" + (lis || '<i>aucune</i>') + "</ul>";
     h.onReady(function () {
         document.getElementById("apps").innerHTML = ul;
