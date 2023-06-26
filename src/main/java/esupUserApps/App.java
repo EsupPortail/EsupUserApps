@@ -50,6 +50,7 @@ class App extends ACLs {
     Map<String,String> url_vars;
     String shibbolethSPPrefix;
     boolean hideFromMobile = false;
+    String helpUrl; // useful for PDF files. Implies hashelp
     boolean hashelp = false;
     boolean hide = false;
     boolean openInNewTab = false;

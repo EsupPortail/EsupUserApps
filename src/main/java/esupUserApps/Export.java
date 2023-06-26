@@ -16,6 +16,7 @@ class Export {
         Integer position;
         Date startDate;
         Collection<String> tags;
+        String helpUrl; // useful for PDF files. Implies hashelp
         Boolean hashelp;
         Boolean hide;
         Boolean openInNewTab;
@@ -29,6 +30,7 @@ class Export {
             description = firstNonNull(app.description, "");
             this.url = url;
             if (app.startDate != null) startDate = app.startDate;
+            if (app.helpUrl != null) helpUrl = app.helpUrl;
             if (app.hashelp) hashelp = app.hashelp;
             if (app.hide) hide = app.hide;
             if (app.openInNewTab) openInNewTab = app.openInNewTab;
