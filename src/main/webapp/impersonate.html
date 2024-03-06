@@ -75,7 +75,7 @@ Pour voir les onglets d'un autre utilisateur :
    };
    
    $( "#person" ).autocompleteUser(
-      'https://wsgroups.univ-paris1.fr/searchUserCAS', { select: select, wsParams: { showExtendedInfo: true } }
+      'https://wsgroups.univ-paris1.fr/searchUserCAS', { select: select, wsParams: { allowInvalidAccounts: 0 /* allow searching on non public attrs like supannEmpId/supannEtuId */ } }
  );
 
 </script>
