@@ -40,6 +40,7 @@ static class Main extends Conf.Apps {
     Set<String> admins = Collections.emptySet();
     Set<String> trusted_ips = Collections.emptySet();
     String cas_base_url;
+    String cas_mfa_base_url;
     String EsupUserApps_url;
     List<String> EsupUserApps_vhost_aliases = Collections.emptyList();
     String current_idpId;
@@ -66,11 +67,17 @@ static class Main extends Conf.Apps {
     // below have valid default values
     String cas_login_url;
     String cas_logout_url;
+    String cas_mfa_login_url;
+    String cas_mfa_logout_url;
 
     Conf.Main init() {
         if (cas_base_url == null) throw new RuntimeException("config.json must set cas_base_url");
         if (cas_login_url == null) cas_login_url = cas_base_url + "/login";
         if (cas_logout_url == null) cas_logout_url = cas_base_url + "/logout";
+
+        if (cas_mfa_base_url == null) throw new RuntimeException("config.json must set cas_mfa_base_url");
+        if (cas_mfa_login_url == null) cas_mfa_login_url = cas_mfa_base_url + "/login";
+        if (cas_mfa_logout_url == null) cas_mfa_logout_url = cas_mfa_base_url + "/logout";
         return this;
     }
 

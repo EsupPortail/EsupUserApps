@@ -118,6 +118,9 @@ public class ComputeBandeau {
         if (favorites != null) {
             js_data.put("favorites", favorites.get(userId));
         }
+        if (request.getSession(false).getAttribute("MFA") != null) {
+            js_data.put("MFA", true);
+        }
 
         String callback = request.getParameter("callback");
         if (callback == null) {

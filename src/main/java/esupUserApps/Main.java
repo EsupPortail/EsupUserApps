@@ -24,7 +24,7 @@ public class Main extends HttpServlet {
 
     static String[] mappings = new String[] {
         "/detectReload", "/purgeCache", "/purgeUserCache",
-        "/layout", "/login", "/logout", "/redirect", "/proxyApp", "/canImpersonate", "/canAccess",
+        "/layout", "/login", "/login-mfa", "/logout", "/redirect", "/proxyApp", "/canImpersonate", "/canAccess",
         "/admin/config-apps.json",
     };
     
@@ -37,6 +37,7 @@ public class Main extends HttpServlet {
 
             case "/layout":         layout        (request, response); break;       
             case "/login":          login         (request, response); break;
+            case "/login-mfa":      login_mfa     (request, response); break;
             case "/logout":         logout        (request, response); break;
             case "/redirect":       redirect      (request, response); break;
             case "/canAccess":      canAccess     (request, response); break;
@@ -74,6 +75,11 @@ public class Main extends HttpServlet {
     
     void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.sendRedirect(request.getParameter("target"));
+    }
+    
+    void login_mfa(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getSession(false).setAttribute("MFA", "true");        
+        login(request, response);
     }
     
     void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

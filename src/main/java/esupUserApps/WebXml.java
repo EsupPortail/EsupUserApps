@@ -30,7 +30,7 @@ public class WebXml implements ServletContextListener {
         serverNames.addAll(conf.EsupUserApps_vhost_aliases);
                 
         addFilter(sc, "CAS Single Sign Out", SingleSignOutFilter.class, null,
-                  "/layout", "/login");
+                  "/layout", "/login", "/login-mfa");
 
         addFilter(sc, "CAS Authentication", AuthenticationFilter.class,
                   asMap("casServerLoginUrl", conf.cas_login_url)
@@ -42,6 +42,12 @@ public class WebXml implements ServletContextListener {
                    .add("serverName", String.join(" ", serverNames))
                    .add("redirectAfterValidation", "false"), 
                   "/layout", "/login");
+    
+        addFilter(sc, "CAS MFA Validate", Cas20ProxyReceivingTicketValidationFilter.class,
+                  asMap("casServerUrlPrefix", conf.cas_mfa_base_url)
+                   .add("serverName", String.join(" ", serverNames))
+                   .add("redirectAfterValidation", "false"), 
+                  "/login-mfa");
     
         addServlet(sc, "EsupUserApps", Main.class, null, Main.mappings);
     }
