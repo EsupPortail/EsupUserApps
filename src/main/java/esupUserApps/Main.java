@@ -131,6 +131,16 @@ public class Main extends HttpServlet {
         if (s == null) return "{}"; // do not fail here, checks are done on required attrs
         // allow trailing commas
         s = s.replaceAll(",(\\s*[\\]}])", "$1");
+        // allow hjson multi-line strings '''xxx'''
+        s = java.util.regex.Pattern.compile("(?s)'''(.*?)'''").matcher(s).replaceAll(mr -> {
+            var multiline = mr.group(1);
+            var one_line = "" + '"' + java.util.regex.Matcher.quoteReplacement(
+                multiline.replaceAll("\n", "\\\\n").replaceAll("" + '"', "\\\\" + '"')
+            ) + '"';
+            var other_lines = multiline.replaceAll("[^\n]*", "");
+            return one_line + other_lines;
+        }
+        );
         return s;
     }
         
