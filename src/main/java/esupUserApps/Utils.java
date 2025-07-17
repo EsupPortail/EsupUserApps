@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterRegistration;
@@ -135,6 +136,12 @@ class Utils {
     static String url2host(String url) {
         URL url_ = toURL(url);
         return url_ != null ? url_.getHost() : null;
+    }
+
+    static private Pattern to_service_query_param = Pattern.compile(".*[?&]service=([^?&]*).*");
+    static String url_to_service_query_param(String url) {
+        var m = to_service_query_param.matcher(url);
+        return m.find() ? urldecode(m.group(1)) : null;
     }
 
     static String urlencode(String s) {

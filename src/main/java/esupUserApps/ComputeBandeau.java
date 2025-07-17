@@ -145,6 +145,10 @@ public class ComputeBandeau {
         }
         String uid = request.getParameter("uid");
         String service = request.getParameter("service");
+        if (conf.cas_mfa_login_url != null && service.startsWith(conf.cas_mfa_login_url)) {
+            var service_ = url_to_service_query_param(service);
+            if (service_ != null) service = service_;
+        }
         Collection<String> appIds = computeApps.canImpersonate(uid, service);
         if (appIds.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
