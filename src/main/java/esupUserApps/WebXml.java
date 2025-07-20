@@ -37,6 +37,14 @@ public class WebXml implements ServletContextListener {
                    .add("serverName", String.join(" ", serverNames)),
                   "/login");
 
+        addFilter(sc, "RemoveCasAssertionInSessionIfNotMFA", RemoveCasAssertionInSessionIfNotMFAFilter.class, null, 
+                "/login-mfa");
+
+        addFilter(sc, "CAS MFA Authentication", AuthenticationFilter.class,
+                  asMap("casServerLoginUrl", conf.cas_mfa_login_url)
+                   .add("serverName", String.join(" ", serverNames)),
+                  "/login-mfa");
+
         addFilter(sc, "CAS Validate", Cas20ProxyReceivingTicketValidationFilter.class,
                   asMap("casServerUrlPrefix", conf.cas_base_url)
                    .add("serverName", String.join(" ", serverNames))
