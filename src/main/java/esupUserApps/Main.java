@@ -116,7 +116,7 @@ public class Main extends HttpServlet {
     synchronized void initConf(HttpServletRequest request) {
         ServletContext sc = request.getServletContext();
         conf = getConf(sc);
-        computeBandeau = new ComputeBandeau(conf);
+        computeBandeau = new ComputeBandeau(conf, computeBandeau);
         proxyApp = new ProxyApp(conf);
     }   
 

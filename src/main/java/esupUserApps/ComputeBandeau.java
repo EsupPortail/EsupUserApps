@@ -32,13 +32,13 @@ public class ComputeBandeau {
 
     org.slf4j.Logger log = LoggerFactory.getLogger(ComputeBandeau.class);
 
-    public ComputeBandeau(Conf.Main conf) {
+    public ComputeBandeau(Conf.Main conf, ComputeBandeau prev) {
         this.conf = conf;
         computeApps = new ComputeApps(conf);
         stats = new Stats(conf);      
         if (conf.topApps.stable != null) {
-            topApps        = new TopAppsAgimus(conf.topApps.stable);
-            topApps_latest = new TopAppsAgimus(conf.topApps.latest);
+            topApps        = new TopAppsAgimus(conf.topApps.stable, prev != null ? prev.topApps : null);
+            topApps_latest = new TopAppsAgimus(conf.topApps.latest, prev != null ? prev.topApps_latest : null);
         }
         if (conf.favorites != null) {
             favorites = new FavoritesRestdb(conf.favorites);

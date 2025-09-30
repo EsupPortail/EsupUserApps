@@ -97,9 +97,9 @@ class TopAppsAgimus {
         Aggregations aggregations;
     }
 
-    TopAppsAgimus(Conf conf) {
+    TopAppsAgimus(Conf conf, TopAppsAgimus prev) {
         this.conf = conf;
-        cache = new Cache<>(toSeconds(conf.cacheLifetime));
+        cache = prev != null ? prev.cache : new Cache<>(toSeconds(conf.cacheLifetime));
     }
     
     String endDate() {
