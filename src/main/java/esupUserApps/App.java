@@ -44,6 +44,7 @@ class App extends ACLs {
     String title;
     String description;
     String url;
+    String logo;
     Integer position;
     Date startDate;
     Date endDate;

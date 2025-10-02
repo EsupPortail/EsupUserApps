@@ -13,6 +13,7 @@ class Export {
         String title;
         String description;
         String url;
+        String logo;
         Integer position;
         Date startDate;
         Collection<String> tags;
@@ -35,6 +36,7 @@ class Export {
             if (app.hide) hide = app.hide;
             if (app.openInNewTab) openInNewTab = app.openInNewTab;
             if (app.tags != null) tags = app.tags;
+            if (app.logo != null) logo = app.logo;
             if (app.position != null) position = app.position;
         }
     }
