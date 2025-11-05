@@ -3,9 +3,11 @@ package esupUserApps;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import static esupUserApps.Utils.firstNonNull;
@@ -61,6 +63,7 @@ class App extends ACLs {
     String serviceRegex;
     ACLs admins;
     Cookies cookies = new Cookies();
+    Set<String> userAttrs_vars_in_url = null;
     
     String showIfCurrentAppIs; // especially useful for "alerts" pseudo-apps which must appear only on a specific app
 
@@ -78,6 +81,7 @@ class App extends ACLs {
         if (url == null) throw new RuntimeException("invalid config-apps.json: missing url for " + title);
         if (url_vars != null) handle_urls_vars(url_vars);
         if (global_url_vars != null) handle_urls_vars(global_url_vars);
+        compute_userAttrs_vars_in_url(url);
 
         if (admins != null) {
             compute_default_cookies_path_and_serviceRegex();
@@ -100,6 +104,14 @@ class App extends ACLs {
     private void handle_urls_vars(Map<String,String> url_vars) {
         for (Map.Entry<String, String> e : url_vars.entrySet()) {
             url = url.replace("{" + e.getKey() + "}", e.getValue());
+        }
+    }
+
+    private void compute_userAttrs_vars_in_url(String url) {
+        userAttrs_vars_in_url = new HashSet<String>();
+        var m = Pattern.compile("\\{userAttrs[.]([^}.]+)\\}").matcher(url);
+        while (m.find()) {
+            userAttrs_vars_in_url.add(m.group(1));
         }
     }
 }

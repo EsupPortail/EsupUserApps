@@ -183,7 +183,8 @@ public class ComputeBandeau {
         App app = conf.APPS.get(appId);
         if (app == null) { bad_request(response, "invalid appId " + appId); return; }
         
-        String location = get_url(app, appId, null, conf.current_idpAuthnRequest_url);
+        if (!app.userAttrs_vars_in_url.isEmpty()) { bad_request(response, "redirect not implemented when app has userAttrs_vars_in_url");}
+        String location = get_url(app, appId, null, null, conf.current_idpAuthnRequest_url);
 
         // Below rely on /EsupUserApps/redirect proxied in applications.
         // Example for Apache:
@@ -318,7 +319,7 @@ public class ComputeBandeau {
             if (fnames.contains((fname))) continue; // this fname is allowed, no need to handle it differently
             App app = conf.APPS.get(fname);
             if (app == null) continue;
-            Export.App export_app = new Export.App(fname, app, get_url(app, fname, idpId, idpAuthnRequest_url));
+            Export.App export_app = new Export.App(fname, app, get_url(app, fname, person, idpId, idpAuthnRequest_url));
             export_app.forbidden = true;
             rslt.put(fname, export_app);
         }
@@ -327,7 +328,7 @@ public class ComputeBandeau {
             if (app.showIfCurrentAppIs != null) {
                 if (!forced_fnames.contains(app.showIfCurrentAppIs)) continue; // especially useful for "alerts" pseudo-apps which must appear only on a specific app
             }
-            Export.App export_app = new Export.App(fname, app, get_url(app, fname, idpId, idpAuthnRequest_url));            
+            Export.App export_app = new Export.App(fname, app, get_url(app, fname, person, idpId, idpAuthnRequest_url));
             rslt.put(fname, export_app);
         }
         return rslt;
@@ -355,12 +356,25 @@ public class ComputeBandeau {
         return url;
     }
 
-    String get_url(App app, String appId, String idpId, String idpAuthnRequest_url) {
+    private String handle_userAttrs_url_vars(Set<String> userAttrs_vars_in_url, Ldap.Attrs attrs, String url) {
+        for (var name : userAttrs_vars_in_url) {
+            var val = getFirst(attrs, name);
+            if (val != null) {
+                url = url.replace("{userAttrs." + name + "}", val);
+            } else {
+                log.error("Missing attr " + name + " for url " + url);
+            }
+        }
+        return url;
+    }
+
+    String get_url(App app, String appId, Ldap.Attrs person, String idpId, String idpAuthnRequest_url) {
         String url = app.url;
         url = url.replace("{fname}", appId);
         url = url.replace("{idpId_ifShib}", firstNonNull(idpId, ""));
         url = url.replace("{idpId}", firstNonNull(idpId, conf.current_idpId));
         url = url_maybe_adapt_idp(idpAuthnRequest_url, url, app.shibbolethSPPrefix);
+        url = handle_userAttrs_url_vars(app.userAttrs_vars_in_url, person, url);
         return url;
     }
     

@@ -18,12 +18,14 @@ class ComputeApps {
     Groups groups;
     Ldap ldap;
     Shibboleth shibboleth;
+    Set<String> userAttrs_vars_in_url;
     Logger log = LoggerFactory.getLogger(ComputeApps.class);
     
     ComputeApps(Conf.Main conf) {
         this.conf = conf;
         ldap = new Ldap(conf.ldap);
         groups = new Groups(conf.GROUPS);
+        userAttrs_vars_in_url = compute_userAttrs_vars_in_url();
     }
 
     Set<String> computeValidApps(String uid, boolean wantImpersonate) {
@@ -99,6 +101,15 @@ class ComputeApps {
         Set<String> r = groups.needed_ldap_attributes();
         r.add("memberOf"); // hard code memberOf
         r.addAll(conf.wanted_user_attributes);
+        r.addAll(userAttrs_vars_in_url);
+        return r;
+    }
+
+    private Set<String> compute_userAttrs_vars_in_url() {
+        var r = new HashSet<String>();
+        for (var app : conf.APPS.values()) {
+            r.addAll(app.userAttrs_vars_in_url);
+        }
         return r;
     }
 
