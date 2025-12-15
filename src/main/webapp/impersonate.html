@@ -49,7 +49,7 @@
     });
  }
 
- var pE_args = window.prolongation_ENT_args = { current: "impersonate", delegateAuth: true };
+ var pE_args = window.prolongation_ENT_args = { current: "impersonate", mfa: true, delegateAuth: true };
  var m;
  if (document.location.hash) {
     pE_args.uid = document.location.hash.replace(/^#/, '')
