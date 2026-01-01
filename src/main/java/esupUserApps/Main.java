@@ -60,13 +60,7 @@ public class Main extends HttpServlet {
     }
 
     void purgeUserCache(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String userId = get_CAS_userId(request);
-        if (userId == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "you must authenticate first");
-        } else {
-            log.warn("purging cache " + userId);
-            computeBandeau.purgeUserCache(userId);
-        }
+        computeBandeau.purgeUserCache(request, response);
     }
     
     void layout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

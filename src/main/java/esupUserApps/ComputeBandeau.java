@@ -386,6 +386,20 @@ public class ComputeBandeau {
         }
     }
 
+    void purgeUserCache(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String userId;
+        if (hasValidBearerToken(request, conf.shibboleth)) {
+            var attrs = computeApps.getShibbolethUserInfo(request);
+            userId = firstNonNull(getFirst(attrs, "uid"), getFirst(attrs, "id"));
+            if (userId == null)  { bad_request(response, "missing \"eduPersonPrincipalName\"/\"REMOTE_USER\" HTTP header"); return; }
+        } else {
+            userId = get_CAS_userId(request);
+            if (userId == null) { response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "you must authenticate first"); return; }
+        }
+        log.warn("purging cache " + userId);
+        purgeUserCache(userId);
+    }
+
     void purgeUserCache(String userId) {
         favorites.purgeUserCache(userId);
     }
