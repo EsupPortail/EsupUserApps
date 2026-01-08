@@ -57,7 +57,7 @@ class Groups {
         return r;
     }
 
-
+    /* Used by Query classes to handle simple testers. Works on attribute values */
     static abstract class Tester<P> {
         protected P p;
         abstract boolean test(String v);
