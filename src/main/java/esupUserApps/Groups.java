@@ -133,18 +133,24 @@ class Groups {
     private static Map<String, Query> prepareQueries(Map<String, Map<String, Object>> m, Set<String> attrs) {
         Map<String, Query> r = new HashMap<>();
         for (String name : m.keySet()) {
-            r.put(name, prepareQuery(m.get(name), attrs));
+            r.put(name, prepareQuery(r, m.get(name), attrs));
         }
         return r;
     }
 
-    private static Query prepareQuery(Map<String, Object> query, Set<String> attrs) {
+    private static Query prepareQuery(Map<String, Query> group_to_query, Map<String, Object> query, Set<String> attrs) {
         List<Query> r = new LinkedList<>();
         for (String key: query.keySet()) {
             if (key.equals("$and")) {
-                r.add(new QueryAnd(prepareQueryList(query.get(key), attrs)));
+                r.add(new QueryAnd(prepareQueryList(group_to_query, query.get(key), attrs)));
             } else if (key.equals("$or")) {
-                r.add(new QueryOr(prepareQueryList(query.get(key), attrs)));
+                r.add(new QueryOr(prepareQueryList(group_to_query, query.get(key), attrs)));
+            } else if (key.equals("$hasGroup")) {
+                var groupName = query.get(key);
+                if (!(groupName instanceof String)) throw new RuntimeException("invalid $hasGroup param. string expected, got " + groupName);
+                var subQuery = group_to_query.get(groupName);
+                if (subQuery == null) throw new RuntimeException("unknown group " + groupName + " (used in $hasGroup). NB: it must be defined BEFORE $hasGroup");
+                r.add(subQuery);
             } else {
                 QueryAttr qA = prepareQueryAttr(key, query.get(key));
                 attrs.add(qA.attr);
@@ -172,10 +178,10 @@ class Groups {
     }
 
     @SuppressWarnings("unchecked")
-    private static List<Query> prepareQueryList(Object l, Set<String> attrs) {
+    private static List<Query> prepareQueryList(Map<String, Query> group_to_query, Object l, Set<String> attrs) {
         List<Query> r = new LinkedList<>();
         for (Object query : (List<?>) l) {
-            r.add(prepareQuery((Map<String, Object>) query, attrs));
+            r.add(prepareQuery(group_to_query, (Map<String, Object>) query, attrs));
         }
         return r;
     }
