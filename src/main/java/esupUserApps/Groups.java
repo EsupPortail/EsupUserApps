@@ -130,10 +130,10 @@ class Groups {
         }
     }   
     
-    private static Map<String, Query> prepareQueries(Map<String, Map<String, Object>> m, Set<String> attrs) {
+    private static Map<String, Query> prepareQueries(Map<String, Map<String, Object>> groups, Set<String> attrs) {
         Map<String, Query> r = new HashMap<>();
-        for (String name : m.keySet()) {
-            r.put(name, prepareQuery(r, m.get(name), attrs));
+        for (String name : groups.keySet()) {
+            r.put(name, prepareQuery(r, groups.get(name), attrs));
         }
         return r;
     }
