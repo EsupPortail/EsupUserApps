@@ -160,6 +160,18 @@ public class ComputeBandeau {
         }
     }
     
+    private boolean canAccess(Collection<String> appIds, String app) {
+        if (app == null) {
+            return true;
+        } else if (app.contains("|")) {
+            for (var app_ : app.split("\\|")) {
+                if (appIds.contains(app_)) return true;
+            }
+            return false;
+        } else {
+            return appIds.contains(app);
+        }
+    }
     void canAccess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (!is_trusted_ip(request)) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -168,7 +180,7 @@ public class ComputeBandeau {
         String uid = request.getParameter("uid");
         String app = request.getParameter("app");
         Collection<String> appIds = computeApps.canAccess(uid);
-        if (app == null || appIds.contains(app)) {
+        if (canAccess(appIds, app)) {
             respond_json(response, appIds);
         } else {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
