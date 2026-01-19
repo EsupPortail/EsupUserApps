@@ -72,18 +72,19 @@ public class ComputeBandeau {
         }
     }
 
-    void layout(HttpServletRequest request, HttpServletResponse response, String userId) throws IOException {
-        String forcedId = request.getParameter("uid");  
+    String wantedUserId(String loggedUser, String forcedId) {
         if (forcedId != null) {
-            List<String> memberOf = computeApps.getLdapPeopleInfo(userId).get("memberOf");
-            if (conf.admins.contains(userId) ||
+            List<String> memberOf = computeApps.getLdapPeopleInfo(loggedUser).get("memberOf");
+            if (conf.admins.contains(loggedUser) ||
                 memberOf != null && firstCommonElt(memberOf, conf.admins) != null) {
-                // ok
-            } else {
-                forcedId = null;
+                return forcedId;
             }
         }
-        if (forcedId == null) forcedId = userId;
+        return loggedUser;
+    }
+
+    void layout(HttpServletRequest request, HttpServletResponse response, String userId) throws IOException {
+        String forcedId = wantedUserId(userId, request.getParameter("uid"));
         layout(request, response, forcedId, userId, computeApps.getLdapPeopleInfo(forcedId));
     }
                 
