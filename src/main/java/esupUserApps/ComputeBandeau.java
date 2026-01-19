@@ -196,8 +196,17 @@ public class ComputeBandeau {
         App app = conf.APPS.get(appId);
         if (app == null) { bad_request(response, "invalid appId " + appId); return; }
         
-        if (!app.userAttrs_vars_in_url.isEmpty()) { bad_request(response, "redirect not implemented when app has userAttrs_vars_in_url"); return; }
-        String location = get_url(app, appId, null, null, conf.current_idpAuthnRequest_url);
+        Ldap.Attrs person = null;
+        if (!app.userAttrs_vars_in_url.isEmpty()) { 
+            var loggedUser = get_CAS_userId(request);
+            if (loggedUser == null) {
+                needAuthentication(request, response);
+                return;
+            } else {
+                person = computeApps.getLdapPeopleInfo(wantedUserId(loggedUser, request.getParameter("uid")));
+            }            
+        }
+        String location = get_url(app, appId, person, null, conf.current_idpAuthnRequest_url);
 
         // Below rely on /EsupUserApps/redirect proxied in applications.
         // Example for Apache:
