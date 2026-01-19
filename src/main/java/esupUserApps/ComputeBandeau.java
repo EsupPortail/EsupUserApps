@@ -183,7 +183,7 @@ public class ComputeBandeau {
         App app = conf.APPS.get(appId);
         if (app == null) { bad_request(response, "invalid appId " + appId); return; }
         
-        if (!app.userAttrs_vars_in_url.isEmpty()) { bad_request(response, "redirect not implemented when app has userAttrs_vars_in_url");}
+        if (!app.userAttrs_vars_in_url.isEmpty()) { bad_request(response, "redirect not implemented when app has userAttrs_vars_in_url"); return; }
         String location = get_url(app, appId, null, null, conf.current_idpAuthnRequest_url);
 
         // Below rely on /EsupUserApps/redirect proxied in applications.
