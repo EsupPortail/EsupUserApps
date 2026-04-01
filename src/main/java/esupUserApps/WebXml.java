@@ -27,6 +27,9 @@ public class WebXml implements ServletContextListener {
 
         List<String> serverNames = new LinkedList<String>();
         serverNames.add(url2host(conf.EsupUserApps_url));
+        if (conf.EsupUserApps_url_other_domain != null) {
+            serverNames.add(url2host(conf.EsupUserApps_url_other_domain));
+        }
         serverNames.addAll(conf.EsupUserApps_vhost_aliases);
                 
         addFilter(sc, "CAS Single Sign Out", SingleSignOutFilter.class, null,

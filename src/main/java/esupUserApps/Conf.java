@@ -40,8 +40,10 @@ static class Main extends Conf.Apps {
     Set<String> admins = Collections.emptySet();
     Set<String> trusted_ips = Collections.emptySet();
     String cas_base_url;
+    String cas_base_url_other_domain;
     String cas_mfa_base_url;
     String EsupUserApps_url;
+    String EsupUserApps_url_other_domain;
     List<String> EsupUserApps_vhost_aliases = Collections.emptyList();
     String current_idpId;
     String current_idpAuthnRequest_url;
@@ -66,6 +68,7 @@ static class Main extends Conf.Apps {
 
     // below have valid default values
     String cas_login_url;
+    String cas_login_url_other_domain;
     String cas_logout_url;
     String cas_mfa_login_url;
     String cas_mfa_logout_url;
@@ -74,6 +77,13 @@ static class Main extends Conf.Apps {
         if (cas_base_url == null) throw new RuntimeException("config.json must set cas_base_url");
         if (cas_login_url == null) cas_login_url = cas_base_url + "/login";
         if (cas_logout_url == null) cas_logout_url = cas_base_url + "/logout";
+
+        if (EsupUserApps_url_other_domain != null) {
+            if (cas_base_url_other_domain == null) throw new RuntimeException("config.json must set cas_base_url_other_domain when using EsupUserApps_url_other_domain");
+            if (cas_login_url_other_domain == null) cas_login_url_other_domain = cas_base_url_other_domain + "/login";
+        } else {
+            if (cas_base_url_other_domain != null) throw new RuntimeException("config.json must set EsupUserApps_url_other_domain when using cas_base_url_other_domain");
+        }
 
         if (cas_mfa_base_url == null) throw new RuntimeException("config.json must set cas_mfa_base_url");
         if (cas_mfa_login_url == null) cas_mfa_login_url = cas_mfa_base_url + "/login";

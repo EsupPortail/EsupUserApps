@@ -225,9 +225,10 @@ public class ComputeBandeau {
     void needAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
             if (request.getParameter("auth_checked") == null) {
                 cleanupSession(request);
-                String final_url = conf.EsupUserApps_url + "/layout?auth_checked"
+                var is_other_domain = conf.EsupUserApps_url_other_domain != null && request.getServerName().equals(url2host(conf.EsupUserApps_url_other_domain));
+                String final_url = (is_other_domain ? conf.EsupUserApps_url_other_domain : conf.EsupUserApps_url) + "/layout?auth_checked"
                     + (request.getQueryString() != null ? "&" + request.getQueryString() : "");
-                response.sendRedirect(via_CAS(conf.cas_login_url, final_url) + "&gateway=true");
+                response.sendRedirect(via_CAS(is_other_domain ? conf.cas_login_url_other_domain : conf.cas_login_url, final_url) + "&gateway=true");
             } else {
                 // user is not authenticated.
                 respond_json_or_jsonp(request, response, asMap("error", "Unauthorized"));
