@@ -3,7 +3,6 @@ package esupUserApps;
 import javax.servlet.*;
 
 import org.jasig.cas.client.session.SingleSignOutFilter;
-import org.jasig.cas.client.authentication.AuthenticationFilter;
 import org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter;
 
 import static esupUserApps.Utils.*;
@@ -35,18 +34,13 @@ public class WebXml implements ServletContextListener {
         addFilter(sc, "CAS Single Sign Out", SingleSignOutFilter.class, null,
                   "/layout", "/login", "/login-mfa");
 
-        addFilter(sc, "CAS Authentication", AuthenticationFilter.class,
-                  asMap("casServerLoginUrl", conf.cas_login_url)
-                   .add("serverName", String.join(" ", serverNames)),
-                  "/login");
-
-        addFilter(sc, "RemoveCasAssertionInSessionIfNotMFA", RemoveCasAssertionInSessionIfNotMFAFilter.class, null, 
-                "/login-mfa");
-
-        addFilter(sc, "CAS MFA Authentication", AuthenticationFilter.class,
-                  asMap("casServerLoginUrl", conf.cas_mfa_login_url)
-                   .add("serverName", String.join(" ", serverNames)),
-                  "/login-mfa");
+        addFilter(sc, "CAS Authentication", CasAuthenticationFilter.class,
+                  asMap("cas_login_url", conf.cas_login_url)
+                   .add("cas_login_url_other_domain", conf.cas_login_url_other_domain)
+                   .add("cas_mfa_login_url", conf.cas_mfa_login_url)
+                   .add("EsupUserApps_url", conf.EsupUserApps_url)
+                   .add("EsupUserApps_url_other_domain", conf.EsupUserApps_url_other_domain),
+                  "/login", "/login-mfa");
 
         addFilter(sc, "CAS Validate", Cas20ProxyReceivingTicketValidationFilter.class,
                   asMap("casServerUrlPrefix", conf.cas_base_url)
