@@ -13,7 +13,7 @@
     document.location.reload();
  }
      function setCasCookie(uid) {
-   document.cookie = IMPERSONATE_COOKIE + "=" + uid + ";domain=." + current_domain + ";path=/" + (uid ? '' : ";expires=Thu, 01 Jan 1970 00:00:01 GMT;");
+   document.cookie = `${IMPERSONATE_COOKIE}=${uid};domain=.${current_domain};path=/` + (uid ? '' : ";expires=Thu, 01 Jan 1970 00:00:01 GMT;");
  }
  function restoreRealUser() {
    setHash('');
