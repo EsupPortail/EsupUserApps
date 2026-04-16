@@ -7,12 +7,13 @@
 
 <script type="text/javascript"> 
  var IMPERSONATE_COOKIE = 'CAS_TEST_IMPERSONATE';
+ const current_domain = location.hostname.match(/[.]univ-paris1[.]fr$/) ? 'univ-paris1.fr' : 'pantheonsorbonne.fr'
  function setHash(uid) {
     document.location.hash = "#" + uid;
     document.location.reload();
  }
- function setCasCookie(uid) {
-   document.cookie = IMPERSONATE_COOKIE + "=" + uid + ";domain=.univ-paris1.fr;path=/" + (uid ? '' : ";expires=Thu, 01 Jan 1970 00:00:01 GMT;");
+     function setCasCookie(uid) {
+   document.cookie = IMPERSONATE_COOKIE + "=" + uid + ";domain=." + current_domain + ";path=/" + (uid ? '' : ";expires=Thu, 01 Jan 1970 00:00:01 GMT;");
  }
  function restoreRealUser() {
    setHash('');
@@ -75,7 +76,7 @@ Pour voir les onglets d'un autre utilisateur :
    };
    
    $( "#person" ).autocompleteUser(
-      'https://wsgroups.univ-paris1.fr/searchUserCAS', { select: select, wsParams: { allowInvalidAccounts: 0 /* allow searching on non public attrs like supannEmpId/supannEtuId */ } }
+      `https://wsgroups.${current_domain}/searchUserCAS`, { select: select, wsParams: { allowInvalidAccounts: 0 /* allow searching on non public attrs like supannEmpId/supannEtuId */ } }
  );
 
 </script>
