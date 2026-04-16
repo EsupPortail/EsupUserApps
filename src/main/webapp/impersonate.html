@@ -7,13 +7,20 @@
 
 <script type="text/javascript"> 
  var IMPERSONATE_COOKIE = 'CAS_TEST_IMPERSONATE';
- const current_domain = location.hostname.match(/[.]univ-paris1[.]fr$/) ? 'univ-paris1.fr' : 'pantheonsorbonne.fr'
- function setHash(uid) {
+ const displayed_domain = '.pantheonsorbonne.fr'
+ const other_domain = '.univ-paris1.fr' 
+ const current_domain = location.hostname.endsWith(displayed_domain) ? displayed_domain : other_domain
+ function setHash(uid, opts) {
     document.location.hash = "#" + uid;
-    document.location.reload();
+    if (opts === 'no-redirect') {
+        // cookie is there, only reload bandeau
+        document.location.reload();
+    } else {
+        location.host = location.host.replace(current_domain, other_domain)
+    }
  }
      function setCasCookie(uid) {
-   document.cookie = `${IMPERSONATE_COOKIE}=${uid};domain=.${current_domain};path=/` + (uid ? '' : ";expires=Thu, 01 Jan 1970 00:00:01 GMT;");
+   document.cookie = `${IMPERSONATE_COOKIE}=${uid};domain=${current_domain};path=/` + (uid ? '' : ";expires=Thu, 01 Jan 1970 00:00:01 GMT;");
  }
  function restoreRealUser() {
    setHash('');
@@ -52,12 +59,13 @@
 
  var pE_args = window.prolongation_ENT_args = { current: "impersonate", mfa: true, delegateAuth: true };
  var m;
- if (document.location.hash) {
+ if (document.location.hash || current_domain !== displayed_domain) {
     pE_args.uid = document.location.hash.replace(/^#/, '')
     pE_args.onload = onBandeauLoad;
     setCasCookie(pE_args.uid);
+    if (current_domain !== displayed_domain) location.host = location.host.replace(current_domain, displayed_domain)
  } else if (m = document.cookie.match(new RegExp(IMPERSONATE_COOKIE + "=(\\w+)"))) { //xx
-    setHash(m[1]);
+    setHash(m[1], 'no-redirect');
  }
 </script>
 <script src="/ProlongationENT/loader.js" type="text/javascript"></script>
@@ -71,12 +79,11 @@ Pour voir les onglets d'un autre utilisateur :
 <script>
    var select = function (event, ui) {
      setHash(ui.item.value);
-     setCasCookie(ui.item.value);
      return false;
    };
    
    $( "#person" ).autocompleteUser(
-      `https://wsgroups.${current_domain}/searchUserCAS`, { select: select, wsParams: { allowInvalidAccounts: 0 /* allow searching on non public attrs like supannEmpId/supannEtuId */ } }
+      `https://wsgroups${current_domain}/searchUserCAS`, { select: select, wsParams: { allowInvalidAccounts: 0 /* allow searching on non public attrs like supannEmpId/supannEtuId */ } }
  );
 
 </script>
