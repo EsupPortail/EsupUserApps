@@ -189,8 +189,8 @@ class Groups {
     @SuppressWarnings("unchecked")
     private static List<Tester<?>> prepareTesters(Object tester) {
         List<Tester<?>> r = new LinkedList<>();
-        if (tester instanceof String) {
-            r.add(new TesterEq((String) tester));
+        if (tester instanceof String tester_) {
+            r.add(new TesterEq(tester_));
         } else {
             Map<String, Object> tester_ = (Map<String, Object>) tester;
             for (String op : tester_.keySet()) {
