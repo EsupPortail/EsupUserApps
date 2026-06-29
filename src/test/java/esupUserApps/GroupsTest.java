@@ -5,9 +5,11 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.junit.Test;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GroupsTest {
     Map<String, Map<String, Object>> parseGroups(String json) {
@@ -27,65 +29,65 @@ public class GroupsTest {
     public void test() {
         String group;
         group = "{ a: 'foo' }";
-        assertTrue("$eq", hasGroup(group, "{ a: ['foo'] }"));
-        assertTrue("$eq: multiple vals", hasGroup(group, "{ a: ['foo', 'bar'] }"));
-        assertFalse("$eq: no attr", hasGroup(group, "{}"));
-        assertFalse("$eq: not equal", hasGroup(group, "{ a: ['bar'] }"));
+        assertTrue(hasGroup(group, "{ a: ['foo'] }"), "$eq");
+        assertTrue(hasGroup(group, "{ a: ['foo', 'bar'] }"), "$eq: multiple vals");
+        assertFalse(hasGroup(group, "{}"), "$eq: no attr");
+        assertFalse(hasGroup(group, "{ a: ['bar'] }"), "$eq: not equal");
 
         group = "{ a: { $ne: 'foo' } }";
-        assertFalse("$ne", hasGroup(group, "{ a: ['foo'] }"));
-        assertFalse("$ne: multiple vals", hasGroup(group, "{ a: ['foo', 'bar'] }"));
-        assertTrue("$ne: no attr", hasGroup(group, "{}"));
-        assertTrue("$ne: not equal", hasGroup(group, "{ a: ['bar'] }"));
+        assertFalse(hasGroup(group, "{ a: ['foo'] }"), "$ne");
+        assertFalse(hasGroup(group, "{ a: ['foo', 'bar'] }"), "$ne: multiple vals");
+        assertTrue(hasGroup(group, "{}"), "$ne: no attr");
+        assertTrue(hasGroup(group, "{ a: ['bar'] }"), "$ne: not equal");
 
         group = "{ a: { $in: [ 'foo' ] } }";
-        assertTrue("$in", hasGroup(group, "{ a: ['foo'] }"));
+        assertTrue(hasGroup(group, "{ a: ['foo'] }"), "$in");
         group = "{ a: { $in: [ 'foo', 'bar' ] } }";
-        assertTrue("$in", hasGroup(group, "{ a: ['foo'] }"));
-        assertTrue("$in: multiple vals", hasGroup(group, "{ a: ['bar', 'zzz'] }"));
-        assertFalse("$in: no attr", hasGroup(group, "{}"));
-        assertFalse("$in: not in", hasGroup(group, "{ a: ['zzz', 'yyy'] }"));
+        assertTrue(hasGroup(group, "{ a: ['foo'] }"), "$in");
+        assertTrue(hasGroup(group, "{ a: ['bar', 'zzz'] }"), "$in: multiple vals");
+        assertFalse(hasGroup(group, "{}"), "$in: no attr");
+        assertFalse(hasGroup(group, "{ a: ['zzz', 'yyy'] }"), "$in: not in");
 
         group = "{ a: { $nin: [ 'foo' ] } }";
-        assertFalse("$nin", hasGroup(group, "{ a: ['foo'] }"));
+        assertFalse(hasGroup(group, "{ a: ['foo'] }"), "$nin");
         group = "{ a: { $nin: [ 'foo', 'bar' ] } }";
-        assertFalse("$nin", hasGroup(group, "{ a: ['foo'] }"));
-        assertFalse("$nin: multiple vals", hasGroup(group, "{ a: ['bar', 'zzz'] }"));
-        assertTrue("$nin: no attr", hasGroup(group, "{}"));
-        assertTrue("$nin: not in", hasGroup(group, "{ a: ['zzz', 'yyy'] }"));
+        assertFalse(hasGroup(group, "{ a: ['foo'] }"), "$nin");
+        assertFalse(hasGroup(group, "{ a: ['bar', 'zzz'] }"), "$nin: multiple vals");
+        assertTrue(hasGroup(group, "{}"), "$nin: no attr");
+        assertTrue(hasGroup(group, "{ a: ['zzz', 'yyy'] }"), "$nin: not in");
 
         group = "{ a: { $in: [ 'foo' ], $eq: 'bar' } }";
-        assertTrue("$in + $eq", hasGroup(group, "{ a: ['foo', 'bar', 'zzz'] }"));
-        assertFalse("$in + $eq: no attr", hasGroup(group, "{}"));
-        assertFalse("$in + $eq: not both", hasGroup(group, "{ a: ['foo', 'zzz'] }"));
+        assertTrue(hasGroup(group, "{ a: ['foo', 'bar', 'zzz'] }"), "$in + $eq");
+        assertFalse(hasGroup(group, "{}"), "$in + $eq: no attr");
+        assertFalse(hasGroup(group, "{ a: ['foo', 'zzz'] }"), "$in + $eq: not both");
 
         group = "{ $and: [ { a: 'foo' }, { a: 'bar' } ] }";
-        assertTrue("$and $eq", hasGroup(group, "{ a: ['foo', 'bar', 'zzz'] }"));
-        assertFalse("$and $eq: no attr", hasGroup(group, "{}"));
-        assertFalse("$and $eq: not both", hasGroup(group, "{ a: ['foo', 'zzz'] }"));
+        assertTrue(hasGroup(group, "{ a: ['foo', 'bar', 'zzz'] }"), "$and $eq");
+        assertFalse(hasGroup(group, "{}"), "$and $eq: no attr");
+        assertFalse(hasGroup(group, "{ a: ['foo', 'zzz'] }"), "$and $eq: not both");
 
         group = "{ $or: [ { a: 'foo' }, { b: 'foo' } ] }";
-        assertTrue("$or $eq: one", hasGroup(group, "{ a: ['foo', 'bar', 'zzz'] }"));
-        assertTrue("$or $eq: other one", hasGroup(group, "{ a: ['bar'], b: ['foo'] }"));
-        assertFalse("$or $eq: no attr", hasGroup(group, "{}"));
-        assertFalse("$or $eq: none", hasGroup(group, "{ a: ['bar'], b: ['bar'] }"));
+        assertTrue(hasGroup(group, "{ a: ['foo', 'bar', 'zzz'] }"), "$or $eq: one");
+        assertTrue(hasGroup(group, "{ a: ['bar'], b: ['foo'] }"), "$or $eq: other one");
+        assertFalse(hasGroup(group, "{}"), "$or $eq: no attr");
+        assertFalse(hasGroup(group, "{ a: ['bar'], b: ['bar'] }"), "$or $eq: none");
 
         group = "{ a: { $eq: null } }";
-        assertFalse("$eq null: no attr", hasGroup(group, "{ a: ['foo'] }"));
-        assertTrue("$eq null: no attr", hasGroup(group, "{}"));
-        assertTrue("$eq null: null list", hasGroup(group, "{ a: null }"));
-        assertTrue("$eq null: null value", hasGroup(group, "{ a: [null] }"));
+        assertFalse(hasGroup(group, "{ a: ['foo'] }"), "$eq null: no attr");
+        assertTrue(hasGroup(group, "{}"), "$eq null: no attr");
+        assertTrue(hasGroup(group, "{ a: null }"), "$eq null: null list");
+        assertTrue(hasGroup(group, "{ a: [null] }"), "$eq null: null value");
 
         group = "{ a: 'foo', b: 'bar' }";
-        assertTrue("mutiple attrs $eq", hasGroup(group, "{ a: ['foo'], b: ['bar'] }"));
-        assertFalse("mutiple attrs $eq", hasGroup(group, "{ a: ['foo'] }"));
-        assertFalse("mutiple attrs $eq", hasGroup(group, "{ b: ['bar'] }"));
-        assertFalse("mutiple attrs $eq", hasGroup(group, "{ a: ['foo'], b: ['zzz'] }"));
+        assertTrue(hasGroup(group, "{ a: ['foo'], b: ['bar'] }"), "mutiple attrs $eq");
+        assertFalse(hasGroup(group, "{ a: ['foo'] }"), "mutiple attrs $eq");
+        assertFalse(hasGroup(group, "{ b: ['bar'] }"), "mutiple attrs $eq");
+        assertFalse(hasGroup(group, "{ a: ['foo'], b: ['zzz'] }"), "mutiple attrs $eq");
 
-        assertTrue("$regex", hasGroup("{ a: { $regex: 'foo.*' } }", "{ a: ['foobar'] }"));
-        assertFalse("$regex", hasGroup("{ a: { $regex: 'foo.*' } }", "{ a: ['Zfoobar'] }"));
-        assertFalse("$regex", hasGroup("{ a: { $regex: 'foo' } }", "{ a: ['foobar'] }"));
-        assertFalse("$regex: no attr", hasGroup("{ a: { $regex: 'foo' } }", "{}"));
+        assertTrue(hasGroup("{ a: { $regex: 'foo.*' } }", "{ a: ['foobar'] }"), "$regex");
+        assertFalse(hasGroup("{ a: { $regex: 'foo.*' } }", "{ a: ['Zfoobar'] }"), "$regex");
+        assertFalse(hasGroup("{ a: { $regex: 'foo' } }", "{ a: ['foobar'] }"), "$regex");
+        assertFalse(hasGroup("{ a: { $regex: 'foo' } }", "{}"), "$regex: no attr");
     }
 
 }
