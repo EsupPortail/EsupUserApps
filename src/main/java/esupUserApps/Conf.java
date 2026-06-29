@@ -46,7 +46,6 @@ static class Main extends Conf.Apps {
     String EsupUserApps_url_other_domain;
     List<String> EsupUserApps_vhost_aliases = Collections.emptyList();
     String current_idpId;
-    String current_idpAuthnRequest_url;
 
     Set<String> wanted_user_attributes;
     int visit_max_inactive = 1800; // 30 min
@@ -100,7 +99,7 @@ static class Main extends Conf.Apps {
         ldap = conf.ldap;
     }    
     void merge(Shibboleth.Conf conf) {
-        if (conf.federation_metadata_url != null)
+        if (conf.bearerTokens != null)
             shibboleth = conf;
     }
 }

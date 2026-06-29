@@ -75,8 +75,7 @@
             "shortText": "Wiki",
             "title": "Espace de travail ESUP",
             "description": "Wiki confluence",
-            "shibbolethSPPrefix": "/",
-            "url": "https://www.esup-portail.org/wiki/",
+            "url": "https://www.esup-portail.org/Shibboleth.sso/WAYF?entityID={idpId}&target=/wiki/",
             "groups": [ "Tous" ],
         },
         

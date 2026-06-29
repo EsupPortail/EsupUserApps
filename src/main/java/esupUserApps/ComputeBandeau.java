@@ -206,7 +206,7 @@ public class ComputeBandeau {
                 person = computeApps.getLdapPeopleInfo(wantedUserId(loggedUser, request.getParameter("uid")));
             }            
         }
-        String location = get_url(app, appId, person, null, conf.current_idpAuthnRequest_url);
+        String location = get_url(app, appId, person, null);
 
         // Below rely on /EsupUserApps/redirect proxied in applications.
         // Example for Apache:
@@ -335,14 +335,12 @@ public class ComputeBandeau {
     private Map<String, Export.App> exportApps(Ldap.Attrs person, Set<String> fnames, Set<String> forced_fnames) {
         Map<String, Export.App> rslt = new HashMap<>();
         String idpId = getFirst(person, "Shib-Identity-Provider");
-        String idpAuthnRequest_url = firstNonNull(getFirst(person, "SingleSignOnService-url"),
-                conf.current_idpAuthnRequest_url);
         
         for (String fname : forced_fnames) {
             if (fnames.contains((fname))) continue; // this fname is allowed, no need to handle it differently
             App app = conf.APPS.get(fname);
             if (app == null) continue;
-            Export.App export_app = new Export.App(fname, app, get_url(app, fname, person, idpId, idpAuthnRequest_url));
+            Export.App export_app = new Export.App(fname, app, get_url(app, fname, person, idpId));
             export_app.forbidden = true;
             rslt.put(fname, export_app);
         }
@@ -351,7 +349,7 @@ public class ComputeBandeau {
             if (app.showIfCurrentAppIs != null) {
                 if (!forced_fnames.contains(app.showIfCurrentAppIs)) continue; // especially useful for "alerts" pseudo-apps which must appear only on a specific app
             }
-            Export.App export_app = new Export.App(fname, app, get_url(app, fname, person, idpId, idpAuthnRequest_url));
+            Export.App export_app = new Export.App(fname, app, get_url(app, fname, person, idpId));
             rslt.put(fname, export_app);
         }
         return rslt;
@@ -360,25 +358,6 @@ public class ComputeBandeau {
     /* ******************************************************************************** */
     /* generate links */
     /* ******************************************************************************** */   
-    // quick'n'dirty version: it expects a simple mapping from url to SP entityId and SP SAML v1 url
-    static String via_idpAuthnRequest_url(String idpAuthnRequest_url, String url, String shibbolethSPPrefix) {
-        String spId = url.replaceFirst("(://[^/]*)(.*)", "$1");
-        String shire = spId + shibbolethSPPrefix + "Shibboleth.sso/SAML/POST";
-        return String.format("%s?shire=%s&target=%s&providerId=%s", idpAuthnRequest_url, shire, urlencode(url), spId);
-    }
-
-    static String url_maybe_adapt_idp(String idpAuthnRequest_url, String url, String shibbolethSPPrefix) {
-        if (idpAuthnRequest_url != null && shibbolethSPPrefix != null) {
-            String realUrl = url;
-            url = via_idpAuthnRequest_url(idpAuthnRequest_url, url, shibbolethSPPrefix);
-            
-            // HACK for test EsupUserApps: handle apps using production federation
-            if (!realUrl.contains("test")) url = url.replace("idp-test", "idp");
-            //debug_msg("personalized shib url is now " + url);
-        }
-        return url;
-    }
-
     private String handle_userAttrs_url_vars(Set<String> userAttrs_vars_in_url, Ldap.Attrs attrs, String url) {
         for (var name : userAttrs_vars_in_url) {
             var val = getFirst(attrs, name);
@@ -391,12 +370,11 @@ public class ComputeBandeau {
         return url;
     }
 
-    String get_url(App app, String appId, Ldap.Attrs person, String idpId, String idpAuthnRequest_url) {
+    String get_url(App app, String appId, Ldap.Attrs person, String idpId) {
         String url = app.url;
         url = url.replace("{fname}", appId);
         url = url.replace("{idpId_ifShib}", firstNonNull(idpId, ""));
         url = url.replace("{idpId}", firstNonNull(idpId, conf.current_idpId));
-        url = url_maybe_adapt_idp(idpAuthnRequest_url, url, app.shibbolethSPPrefix);
         url = handle_userAttrs_url_vars(app.userAttrs_vars_in_url, person, url);
         return url;
     }

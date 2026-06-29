@@ -51,7 +51,6 @@ class App extends ACLs {
     Date startDate;
     Date endDate;
     Map<String,String> url_vars;
-    String shibbolethSPPrefix;
     boolean hideFromMobile = false;
     String helpUrl; // useful for PDF files. Implies hashelp
     boolean hashelp = false;
@@ -74,7 +73,6 @@ class App extends ACLs {
         if (app.serviceRegex != null) serviceRegex = app.serviceRegex;
         if (app.admins != null) admins = app.admins;
         if (app.cookies != null) cookies = app.cookies;
-        if (app.shibbolethSPPrefix != null) shibbolethSPPrefix = app.shibbolethSPPrefix;
     }
 
     App init(Map<String,String> global_url_vars) {
