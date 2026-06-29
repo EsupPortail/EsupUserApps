@@ -226,7 +226,7 @@ public class ComputeBandeau {
             if (request.getParameter("auth_checked") == null) {
                 cleanupSession(request);
                 var is_other_domain = conf.EsupUserApps_url_other_domain != null && request.getServerName().equals(url2host(conf.EsupUserApps_url_other_domain));
-                String final_url = (is_other_domain ? conf.EsupUserApps_url_other_domain : conf.EsupUserApps_url) + "/layout?auth_checked"
+                String final_url = (is_other_domain ? conf.EsupUserApps_url_other_domain : conf.EsupUserApps_url) + "/layout?auth_checked=1"
                     + (request.getQueryString() != null ? "&" + request.getQueryString() : "");
                 response.sendRedirect(via_CAS(is_other_domain ? conf.cas_login_url_other_domain : conf.cas_login_url, final_url) + "&gateway=true");
             } else {
