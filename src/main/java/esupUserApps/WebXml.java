@@ -2,8 +2,8 @@ package esupUserApps;
 
 import jakarta.servlet.*;
 
-import org.jasig.cas.client.session.SingleSignOutFilter;
-import org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter;
+import org.apereo.cas.client.session.SingleSignOutFilter;
+import org.apereo.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter;
 
 import static esupUserApps.Utils.*;
 

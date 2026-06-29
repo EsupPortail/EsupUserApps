@@ -55,13 +55,19 @@
     </dependency>
     
     <dependency>
-      <groupId>org.jasig.cas.client</groupId>
+      <groupId>org.apereo.cas.client</groupId>
       <artifactId>cas-client-core</artifactId>
-      <version>3.3.3</version>
+      <version>4.1.1</version>
       <exclusions>
         <exclusion>
-          <groupId>org.opensaml</groupId>
-          <artifactId>opensaml</artifactId>
+        <!-- we do not use JWT tickets -->
+          <groupId>com.nimbusds</groupId>
+          <artifactId>nimbus-jose-jwt</artifactId>
+        </exclusion>
+        <exclusion>
+          <!-- we do not use encrypted PGTs -->
+          <groupId>org.bouncycastle</groupId>
+          <artifactId>bcpkix-jdk18on</artifactId>
         </exclusion>
       </exclusions>
     </dependency>

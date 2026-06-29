@@ -1,7 +1,7 @@
 package esupUserApps;
 
-import org.jasig.cas.client.util.AbstractCasFilter;
-import org.jasig.cas.client.util.CommonUtils;
+import org.apereo.cas.client.util.AbstractCasFilter;
+import org.apereo.cas.client.util.CommonUtils;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;

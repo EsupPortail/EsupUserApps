@@ -33,8 +33,8 @@ import com.google.gson.GsonBuilder;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jasig.cas.client.util.AbstractCasFilter;
-import org.jasig.cas.client.validation.Assertion;
+import org.apereo.cas.client.util.AbstractCasFilter;
+import org.apereo.cas.client.validation.Assertion;
 
 class Utils {
     
