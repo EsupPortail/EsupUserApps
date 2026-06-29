@@ -65,14 +65,11 @@ class ProxyApp {
     }
 
     private void forwardRequest(HttpURLConnection conn, HttpServletResponse response) throws IOException {
-        var inputStream = conn.getResponseCode() < 400 ? conn.getInputStream() : conn.getErrorStream();
-        try {
+        try (var inputStream = conn.getResponseCode() < 400 ? conn.getInputStream() : conn.getErrorStream()) {
             response.setStatus(conn.getResponseCode());
             copyHeaders(conn, response);
             if (response.getHeader("Cache-Control") == null) response.setHeader("Cache-Control", "private, no-cache"); // be safe (in case someone forces a default cache)
             if (inputStream != null) IOUtils.copy(inputStream, response.getOutputStream());
-        } finally {
-            if (inputStream != null) inputStream.close();
         }
     }
 
